@@ -1,6 +1,7 @@
 payload:
   # 代理列表
   # MyList && Other
+  - PROCESS-NAME,Discord.exe
   - DOMAIN-SUFFIX,1password.com
   - DOMAIN-SUFFIX,adguard.org
   - DOMAIN-SUFFIX,bit.no.com
@@ -21,7 +22,6 @@ payload:
   - DOMAIN-SUFFIX,tumbex.com
   - DOMAIN-SUFFIX,twdvd.com
   - DOMAIN-SUFFIX,unsplash.com
-  - PROCESS-NAME,Discord.exe
 
   # 国外域名
   - DOMAIN-SUFFIX,eu
