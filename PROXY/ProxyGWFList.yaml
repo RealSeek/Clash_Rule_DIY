@@ -21,7 +21,7 @@ payload:
   - DOMAIN-SUFFIX,tumbex.com
   - DOMAIN-SUFFIX,twdvd.com
   - DOMAIN-SUFFIX,unsplash.com
-  - PROCESS-NAME,discord.exe
+  - PROCESS-NAME,Discord.exe
 
   # 国外域名
   - DOMAIN-SUFFIX,eu
