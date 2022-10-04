@@ -9,39 +9,83 @@
 [REJECT](https://github.com/RealSeek/Clash_Rule_DIY/tree/master/REJECT) 内所有配置文件均为屏蔽规则
 
 ### 规则文件地址及使用方式
+> 如果无法访问域名 `raw.githubusercontent.com` 或者下载配置文件困难，可以使用第二个地址（`cdn.jsdelivr.net`）,自行替换 `url` 配置项
+
+
 #### 推荐DIRECT(直连)
 - **中国软件 ChinaApp.txt**：
     - [https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/ChinaApp.yaml](https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/ChinaApp.yaml)
+    - [https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/DIRECT/ChinaApp.yaml](https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/DIRECT/ChinaApp.yaml)
+
+
 - **中国各类云服务商IP ChinaCloudServiceProvider.yaml**：
     - [https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/ChinaCloudServiceProvider.yaml](https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/ChinaCloudServiceProvider.yaml)
+    - [https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/DIRECT/ChinaCloudServiceProvider.yaml](https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/DIRECT/ChinaCloudServiceProvider.yaml)
+
+
 - **中国常见域名 ChinaDomain.yaml**：
     - [https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/ChinaDomain.yaml](https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/ChinaDomain.yaml)
+    - [https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/DIRECT/ChinaDomain.yaml](https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/DIRECT/ChinaDomain.yaml)
+
+
 - **中国IP ChinaIP.yaml**:
     - [https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/ChinaIP.yaml](https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/ChinaIP.yaml)
+    - [https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/DIRECT/ChinaIP.yaml](https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/DIRECT/ChinaIP.yaml)
+
+
 - **中国媒体列表 ChinaVideo.yaml**:
     - [https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/ChinaVideo.yaml](https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/ChinaVideo.yaml)
+    - [https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/DIRECT/ChinaVideo.yaml](https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/DIRECT/ChinaVideo.yaml)
+
+
 - **中国下载客户端 DownloadClient**：
     - [https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/DownloadClient.yaml](https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/DownloadClient.yaml)
+    - [https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/DIRECT/DownloadClient.yaml](https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/DIRECT/DownloadClient.yaml)
+
+
 - **中国可以直连的Google地址 GoogleCN.yaml**：
     - [https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/GoogleCN.yaml](https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/GoogleCN.yaml)
+    - [https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/DIRECT/GoogleCN.yaml](https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/DIRECT/GoogleCN.yaml)
+
+
 - **局域网地址 LocalAreaNetwork.yaml**:
     - [https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/LocalAreaNetwork.yaml](https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/LocalAreaNetwork.yaml)
+    - [https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/DIRECT/LocalAreaNetwork.yaml](https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/DIRECT/LocalAreaNetwork.yaml)
+
 
 #### 推荐PROXY(代理)
 - **奈菲 Netflix。yaml**：
     - [https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/Netflix.yaml](https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/Netflix.yaml)
+    - [https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/PROXY/Netflix.yaml](https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/PROXY/Netflix.yaml)
+
+
 - **OneDrive OneDrive.yaml(可选DIRECT or PROXY)**:
     - [https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/OneDrive.yaml](https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/OneDrive.yaml)
+    - [https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/PROXY/OneDrive.yaml](https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/PROXY/OneDrive.yaml)
+
+
 - **GWFList ProxyGWFList.yaml**:
     - [https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/ProxyGWFList.yaml](https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/ProxyGWFList.yaml)
+    - [https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/PROXY/ProxyGWFList.yaml](https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/PROXY/ProxyGWFList.yaml)
+
+
 - **国外媒体列表 ProxyVideo.yaml**:
     - [https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/ProxyVideo.yaml](https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/ProxyVideo.yaml)
+    - [https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/PROXY/ProxyVideo.yaml](https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/PROXY/ProxyVideo.yaml)
+
+
 - **Telegram Telegram.yaml**:
     - [https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/Telegram.yaml](https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/Telegram.yaml)
+    - [https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/PROXY/Telegram.yaml](https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/PROXY/Telegram.yaml)
+
+
 
 #### 推荐REJECT(屏蔽)
 - **广告联盟 BanAD.yaml**：
     - [https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/REJECT/BanAD.yaml](https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/REJECT/BanAD.yaml)
+    - [https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/REJECT/BanAD.yaml](https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/REJECT/BanAD.yaml)
+
+
 ### 使用方法
 ```yaml
 rule-providers:
