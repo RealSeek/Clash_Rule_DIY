@@ -2,6 +2,7 @@ payload:
   # 代理列表
   # MyList && Other
   - PROCESS-NAME,Discord.exe
+  - DOMAIN-SUFFIX,domeggook.com
   - DOMAIN-SUFFIX,1password.com
   - DOMAIN-SUFFIX,adguard.org
   - DOMAIN-SUFFIX,bit.no.com
