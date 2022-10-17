@@ -51,3 +51,4 @@ payload:
   - PROCESS-NAME,uu_render.exe
   - PROCESS-NAME,Agent.exe
   - PROCESS-NAME,Battle.net.exe
+  - PROCESS-NAME,r5apex.exe
