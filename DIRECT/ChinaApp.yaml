@@ -49,3 +49,5 @@ payload:
   - PROCESS-NAME,uu.exe
   - PROCESS-NAME,uu_ball.exe
   - PROCESS-NAME,uu_render.exe
+  - PROCESS-NAME,Agent.exe
+  - PROCESS-NAME,Battle.net.exe
