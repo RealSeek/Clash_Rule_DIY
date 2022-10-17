@@ -52,3 +52,5 @@ payload:
   - PROCESS-NAME,Agent.exe
   - PROCESS-NAME,Battle.net.exe
   - PROCESS-NAME,r5apex.exe
+  - PROCESS-NAME,NarakaBladepoint.exe
+  - PROCESS-NAME,NeacClient.exe
