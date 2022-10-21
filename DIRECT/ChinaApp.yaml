@@ -45,6 +45,8 @@ payload:
   - PROCESS-NAME,transmission-qt.exe
   - PROCESS-NAME,uTorrent.exe
   - PROCESS-NAME,WebTorrent.exe
+  # 自己电脑的应用列表
+  # MyList
   - PROCESS-NAME,完美世界竞技平台.exe
   - PROCESS-NAME,uu.exe
   - PROCESS-NAME,uu_ball.exe
@@ -55,3 +57,4 @@ payload:
   - PROCESS-NAME,NarakaBladepoint.exe
   - PROCESS-NAME,NeacClient.exe
   - PROCESS-NAME,left4dead2.exe
+  - PROCESS-NAME,Steam.exe

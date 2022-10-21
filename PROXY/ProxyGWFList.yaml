@@ -2,12 +2,14 @@ payload:
   # 代理列表
   # MyList && Other
   - PROCESS-NAME,Discord.exe
+  - DOMAIN-SUFFIX,duangks.com
   - DOMAIN-SUFFIX,nexitallysafe.com
   - DOMAIN-SUFFIX,ns.exitgames.com
   - DOMAIN-SUFFIX,domeggook.com
   - DOMAIN-SUFFIX,acgbox.link
   - DOMAIN-SUFFIX,blog.reimu.net
   - DOMAIN-SUFFIX,hmoe11.net
+  # 以下
   - DOMAIN-SUFFIX,1password.com
   - DOMAIN-SUFFIX,adguard.org
   - DOMAIN-SUFFIX,bit.no.com
