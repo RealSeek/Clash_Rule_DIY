@@ -9,6 +9,7 @@ payload:
   - DOMAIN-SUFFIX,acgbox.link
   - DOMAIN-SUFFIX,blog.reimu.net
   - DOMAIN-SUFFIX,hmoe11.net
+  - DOMAIN-SUFFIX,api.steampowered.com
   # 以下
   - DOMAIN-SUFFIX,1password.com
   - DOMAIN-SUFFIX,adguard.org
