@@ -12,6 +12,7 @@ payload:
   - DOMAIN-SUFFIX,api.steampowered.com
   - DOMAIN-SUFFIX,anonfiles.com
   - DOMAIN-SUFFIX,cnbeta.com
+  - DOMAIN-SUFFIX,riotgames.com
   # 以下
   - DOMAIN-SUFFIX,1password.com
   - DOMAIN-SUFFIX,adguard.org
