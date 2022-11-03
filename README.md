@@ -85,6 +85,9 @@
     - [https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/REJECT/BanAD.yaml](https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/REJECT/BanAD.yaml)
     - [https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/REJECT/BanAD.yaml](https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/REJECT/BanAD.yaml)
 
+- **ABP中的 EasyListChina**:
+    - [https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/REJECT/BanEasyListChina.yaml](https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/REJECT/BanEasyListChina.yaml)
+    - [https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/master/REJECT/BanEasyListChina.yaml](https://cdn.jsdelivr.net/gh/RealSeek/Clash_Rule_DIY/master/REJECT/BanEasyListChina.yaml) 
 
 ### 使用方法
 ```yaml
@@ -178,6 +181,13 @@ rule-providers:
     behavior: classical
     url: "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/REJECT/BanAD.yaml"
     path: ./ruleset/BanAD.yaml
+    interval: 1800
+
+  BanEasyListChina: # 屏蔽广告
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/REJECT/BanEasyListChina.yaml"
+    path: ./ruleset/BanEasyListChina.yaml
     interval: 1800
     
   ChinaApp: # 需要直连的常见软件列表
@@ -393,6 +403,13 @@ parsers: # array
           behavior: classical
           url: "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/REJECT/BanAD.yaml"
           path: ./ruleset/BanAD.yaml
+          interval: 1800
+
+        BanEasyListChina: # 屏蔽广告
+          type: http
+          behavior: classical
+          url: "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/REJECT/BanEasyListChina.yaml"
+          path: ./ruleset/BanEasyListChina.yaml
           interval: 1800
 
         ChinaApp: # 需要直连的常见软件列表
