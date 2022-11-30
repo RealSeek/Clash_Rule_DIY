@@ -14,6 +14,9 @@ payload:
   - DOMAIN-SUFFIX,cnbeta.com
   - DOMAIN-SUFFIX,riotgames.com
   - DOMAIN-SUFFIX,ea.com
+
+  # MC
+  - DOMAIN-SUFFIX,magmafoundation.org
   # 以下
   - DOMAIN-SUFFIX,1password.com
   - DOMAIN-SUFFIX,adguard.org
