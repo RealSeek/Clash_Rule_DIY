@@ -17,6 +17,7 @@ payload:
 
   # MC
   - DOMAIN-SUFFIX,magmafoundation.org
+  - DOMAIN-SUFFIX,beta.openai.com
   # 以下
   - DOMAIN-SUFFIX,1password.com
   - DOMAIN-SUFFIX,adguard.org
