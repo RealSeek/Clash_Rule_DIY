@@ -19,6 +19,9 @@ payload:
   - DOMAIN-SUFFIX,magmafoundation.org
   - DOMAIN-SUFFIX,beta.openai.com
   - DOMAIN-SUFFIX,chat.openai.com
+
+  # Naver
+  - DOMAIN-SUFFIX,nid.naver.com
   # 以下
   - DOMAIN-SUFFIX,1password.com
   - DOMAIN-SUFFIX,adguard.org
