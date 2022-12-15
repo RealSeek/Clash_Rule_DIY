@@ -3,6 +3,7 @@ payload:
   # MyList && Other
   - PROCESS-NAME,Discord.exe
   - DOMAIN-SUFFIX,hanime1.me
+  - DOMAIN-SUFFIX,maven.tterrag.com
   - DOMAIN-SUFFIX,duangks.com
   - DOMAIN-SUFFIX,nexitallysafe.com
   - DOMAIN-SUFFIX,ns.exitgames.com
