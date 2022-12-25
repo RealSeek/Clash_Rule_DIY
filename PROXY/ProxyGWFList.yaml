@@ -4,6 +4,7 @@ payload:
   - PROCESS-NAME,Discord.exe
   - DOMAIN-KEYWORD,maven
   - DOMAIN-SUFFIX,hanime1.me
+  - DOMAIN-SUFFIX,zerotier.com
   - DOMAIN-SUFFIX,duangks.com
   - DOMAIN-SUFFIX,nexitallysafe.com
   - DOMAIN-SUFFIX,ns.exitgames.com
