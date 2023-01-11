@@ -58,3 +58,4 @@ payload:
   - PROCESS-NAME,NeacClient.exe
   - PROCESS-NAME,left4dead2.exe
   - PROCESS-NAME,Steam.exe
+  - PROCESS-NAME,RiotClientServices.exe
