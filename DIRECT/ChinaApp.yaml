@@ -59,3 +59,5 @@ payload:
   - PROCESS-NAME,left4dead2.exe
   - PROCESS-NAME,Steam.exe
   - PROCESS-NAME,RiotClientServices.exe
+  - PROCESS-NAME,RiotClientUx.exe
+  - PROCESS-NAME,LeagueClient.exe
