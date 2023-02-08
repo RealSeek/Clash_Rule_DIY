@@ -61,3 +61,4 @@ payload:
   - PROCESS-NAME,RiotClientServices.exe
   - PROCESS-NAME,RiotClientUx.exe
   - PROCESS-NAME,LeagueClient.exe
+  - DOMAIN-SUFFIX,game.maj-soul.com
