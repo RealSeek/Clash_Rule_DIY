@@ -2,6 +2,7 @@ payload:
   # 代理列表
   # MyList && Other
   - PROCESS-NAME,Discord.exe
+  - PROCESS-NAME,nikke.exe
   - DOMAIN-KEYWORD,maven
   - DOMAIN-SUFFIX,hanime1.me
   - DOMAIN-SUFFIX,gamemaps.com
