@@ -4,6 +4,7 @@ payload:
   - PROCESS-NAME,Discord.exe
   - DOMAIN-KEYWORD,maven
   - DOMAIN-SUFFIX,nikke.gamamobi.com
+  - DOMAIN-SUFFIX,static.gamamobi.com
   - DOMAIN-SUFFIX,hanime1.me
   - DOMAIN-SUFFIX,gamemaps.com
   - DOMAIN-SUFFIX,mediafilez.forgecdn.net
