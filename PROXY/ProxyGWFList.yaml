@@ -3,6 +3,7 @@ payload:
   # MyList && Other
   - PROCESS-NAME,Discord.exe
   - DOMAIN-KEYWORD,maven
+  - DOMAIN-KEYWORD,vsassets.io
   - DOMAIN-SUFFIX,nikke.gamamobi.com
   - DOMAIN-SUFFIX,static.gamamobi.com
   - DOMAIN-SUFFIX,nikke-jp.com
