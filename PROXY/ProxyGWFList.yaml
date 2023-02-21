@@ -4,6 +4,8 @@ payload:
   - PROCESS-NAME,Discord.exe
   - DOMAIN-KEYWORD,maven
   - DOMAIN-KEYWORD,vsassets.io
+  - DOMAIN-SUFFIX,logincdn.msftauth.net
+  - DOMAIN-SUFFIX,login.live.com
   - DOMAIN-SUFFIX,nikke.gamamobi.com
   - DOMAIN-SUFFIX,static.gamamobi.com
   - DOMAIN-SUFFIX,nikke-jp.com
