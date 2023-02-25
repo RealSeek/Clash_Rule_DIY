@@ -8,6 +8,7 @@ payload:
   - DOMAIN-SUFFIX,login.live.com
   - DOMAIN-KEYWORD,civitai-prod-settled
   - DOMAIN-SUFFIX,nikke.gamamobi.com
+  - DOMAIN-SUFFIX,noxcrew.com
   - DOMAIN-SUFFIX,static.gamamobi.com
   - DOMAIN-SUFFIX,nikke-jp.com
   - DOMAIN-SUFFIX,hanime1.me
