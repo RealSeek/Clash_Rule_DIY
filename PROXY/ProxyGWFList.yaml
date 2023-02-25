@@ -4,6 +4,7 @@ payload:
   - PROCESS-NAME,Discord.exe
   - DOMAIN-KEYWORD,maven
   - DOMAIN-KEYWORD,vsassets.io
+  - DOMAIN-KEYWORD,huggingface.co
   - DOMAIN-SUFFIX,logincdn.msftauth.net
   - DOMAIN-SUFFIX,login.live.com
   - DOMAIN-KEYWORD,civitai-prod-settled
