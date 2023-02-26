@@ -9,6 +9,7 @@ payload:
   - DOMAIN-SUFFIX,login.live.com
   - DOMAIN-KEYWORD,civitai-prod-settled
   - DOMAIN-SUFFIX,nikke.gamamobi.com
+  - DOMAIN-SUFFIX,nexusmods.com
   - DOMAIN-SUFFIX,noxcrew.com
   - DOMAIN-SUFFIX,static.gamamobi.com
   - DOMAIN-SUFFIX,nikke-jp.com
@@ -35,6 +36,7 @@ payload:
   # chatGPT
   - DOMAIN-SUFFIX,beta.openai.com
   - DOMAIN-SUFFIX,chat.openai.com
+  - DOMAIN-SUFFIX,platform.openai.com
   - DOMAIN-SUFFIX,auth0.openai.com
 
   # Naver
