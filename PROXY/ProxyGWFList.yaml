@@ -7,6 +7,7 @@ payload:
   - DOMAIN-KEYWORD,huggingface.co
   - DOMAIN-SUFFIX,logincdn.msftauth.net
   - DOMAIN-SUFFIX,login.live.com
+  - DOMAIN-SUFFIX,curseforge.com
   - DOMAIN-SUFFIX,supporter-files.nexus-cdn.com
   - DOMAIN-KEYWORD,civitai-prod-settled
   - DOMAIN-SUFFIX,nikke.gamamobi.com
