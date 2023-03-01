@@ -8,6 +8,7 @@ payload:
   - DOMAIN-SUFFIX,logincdn.msftauth.net
   - DOMAIN-SUFFIX,login.live.com
   - DOMAIN-SUFFIX,ffmpeg.zeranoe.com
+  - DOMAIN-SUFFIX,gyan.dev
   - DOMAIN-SUFFIX,curseforge.com
   - DOMAIN-SUFFIX,supporter-files.nexus-cdn.com
   - DOMAIN-KEYWORD,civitai-prod-settled
