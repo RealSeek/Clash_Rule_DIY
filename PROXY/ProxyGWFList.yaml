@@ -9,6 +9,7 @@ payload:
   - DOMAIN-SUFFIX,login.live.com
   - DOMAIN-SUFFIX,ffmpeg.zeranoe.com
   - DOMAIN-SUFFIX,gyan.dev
+  - DOMAIN-KEYWORD,vercel
   - DOMAIN-SUFFIX,curseforge.com
   - DOMAIN-SUFFIX,supporter-files.nexus-cdn.com
   - DOMAIN-KEYWORD,civitai-prod-settled
