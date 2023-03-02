@@ -39,6 +39,7 @@ payload:
   - DOMAIN-SUFFIX,magmafoundation.org
 
   # chatGPT
+  - DOMAIN-KEYWORD,openai
   - DOMAIN-SUFFIX,beta.openai.com
   - DOMAIN-SUFFIX,chat.openai.com
   - DOMAIN-SUFFIX,platform.openai.com
