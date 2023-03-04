@@ -39,6 +39,7 @@ payload:
   - PROCESS-NAME,XboxPcApp.exe
   - PROCESS-NAME,gamingservices.exe
   - PROCESS-NAME,XboxIdp.exe
+  - DOMAIN-KEYWORD,microsoft
   # MC
   - DOMAIN-SUFFIX,magmafoundation.org
 
