@@ -35,6 +35,8 @@ payload:
   - DOMAIN-SUFFIX,riotgames.com
   - DOMAIN-SUFFIX,ea.com
 
+  # XGP
+  - PROCESS-NAME,XboxPcApp.exe
   # MC
   - DOMAIN-SUFFIX,magmafoundation.org
 
