@@ -374,6 +374,13 @@ parsers: # array
           path: ./ruleset/LocalAreaNetwork.yaml
           interval: 1800
 
+        Emby: # Emby
+          type: http
+          behavior: classical
+          url: "https://ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/Emby.yaml"
+          path: ./ruleset/ChinaApp.yaml
+          interval: 1800
+
         Netflix:   # 代理-奈菲.
           type: http
           behavior: classical
