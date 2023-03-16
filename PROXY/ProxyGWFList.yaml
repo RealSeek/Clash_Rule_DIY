@@ -3,6 +3,7 @@ payload:
   # MyList && Other
   - PROCESS-NAME,Discord.exe
   - DOMAIN-KEYWORD,maven
+  - DOMAIN-SUFFIX,iwara.tv
   - DOMAIN-KEYWORD,vsassets.io
   - DOMAIN-KEYWORD,huggingface.co
   - DOMAIN-SUFFIX,logincdn.msftauth.net
