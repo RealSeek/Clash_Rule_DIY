@@ -9,6 +9,7 @@ payload:
   - DOMAIN-SUFFIX,logincdn.msftauth.net
   - DOMAIN-SUFFIX,login.live.com
   - DOMAIN-SUFFIX,ffmpeg.zeranoe.com
+  - DOMAIN-KEYWORD,vo.msecnd.net
   - DOMAIN-SUFFIX,gyan.dev
   - DOMAIN-KEYWORD,vercel
   - DOMAIN-SUFFIX,curseforge.com
