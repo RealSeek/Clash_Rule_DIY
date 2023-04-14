@@ -5,6 +5,7 @@ payload:
   - DOMAIN-KEYWORD,maven
   - DOMAIN-SUFFIX,iwara.tv
   - DOMAIN-KEYWORD,vsassets.io
+  - DOMAIN-KEYWORD,chatbot.theb.ai
   - DOMAIN-KEYWORD,huggingface.co
   - DOMAIN-SUFFIX,logincdn.msftauth.net
   - DOMAIN-SUFFIX,login.live.com
