@@ -6,6 +6,7 @@ payload:
   - DOMAIN-SUFFIX,iwara.tv
   - DOMAIN-KEYWORD,vsassets.io
   - DOMAIN-KEYWORD,chatbot.theb.ai
+  - DOMAIN-KEYWORD,files.minecraftforge.net
   - DOMAIN-KEYWORD,huggingface.co
   - DOMAIN-SUFFIX,logincdn.msftauth.net
   - DOMAIN-SUFFIX,login.live.com
