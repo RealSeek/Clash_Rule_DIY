@@ -7,6 +7,7 @@ payload:
   - DOMAIN-KEYWORD,vsassets.io
   - DOMAIN-KEYWORD,chatbot.theb.ai
   - DOMAIN-KEYWORD,files.minecraftforge.net
+  - DOMAIN-KEYWORD,launcher.mojang.com
   - DOMAIN-KEYWORD,huggingface.co
   - DOMAIN-SUFFIX,logincdn.msftauth.net
   - DOMAIN-SUFFIX,login.live.com
