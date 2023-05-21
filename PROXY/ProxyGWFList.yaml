@@ -3,6 +3,8 @@ payload:
   # MyList && Other
   - PROCESS-NAME,Discord.exe
   - DOMAIN-KEYWORD,maven
+  - DOMAIN-KEYWORD,bilibili
+  -
   - DOMAIN-SUFFIX,iwara.tv
   - DOMAIN-KEYWORD,vsassets.io
   - DOMAIN-KEYWORD,chatbot.theb.ai
