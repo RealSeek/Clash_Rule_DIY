@@ -4,6 +4,7 @@ payload:
   # 数量：45条
 
   # Bilibili 哔哩哔哩
+  - DOMAIN-KEYWORD,bilibili
   - DOMAIN,apiintl.biliapi.net
   - DOMAIN,upos-hz-mirrorakam.akamaized.net
   - DOMAIN-SUFFIX,acg.tv
