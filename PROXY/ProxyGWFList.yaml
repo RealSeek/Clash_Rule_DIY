@@ -2,6 +2,9 @@ payload:
   # 代理列表
   # MyList && Other
   - PROCESS-NAME,Discord.exe
+  - DOMAIN-SUFFIX,account.bandainamcoid.com
+  - DOMAIN-SUFFIX,account-api.bandainamcoid.com
+  - DOMAIN-SUFFIX,stats.g.doubleclick.net
   - DOMAIN-KEYWORD,maven
   - DOMAIN-KEYWORD,hmoe
   - DOMAIN-SUFFIX,iwara.tv
