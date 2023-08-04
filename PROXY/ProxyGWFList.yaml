@@ -6,6 +6,7 @@ payload:
   - DOMAIN-SUFFIX,account-api.bandainamcoid.com
   - DOMAIN-SUFFIX,stats.g.doubleclick.net
   - DOMAIN-SUFFIX,my.ucdavis.edu
+  - DOMAIN-SUFFIX,poe.com
   - DOMAIN-KEYWORD,mccisland
   - DOMAIN-KEYWORD,maven
   - DOMAIN-KEYWORD,deanza
