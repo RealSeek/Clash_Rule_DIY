@@ -9,6 +9,7 @@ payload:
   - DOMAIN-SUFFIX,my.ucdavis.edu
   - DOMAIN-SUFFIX,poe.com
   - DOMAIN-KEYWORD,mccisland
+  - DOMAIN-KEYWORD,microsoft
   - DOMAIN-KEYWORD,maven
   - DOMAIN-KEYWORD,deanza
   - DOMAIN-KEYWORD,hmoe
