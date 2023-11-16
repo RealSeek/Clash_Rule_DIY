@@ -328,112 +328,112 @@ parsers: # array
         ChinaCloudServiceProvider:   # 直连-中国各类云服务商IP.
           type: http
           behavior: classical
-          url: "https://ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/ChinaCloudServiceProvider.yaml"
+          url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/ChinaCloudServiceProvider.yaml"
           path: ./ruleset/ChinaCloudServiceProvider.yaml
           interval: 1800
 
         ChinaDomain: # 直连-中国常见域名
           type: http
           behavior: classical
-          url: "https://ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/ChinaDomain.yaml"
+          url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/ChinaDomain.yaml"
           path: ./ruleset/ChinaDomain.yaml
           interval: 1800
 
         ChinaIP: # 直连-中国IP
           type: http
           behavior: classical
-          url: "https://ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/ChinaIP.yaml"
+          url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/ChinaIP.yaml"
           path: ./ruleset/ChinaIP.yaml
           interval: 1800
 
         ChinaVideo: # 直连-中国媒体列表
           type: http
           behavior: classical
-          url: "https://ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/ChinaVideo.yaml"
+          url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/ChinaVideo.yaml"
           path: ./ruleset/ChinaVideo.yaml
           interval: 1800
 
         DownloadClient: # 直连-中国常用下载客户端
           type: http
           behavior: classical
-          url: "https://ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/DownloadClient.yaml"
+          url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/DownloadClient.yaml"
           path: ./ruleset/DownloadClient.yaml
           interval: 1800
 
         GoogleCN: # 直连-中国可以直连的Google地址
           type: http
           behavior: classical
-          url: "https://ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/GoogleCN.yaml"
+          url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/GoogleCN.yaml"
           path: ./ruleset/GoogleCN.yaml
           interval: 1800
 
         LocalAreaNetwork: # 直连-局域网地址
           type: http
           behavior: classical
-          url: "https://ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/LocalAreaNetwork.yaml"
+          url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/LocalAreaNetwork.yaml"
           path: ./ruleset/LocalAreaNetwork.yaml
           interval: 1800
 
         Emby: # Emby
           type: http
           behavior: classical
-          url: "https://ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/Emby.yaml"
+          url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/Emby.yaml"
           path: ./ruleset/ChinaApp.yaml
           interval: 1800
 
         Netflix:   # 代理-奈菲.
           type: http
           behavior: classical
-          url: "https://ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/Netflix.yaml"
+          url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/Netflix.yaml"
           path: ./ruleset/Netflix.yaml
           interval: 1800
 
         OneDrive:   # 代理-OneDrive.
           type: http
           behavior: classical
-          url: "https://ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/OneDrive.yaml"
+          url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/OneDrive.yaml"
           path: ./ruleset/OneDrive.yaml
           interval: 1800
 
         ProxyGWFList:   # 代理-GWFList.
           type: http
           behavior: classical
-          url: "https://ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/ProxyGWFList.yaml"
+          url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/ProxyGWFList.yaml"
           path: ./ruleset/ProxyGWFList.yaml
           interval: 1800
 
         ProxyVideo:   # 代理-国外媒体列表.
           type: http
           behavior: classical
-          url: "https://ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/ProxyVideo.yaml"
+          url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/ProxyVideo.yaml"
           path: ./ruleset/ProxyVideo.yaml
           interval: 1800
 
         Telegram:   # 代理-Telegram.
           type: http
           behavior: classical
-          url: "https://ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/Telegram.yaml"
+          url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/Telegram.yaml"
           path: ./ruleset/Telegram.yaml
           interval: 1800
 
         BanAD:   # 屏蔽-广告联盟.
           type: http
           behavior: classical
-          url: "https://ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/REJECT/BanAD.yaml"
+          url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/REJECT/BanAD.yaml"
           path: ./ruleset/BanAD.yaml
           interval: 1800
 
         BanEasyListChina: # 屏蔽广告
           type: http
           behavior: classical
-          url: "https://ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/REJECT/BanEasyListChina.yaml"
+          url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/REJECT/BanEasyListChina.yaml"
           path: ./ruleset/BanEasyListChina.yaml
           interval: 1800
 
         ChinaApp: # 需要直连的常见软件列表
           type: http
           behavior: classical
-          url: "https://ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/ChinaApp.yaml"
+          url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/ChinaApp.yaml"
           path: ./ruleset/ChinaApp.yaml
           interval: 1800
 ```
