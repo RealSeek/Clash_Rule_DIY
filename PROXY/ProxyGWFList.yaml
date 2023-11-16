@@ -6,6 +6,7 @@ payload:
   - DOMAIN-SUFFIX,openai.com
   - DOMAIN-SUFFIX,chatgpt.com
   - DOMAIN-SUFFIX,oaistatic.com
+  - DOMAIN-SUFFIX,oaiusercontent.com
   - DOMAIN-SUFFIX,auth0.com
   - DOMAIN-SUFFIX,account-api.bandainamcoid.com
   - DOMAIN-SUFFIX,stats.g.doubleclick.net
