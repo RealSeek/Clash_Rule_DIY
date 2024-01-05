@@ -33,6 +33,7 @@ payload:
   - DOMAIN-KEYWORD,vo.msecnd.net
   - DOMAIN-SUFFIX,gyan.dev
   - DOMAIN-KEYWORD,vercel
+  - DOMAIN-KEYWORD,gstatic
   - DOMAIN-SUFFIX,curseforge.com
   - DOMAIN-SUFFIX,supporter-files.nexus-cdn.com
   - DOMAIN-KEYWORD,civitai-prod-settled
