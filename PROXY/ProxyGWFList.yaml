@@ -29,6 +29,7 @@ payload:
   - DOMAIN-KEYWORD,huggingface.co
   - DOMAIN-SUFFIX,logincdn.msftauth.net
   - DOMAIN-SUFFIX,login.live.com
+  - DOMAIN-SUFFIX,gstatic.com
   - DOMAIN-SUFFIX,ffmpeg.zeranoe.com
   - DOMAIN-KEYWORD,vo.msecnd.net
   - DOMAIN-SUFFIX,gyan.dev
