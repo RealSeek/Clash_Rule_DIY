@@ -57,7 +57,6 @@ payload:
   - DOMAIN-SUFFIX,api.steampowered.com
   - DOMAIN-SUFFIX,anonfiles.com
   - DOMAIN-SUFFIX,cnbeta.com
-  - DOMAIN-SUFFIX,riotgames.com
   - DOMAIN-SUFFIX,ea.com
 
   # XGP

@@ -58,8 +58,5 @@ payload:
   - PROCESS-NAME,NeacClient.exe
   - PROCESS-NAME,left4dead2.exe
   - PROCESS-NAME,Steam.exe
-  - PROCESS-NAME,RiotClientServices.exe
-  - PROCESS-NAME,RiotClientUx.exe
-  - PROCESS-NAME,LeagueClient.exe
   - DOMAIN-SUFFIX,game.maj-soul.com
   - PROCESS-NAME,KOOK.exe
