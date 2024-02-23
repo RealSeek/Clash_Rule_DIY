@@ -232,8 +232,8 @@ parsers: # array
         - name: 🔯 代理模式
           type: select
           proxies:
-            - 绕过大陆丨黑名单(只走规则内的代理) # 黑名单模式，意为「只有命中规则的网络流量，才使用代理」
-            - 绕过大陆丨白名单(规则外走代理) # 白名单模式，意为「没有命中规则的网络流量，统统使用代理」
+            - 绕过大陆丨黑名单 # 黑名单模式，意为「只有命中规则的网络流量，才使用代理」
+            - 绕过大陆丨白名单 # 白名单模式，意为「没有命中规则的网络流量，统统使用代理」
 
         - name: 🔰 选择节点
           type: select
@@ -257,14 +257,14 @@ parsers: # array
             - DIRECT
             - PROXY
 
-        - name: 绕过大陆丨黑名单(只走规则内的代理)
+        - name: 绕过大陆丨黑名单
           type: url-test
           url: http://www.gstatic.com/generate_204
           interval: 86400
           proxies:
             - DIRECT
 
-        - name: 绕过大陆丨白名单(规则外走代理)
+        - name: 绕过大陆丨白名单
           type: url-test
           url: http://www.gstatic.com/generate_204
           interval: 86400
@@ -278,22 +278,37 @@ parsers: # array
           proxies:
             - 🔰 选择节点
 
-            # 策略组示例
-            # - name: 分组名
-            # type: select       # 手动选点   
-            # url-test     # 自动选择延迟最低的节点
-            # fallback     # 节点故障时自动切换下一个
-            # laod-balance # 均衡使用分组内的节点
-            # url: http://www.gstatic.com/generate_204 # 测试地址 非select类型分组必要
-            # interval: 300 # 自动测试间隔时间，单位秒 非select类型分组必要
-            # tolerance: 50 # 允许的偏差，节点之间延迟差小于该值不切换 非必要
-            # proxies:  
-            # - 节点名称或其他分组套娃
+        - name: ⚖️ 负载均衡-散列
+          type: load-balance
+          url: 'http://www.google.com/generate_204'
+          interval: 300
+          strategy: consistent-hashing
+
+        - name: ⚖️ 负载均衡-轮询
+          type: load-balance
+          url: 'http://www.google.com/generate_204'
+          interval: 300
+          strategy: round-robin
+
+                  # 策略组示例
+                  # - name: 分组名
+                  # type: select       # 手动选点   
+                  # url-test     # 自动选择延迟最低的节点
+                  # fallback     # 节点故障时自动切换下一个
+                  # laod-balance # 均衡使用分组内的节点
+                  # url: http://www.gstatic.com/generate_204 # 测试地址 非select类型分组必要
+                  # interval: 300 # 自动测试间隔时间，单位秒 非select类型分组必要
+                  # tolerance: 50 # 允许的偏差，节点之间延迟差小于该值不切换 非必要
+                  # proxies:  
+          # - 节点名称或其他分组套娃
 
       commands:
         - proxy-groups.🔰 选择节点.proxies=[]proxyNames # 向指定策略组添加订阅中的节点名，可使用正则过滤
         - proxy-groups.🔰 选择节点.proxies.0+DIRECT # 向指定分组第一个位置添加一个 DIRECT 节点名
-
+        - proxy-groups.⚖️ 负载均衡-散列.proxies=[]proxyNames
+        - proxy-groups.1.proxies.0+⚖️ 负载均衡-散列
+        - proxy-groups.⚖️ 负载均衡-轮询.proxies=[]proxyNames
+        - proxy-groups.1.proxies.0+⚖️ 负载均衡-轮询
         # 一些可能用到的正则过滤节点示例，使分组更细致
         # []proxyNames|a                         # 包含a
         # []proxyNames|^(.*)(a|b)+(.*)$          # 包含a或b
@@ -303,6 +318,9 @@ parsers: # array
 
       # 添加规则
       prepend-rules: # 规则由上往下遍历，如上面规则已经命中，则不再往下处理
+        - AND,(AND,(DST-PORT,443),(NETWORK,UDP)),(NOT,((GEOIP,CN,no-resolve))),REJECT
+        - GEOSITE,Private,DIRECT
+        - GEOSITE,Category-games@cn,DIRECT
         - RULE-SET,ChinaApp,DIRECT
         - DOMAIN,clash.razord.top,DIRECT
         - DOMAIN,yacd.haishan.me,DIRECT
@@ -320,8 +338,8 @@ parsers: # array
         - RULE-SET,ProxyGWFList,PROXY
         - RULE-SET,ProxyVideo,PROXY
         - RULE-SET,Telegram,PROXY
-        - GEOIP,,DIRECT
-        - GEOIP,CN,DIRECT
+        - GEOSITE,CN,DIRECT
+        - GEOIP,CN,DIRECT,no-resolve
         - MATCH,🔯 代理模式 # 规则之外的
       # 添加规则集
       mix-rule-providers:
