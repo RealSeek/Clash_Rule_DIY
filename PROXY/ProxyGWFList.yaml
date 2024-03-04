@@ -3,6 +3,7 @@ payload:
   # MyList && Other
   - PROCESS-NAME,Discord.exe
   - DOMAIN-SUFFIX,obsproject.com
+  - DOMAIN-SUFFIX,themeselection.com
   - DOMAIN-SUFFIX,account.bandainamcoid.com
   - DOMAIN-SUFFIX,openai.com
   - DOMAIN-SUFFIX,chatgpt.com
