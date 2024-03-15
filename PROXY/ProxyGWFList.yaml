@@ -8,6 +8,8 @@ payload:
   - DOMAIN-SUFFIX,xn--ngstr-lra8j.com
   - DOMAIN-SUFFIX,googleapis.com
   - DOMAIN-SUFFIX,services.googleapi.cn
+  - DOMAIN-SUFFIX,services.googleapis.cn
+  - DOMAIN-SUFFIX,connectivitycheck.gstatic.com
   - DOMAIN-SUFFIX,googleusercontent.com
   - DOMAIN-SUFFIX,gstatic.com
   - DOMAIN-SUFFIX,devuploads.com
