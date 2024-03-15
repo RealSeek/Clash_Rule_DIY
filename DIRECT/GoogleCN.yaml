@@ -22,7 +22,6 @@ payload:
   - DOMAIN-SUFFIX,fonts.googleapis.com
   - DOMAIN-SUFFIX,fonts.gstatic.com
   - DOMAIN-SUFFIX,googletagmanager.com
-  - DOMAIN-SUFFIX,googletagservices.com
   - DOMAIN-SUFFIX,gtm.oasisfeng.com
   - DOMAIN-SUFFIX,imasdk.googleapis.com
   - DOMAIN-SUFFIX,mtalk.google.com
@@ -32,10 +31,8 @@ payload:
   - DOMAIN-SUFFIX,safebrowsing.googleapis.com
   - DOMAIN-SUFFIX,settings.crashlytics.com
   - DOMAIN-SUFFIX,ssl-google-analytics.l.google.com
-  - DOMAIN-SUFFIX,ssl.gstatic.com
   - DOMAIN-SUFFIX,toolbarqueries.google.com
   - DOMAIN-SUFFIX,tools.google.com
   - DOMAIN-SUFFIX,tools.l.google.com
   - DOMAIN-SUFFIX,update.googleapis.com
   - DOMAIN-SUFFIX,www-googletagmanager.l.google.com
-  - DOMAIN-SUFFIX,www.gstatic.com
