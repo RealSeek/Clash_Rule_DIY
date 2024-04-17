@@ -213,6 +213,7 @@ rule-providers:
 - 黑名单模式，意为「**只有命中规则的网络流量，才使用代理**」，适用于服务器线路网络质量不稳定或不够快，或服务器流量紧缺的用户。通常也是软路由用户、家庭网关用户的常用模式。
 - 以下配置中，除了 `DIRECT` 和 `REJECT` 是默认存在于 Clash 中的 policy（路由策略/流量处理策略），其余均为自定义 policy，对应配置文件中 `proxies` 或 `proxy-groups` 中的 `name`。如你直接使用下面的 `rules` 规则，则需要在 `proxies` 或 `proxy-groups` 中手动配置一个 `name` 为 `PROXY` 的 policy。
 
+## Clash for Windows 使用
 ### Parsers 预处理文件配置案例
 ```yaml
 parsers: # array
@@ -456,5 +457,281 @@ parsers: # array
           interval: 1800
 ```
 
-- 按此Parsers订阅列表将会被替换成 黑/白名单模式
+- 按此 Parsers 订阅列表将会被替换成 黑/白名单模式
+
+## Clash Verge 使用（Meta 内核）
+- 注意：Clash Verge 为 Meta 内核，不支持 Parsers 预处理文件，因此无法使用上述 Parsers 配置方式。
+- 但是通过内置的 Script 功能可以实现类似 Parsers 的预处理功能。
+### Script 
+```js
+// Define the `main` function
+
+function main(params) {
+
+  // 所有地区
+  const allRegex = /^(?!.*(?:自动|故障|流量|官网|套餐|机场|订阅|年|月|失联|频道)).*$/;
+  const allProxies = getProxiesByRegex(params, allRegex);
+
+  // 代理模式
+  const ProxyMode = {
+    name: "🔯 代理模式",
+    type: "select",
+    url: "http://www.gstatic.com/generate_204",
+    interval: 300,
+    tolerance: 20,
+    timeout: 2000,
+    lazy: true,
+    proxies: ["绕过大陆丨黑名单", "绕过大陆丨白名单"]
+  };
+
+  const SelectProxy = {
+    name: "🔰 选择节点",
+    type: "select",
+    url: "http://www.gstatic.com/generate_204",
+    interval: 300,
+    tolerance: 20,
+    timeout: 2000,
+    lazy: true,
+    proxies: allProxies
+  };
+
+  const BanAD = {
+    name: "🛑 广告拦截",
+    type: "select",
+    url: "http://www.gstatic.com/generate_204",
+    interval: 300,
+    tolerance: 20,
+    timeout: 2000,
+    lazy: true,
+    proxies: ["DIRECT", "REJECT", "PROXY"]
+  };
+
+  const OneDrive = {
+    name: "Ⓜ️ OneDrive",
+    type: "select",
+    url: "http://www.gstatic.com/generate_204",
+    interval: 300,
+    tolerance: 20,
+    timeout: 2000,
+    lazy: true,
+    proxies: ["DIRECT", "PROXY"]
+  };
+
+  const Emby = {
+    name: "🔰 Emby",
+    type: "select",
+    url: "http://www.gstatic.com/generate_204",
+    interval: 300,
+    tolerance: 20,
+    timeout: 2000,
+    lazy: true,
+    proxies: ["DIRECT", "PROXY"]
+  };
+
+  const BypassingBlack = {
+    name: "绕过大陆丨黑名单",
+    type: "url-test",
+    url: "http://www.gstatic.com/generate_204",
+    interval: 300,
+    tolerance: 20,
+    timeout: 2000,
+    lazy: true,
+    proxies: ["DIRECT"]
+  };
+
+  const BypassingWhite = {
+    name: "绕过大陆丨白名单",
+    type: "url-test",
+    url: "http://www.gstatic.com/generate_204",
+    interval: 300,
+    tolerance: 20,
+    timeout: 2000,
+    lazy: true,
+    proxies: ["PROXY"]
+  };
+
+  const PROXY = {
+    name: "PROXY",
+    type: "url-test",
+    url: "http://www.gstatic.com/generate_204",
+    interval: 300,
+    tolerance: 20,
+    timeout: 2000,
+    lazy: true,
+    proxies: ["🔰 选择节点"]
+  };
+
+  
+  // 负载均衡
+  const Balance = {
+    name: "Balance",
+    type: "load-balance",
+    url: "http://www.gstatic.com/generate_204",
+    icon: "https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Available.png",
+    interval: 300,
+    strategy: "consistent-hashing",
+    lazy: true,
+    proxies: allProxies.length > 0 ? allProxies : ["DIRECT"]
+  };
+
+  // 故障转移
+  const Fallback = {
+    name: "Fallback",
+    type: "fallback",
+    url: "http://www.gstatic.com/generate_204",
+    icon: "https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Bypass.png",
+    interval: 300,
+    timeout: 2000,
+    lazy: true,
+    proxies: allProxies.length > 0 ? allProxies : ["DIRECT"]
+  };
+
+  // 插入分组
+  const groups = params["proxy-groups"] = [];
+  groups.unshift(ProxyMode, SelectProxy, BanAD, OneDrive, Emby, BypassingBlack, BypassingWhite, PROXY, Balance, Fallback);
+
+  // 规则
+  const rules = [
+    "AND,(AND,(DST-PORT,443),(NETWORK,UDP)),(NOT,((GEOIP,CN,no-resolve))),REJECT",// quic
+    // "GEOSITE,Category-ads-all,REJECT",// 可能导致某些网站无法访问
+    "GEOSITE,Private,DIRECT",
+    "GEOSITE,Category-games@cn,DIRECT",
+    "RULE-SET,ChinaApp,DIRECT",
+    "RULE-SET,ChinaCloudServiceProvider,DIRECT",
+    "RULE-SET,ChinaDomain,DIRECT",
+    "RULE-SET,ChinaIP,DIRECT",
+    "RULE-SET,ChinaVideo,DIRECT",
+    "RULE-SET,DownloadClient,DIRECT",
+    "RULE-SET,GoogleCN,DIRECT",
+    "RULE-SET,LocalAreaNetwork,DIRECT",
+    "RULE-SET,Emby,🔰 Emby",
+    "RULE-SET,BanAD,🛑 广告拦截",
+    "RULE-SET,Netflix,PROXY",
+    "RULE-SET,OneDrive,Ⓜ️ OneDrive",
+    "RULE-SET,ProxyGWFList,PROXY",
+    "RULE-SET,ProxyVideo,PROXY",
+    "RULE-SET,Telegram,PROXY",
+    "GEOSITE,Geolocation-!cn,PROXY",
+    "GEOSITE,CN,DIRECT",
+    "GEOIP,CN,DIRECT,no-resolve",
+    "MATCH,🔯 代理模式"
+  ];
+  // 插入规则
+  params.rules = rules;
+
+
+  // 远程规则类型
+  const ruleAnchor = {
+    ip: { type: 'http', interval: 86400, behavior: 'ipcidr', format: 'text' },
+    domain: { type: 'http', interval: 86400, behavior: 'domain', format: 'text' },
+    classical: { type: 'http', interval: 86400, behavior: 'classical', format: 'text' }
+  };
+
+  // 远程规则资源
+  const ruleProviders = {
+    ChinaCloudServiceProvider: { ...ruleAnchor.classical, url: 'https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/ChinaCloudServiceProvider.yaml', path: './ruleset/ChinaCloudServiceProvider.yaml' },
+    ChinaDomain: { ...ruleAnchor.classical, url: 'https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/ChinaDomain.yaml', path: './ruleset/ChinaDomain.yaml' },
+    ChinaIP: { ...ruleAnchor.classical, url: 'https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/ChinaIP.yaml', path: './ruleset/ChinaIP.yaml' },
+    ChinaVideo: { ...ruleAnchor.classical, url: 'https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/ChinaVideo.yaml', path: './ruleset/ChinaVideo.yaml' },
+    DownloadClient: { ...ruleAnchor.classical, url: 'https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/DownloadClient.yaml', path: './ruleset/DownloadClient.yaml' },
+    GoogleCN: { ...ruleAnchor.classical, url: 'https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/GoogleCN.yaml', path: './ruleset/GoogleCN.yaml' },
+    LocalAreaNetwork: { ...ruleAnchor.classical, url: 'https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/LocalAreaNetwork.yaml', path: './ruleset/LocalAreaNetwork.yaml' },
+    Emby: { ...ruleAnchor.classical, url: 'https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/Emby.yaml', path: './ruleset/ChinaApp.yaml' },
+    Netflix: { ...ruleAnchor.classical, url: 'https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/Netflix.yaml', path: './ruleset/Netflix.yaml' },
+    OneDrive: { ...ruleAnchor.classical, url: 'https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/OneDrive.yaml', path: './ruleset/OneDrive.yaml' },
+    ProxyGWFList: { ...ruleAnchor.classical, url: 'https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/ProxyGWFList.yaml', path: './ruleset/ProxyGWFList.yaml' },
+    ProxyVideo: { ...ruleAnchor.classical, url: 'https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/ProxyVideo.yaml', path: './ruleset/ProxyVideo.yaml' },
+    Telegram: { ...ruleAnchor.classical, url: 'https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/PROXY/Telegram.yaml', path: './ruleset/Telegram.yaml' },
+    BanAD: { ...ruleAnchor.classical, url: 'https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/REJECT/BanAD.yaml', path: './ruleset/BanAD.yaml' },
+    BanEasyListChina: { ...ruleAnchor.classical, url: 'https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/REJECT/BanEasyListChina.yaml', path: './ruleset/BanEasyListChina.yaml' },
+    ChinaApp: { ...ruleAnchor.classical, url: 'https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/REJECT/ChinaApp.yaml', path: './ruleset/ChinaApp.yaml' }
+  };
+
+  // 插入远程规则
+  params["rule-providers"] = ruleProviders;
+
+  return params;
+}
+
+function getProxiesByRegex(params, regex) {
+  return params.proxies
+    .filter((e) => regex.test(e.name))
+    .map((e) => e.name);
+}
+```
+
+- 开启后刷新订阅即可生效
+
+### 额外配置（选配）
+- 使用内置的 Merge 功能可以实现类似 Mixin 配置的效果（可以不使用）
+
+```yaml
+# The `Merge` format used to enhance profile
+
+bind-address: '*'                     # 监听IP白名单，可绑定单个IPv4和v6地址，"*" 为绑定所有IP地址，仅在将allow-lan设置为true时适用
+unified-delay: false                  # 统一延迟，更换延迟计算方式，去除握手等额外延迟
+tcp-concurrent: true                  #【Meta专属】TCP 并发连接所有 IP, 将使用最快握手的 TCP
+keep-alive-interval: 15               #  TCP keep alive interval
+skip-auth-prefixes:                   # 设置跳过验证的IP段
+  - 127.0.0.1/8
+  - ::1/128
+
+geodata-mode: true                    #【Meta专属】使用geoip.dat数据库(默认：false使用mmdb数据库)
+geox-url:                             # 自定义 geodata url, 需要有代理的前提才能下载geoip和geosite
+  geoip: "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip-lite.dat"
+  geosite: "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat"
+  mmdb: "https://cdn.jsdelivr.net/gh/Hackl0us/GeoIP2-CN@release/Country.mmdb"
+geo-auto-update: true                 # 是否自动更新 geodata
+geo-update-interval: 24               # 更新间隔，单位：小时
+
+find-process-mode: strict             # 匹配所有进程（always/strict/off）
+global-client-fingerprint: chrome     # 全局 TLS 指纹，优先低于 proxy 内的 client-fingerprint
+                                      # 可选： "chrome","firefox","safari","ios","random","none" options.
+profile:
+  store-selected: true                # 存储 select 选择记录
+  store-fake-ip: true                 # 持久化 fake-ip
+
+sniffer:                              # 嗅探域名 可选配置
+  enable: true
+  parse-pure-ip: true                 # 是否使用嗅探结果作为实际访问，默认 true
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+      override-destination: true
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
+  force-domain: []                    # 强制对此域名进行嗅探
+  skip-domain: ['Mijia Cloud']        # 跳过对此域名进行嗅探
+
+tun:                                  # Tun 配置
+  enable: true
+  stack: system                       # 可选： system/gvisor/mixed
+                                      # tun模式堆栈,如无使用问题,建议使用 system 栈;
+  dns-hijack: [any:53]                # dns劫持,一般设置为 any:53 即可, 即劫持所有53端口的udp流量
+  strict-route: true                  # 将所有连接路由到tun来防止泄漏，但你的设备将无法被其他设备访问
+  auto-route: true                    # 自动设置全局路由，可以自动将全局流量路由进入tun网卡。
+  auto-detect-interface: true         # 自动识别出口网卡
+
+dns:
+  enable: true                        # 关闭将使用系统 DNS
+  ipv6: false                         # IPV6解析开关；如果为false，将返回ipv6结果为空
+  enhanced-mode: fake-ip              # 模式：redir-host或fake-ip
+  listen: :1053                       # DNS 监听地
+  fake-ip-range: 198.18.0.1/16        # fakeip 下的 IP 段设置，tun 网卡的默认 ip 也使用此值
+  fake-ip-filter: ['*', '+.lan', '+.local', '+.msftncsi.com', '+.msftconnecttest.com']
+                                      # Fake-ip 过滤，列表中的域名返回真实IP
+  proxy-server-nameserver: [https://dns.alidns.com/dns-query, https://doh.pub/dns-query]
+                                      # 代理DNS服务器，支持udp/tcp/dot/doh/doq
+  nameserver-policy:
+   "geosite:cn,private": [https://doh.pub/dns-query, https://dns.alidns.com/dns-query]
+                                      # 指定域名查询的解析服务器，可使用 geosite, 优先于 nameserver/fallback 查询
+  nameserver: [https://dns.alidns.com/dns-query, https://doh.pub/dns-query]
+                                      # 默认DNS服务器，支持udp/tcp/dot/doh/doq
+  fallback: [tls://8.8.4.4, tls://1.1.1.1]
+                                      # fallbaack DNS服务器，支持udp/tcp/dot/doh/doq
+  fallback-filter: { geoip: true, geoip-code: CN, ipcidr: [240.0.0.0/4, 0.0.0.0/32] }
+```
+
 
