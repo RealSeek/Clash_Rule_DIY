@@ -622,9 +622,9 @@ function main(params) {
 
   // 远程规则类型
   const ruleAnchor = {
-    ip: { type: 'http', interval: 86400, behavior: 'ipcidr', format: 'text' },
-    domain: { type: 'http', interval: 86400, behavior: 'domain', format: 'text' },
-    classical: { type: 'http', interval: 86400, behavior: 'classical', format: 'text' }
+    ip: { type: 'http', interval: 1800, behavior: 'ipcidr', format: 'text' },
+    domain: { type: 'http', interval: 1800, behavior: 'domain', format: 'text' },
+    classical: { type: 'http', interval: 1800, behavior: 'classical', format: 'yaml' }
   };
 
   // 远程规则资源
