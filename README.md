@@ -561,7 +561,7 @@ function main(params) {
     proxies: ["🔰 选择节点"]
   };
 
-  
+
   // 负载均衡
   const Balance = {
     name: "Balance",
@@ -586,16 +586,29 @@ function main(params) {
     proxies: allProxies.length > 0 ? allProxies : ["DIRECT"]
   };
 
+
   // 插入分组
   const groups = params["proxy-groups"] = [];
   groups.unshift(ProxyMode, SelectProxy, BanAD, OneDrive, Emby, BypassingBlack, BypassingWhite, PROXY, Balance, Fallback);
 
   // 规则
   const rules = [
+    "RULE-SET,cn,DIRECT",
     "AND,(AND,(DST-PORT,443),(NETWORK,UDP)),(NOT,((GEOIP,CN,no-resolve))),REJECT",// quic
     // "GEOSITE,Category-ads-all,REJECT",// 可能导致某些网站无法访问
     "GEOSITE,Private,DIRECT",
-    "GEOSITE,Category-games@cn,DIRECT",
+    "GEOSITE,category-scholar-!cn,PROXY",
+    "GEOSITE,microsoft@cn,DIRECT",
+    "GEOSITE,twitter,PROXY",
+    "GEOSITE,steam@cn,DIRECT",
+    "GEOSITE,apple-cn,DIRECT",
+    "GEOSITE,category-games@cn,DIRECT",
+    "GEOSITE,geolocation-!cn,PROXY",
+    "GEOSITE,cn,DIRECT",
+    "GEOIP,CN,DIRECT,no-resolve",
+    "DST-PORT,80/8080/443/8443,PROXY",
+    "GEOIP,private,DIRECT,no-resolve",
+    // 自己的规则
     "RULE-SET,ChinaApp,DIRECT",
     "RULE-SET,ChinaCloudServiceProvider,DIRECT",
     "RULE-SET,ChinaDomain,DIRECT",
@@ -611,9 +624,6 @@ function main(params) {
     "RULE-SET,ProxyGWFList,PROXY",
     "RULE-SET,ProxyVideo,PROXY",
     "RULE-SET,Telegram,PROXY",
-    "GEOSITE,Geolocation-!cn,PROXY",
-    "GEOSITE,CN,DIRECT",
-    "GEOIP,CN,DIRECT,no-resolve",
     "MATCH,🔯 代理模式"
   ];
   // 插入规则
@@ -629,6 +639,7 @@ function main(params) {
 
   // 远程规则资源
   const ruleProviders = {
+    cn: { ...ruleAnchor.classical, url: 'https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/cn_domain.yaml', path: './ruleset/CN.yaml' },
     ChinaCloudServiceProvider: { ...ruleAnchor.classical, url: 'https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/ChinaCloudServiceProvider.yaml', path: './ruleset/ChinaCloudServiceProvider.yaml' },
     ChinaDomain: { ...ruleAnchor.classical, url: 'https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/ChinaDomain.yaml', path: './ruleset/ChinaDomain.yaml' },
     ChinaIP: { ...ruleAnchor.classical, url: 'https://mirror.ghproxy.com/https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/master/DIRECT/ChinaIP.yaml', path: './ruleset/ChinaIP.yaml' },
@@ -655,8 +666,8 @@ function main(params) {
 
 function getProxiesByRegex(params, regex) {
   return params.proxies
-    .filter((e) => regex.test(e.name))
-    .map((e) => e.name);
+          .filter((e) => regex.test(e.name))
+          .map((e) => e.name);
 }
 ```
 
@@ -680,13 +691,13 @@ geodata-mode: true                    #【Meta专属】使用geoip.dat数据库(
 geox-url:                             # 自定义 geodata url, 需要有代理的前提才能下载geoip和geosite
   geoip: "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip-lite.dat"
   geosite: "https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat"
-  mmdb: "https://cdn.jsdelivr.net/gh/Hackl0us/GeoIP2-CN@release/Country.mmdb"
+  mmdb: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/country.mmdb"
 geo-auto-update: true                 # 是否自动更新 geodata
 geo-update-interval: 24               # 更新间隔，单位：小时
 
 find-process-mode: strict             # 匹配所有进程（always/strict/off）
 global-client-fingerprint: chrome     # 全局 TLS 指纹，优先低于 proxy 内的 client-fingerprint
-                                      # 可选： "chrome","firefox","safari","ios","random","none" options.
+# 可选： "chrome","firefox","safari","ios","random","none" options.
 profile:
   store-selected: true                # 存储 select 选择记录
   store-fake-ip: true                 # 持久化 fake-ip
@@ -708,7 +719,7 @@ sniffer:                              # 嗅探域名 可选配置
 tun:                                  # Tun 配置
   enable: true
   stack: system                       # 可选： system/gvisor/mixed
-                                      # tun模式堆栈,如无使用问题,建议使用 system 栈;
+  # tun模式堆栈,如无使用问题,建议使用 system 栈;
   dns-hijack: [any:53]                # dns劫持,一般设置为 any:53 即可, 即劫持所有53端口的udp流量
   strict-route: true                  # 将所有连接路由到tun来防止泄漏，但你的设备将无法被其他设备访问
   auto-route: true                    # 自动设置全局路由，可以自动将全局流量路由进入tun网卡。
@@ -721,16 +732,16 @@ dns:
   listen: :1053                       # DNS 监听地
   fake-ip-range: 198.18.0.1/16        # fakeip 下的 IP 段设置，tun 网卡的默认 ip 也使用此值
   fake-ip-filter: ['*', '+.lan', '+.local', '+.msftncsi.com', '+.msftconnecttest.com']
-                                      # Fake-ip 过滤，列表中的域名返回真实IP
+  # Fake-ip 过滤，列表中的域名返回真实IP
   proxy-server-nameserver: [https://dns.alidns.com/dns-query, https://doh.pub/dns-query]
-                                      # 代理DNS服务器，支持udp/tcp/dot/doh/doq
+  # 代理DNS服务器，支持udp/tcp/dot/doh/doq
   nameserver-policy:
-   "geosite:cn,private": [https://doh.pub/dns-query, https://dns.alidns.com/dns-query]
-                                      # 指定域名查询的解析服务器，可使用 geosite, 优先于 nameserver/fallback 查询
+    "geosite:cn,private": [https://doh.pub/dns-query, https://dns.alidns.com/dns-query]
+    # 指定域名查询的解析服务器，可使用 geosite, 优先于 nameserver/fallback 查询
   nameserver: [https://dns.alidns.com/dns-query, https://doh.pub/dns-query]
-                                      # 默认DNS服务器，支持udp/tcp/dot/doh/doq
+  # 默认DNS服务器，支持udp/tcp/dot/doh/doq
   fallback: [tls://8.8.4.4, tls://1.1.1.1]
-                                      # fallbaack DNS服务器，支持udp/tcp/dot/doh/doq
+  # fallbaack DNS服务器，支持udp/tcp/dot/doh/doq
   fallback-filter: { geoip: true, geoip-code: CN, ipcidr: [240.0.0.0/4, 0.0.0.0/32] }
 ```
 
