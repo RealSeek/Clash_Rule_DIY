@@ -4,8 +4,6 @@ payload:
   # CN域名直连(中国|公司|网络)
   - DOMAIN-SUFFIX,cn
   - DOMAIN-SUFFIX,copilot.aistore.sale
-  - DOMAIN-SUFFIX,githubusercontent.com
-  - DOMAIN-SUFFIX,githubcopilot.com
   - DOMAIN-SUFFIX,xn--fiqs8s
   - DOMAIN-SUFFIX,xn--55qx5d
   - DOMAIN-SUFFIX,xn--io0a7i
