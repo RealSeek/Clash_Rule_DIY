@@ -4,6 +4,7 @@ payload:
   - PROCESS-NAME,Discord.exe
   - PROCESS-NAME,prismlauncher.exe
   - DOMAIN-SUFFIX,obsproject.com
+  - DOMAIN-SUFFIX,i.hmoe.link
   - DOMAIN-SUFFIX,themeselection.com
   - DOMAIN-SUFFIX,services.googleapi.cn
   - DOMAIN-SUFFIX,xn--ngstr-lra8j.com
