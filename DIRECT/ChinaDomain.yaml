@@ -8,6 +8,9 @@ payload:
   - DOMAIN-SUFFIX,xn--55qx5d
   - DOMAIN-SUFFIX,xn--io0a7i
 
+  # 自定义
+  - DOMAIN-SUFFIX,oray.com
+  - DOMAIN-SUFFIX,oray.net
   # 中国国内常见域名关键词直连
   - DOMAIN-KEYWORD,-cn
   - DOMAIN-KEYWORD,360buy
