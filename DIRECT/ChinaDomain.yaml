@@ -122,8 +122,67 @@ payload:
 
   # Blizzard
   - DOMAIN-SUFFIX,battle.net
-  - DOMAIN-SUFFIX,battlenet.com
-  - DOMAIN-SUFFIX,blizzard.com
+    - DOMAIN-SUFFIX,battlenet.com.cn
+    - DOMAIN-SUFFIX,blizzard.com
+    - DOMAIN-SUFFIX,battlenet.com
+    - DOMAIN-SUFFIX,blizzard.cn
+    - DOMAIN-SUFFIX,blizzard.nefficient.co.kr
+    - DOMAIN-SUFFIX,blizzardgames.cn
+    - DOMAIN-SUFFIX,blizzardgearstore.com
+    - DOMAIN-SUFFIX,blizzcon-a.akamaihd.net
+    - DOMAIN-SUFFIX,blz-contentstack.com
+    - DOMAIN-SUFFIX,blz.nosdn.127.net
+    - DOMAIN-SUFFIX,blzddist1-a.akamaihd.net
+    - DOMAIN-SUFFIX,blzddistkr1-a.akamaihd.net
+    - DOMAIN-SUFFIX,blzmedia-a.akamaihd.net
+    - DOMAIN-SUFFIX,blznav.akamaized.net
+    - DOMAIN-SUFFIX,blzstatic.cn
+    - DOMAIN-SUFFIX,bnet.163.com
+    - DOMAIN-SUFFIX,bnetcmsus-a.akamaihd.net
+    - DOMAIN-SUFFIX,bnetproduct-a.akamaihd.net
+    - DOMAIN-SUFFIX,bnetshopus.akamaized.net
+    - DOMAIN-SUFFIX,cdp.cloud.unity3d.com
+    - DOMAIN-SUFFIX,di.res.netease.com
+    - DOMAIN-SUFFIX,diablo3.com
+    - DOMAIN-SUFFIX,diablo3.nosdn.127.net
+    - DOMAIN-SUFFIX,diabloimmortal.com
+    - DOMAIN-SUFFIX,firesidegatherings.com
+    - DOMAIN-SUFFIX,hearthstone.nosdn.127.net
+    - DOMAIN-SUFFIX,heroes.nos.netease.com
+    - DOMAIN-SUFFIX,heroesofthestorm.com
+    - DOMAIN-SUFFIX,overwatch.nosdn.127.net
+    - DOMAIN-SUFFIX,playhearthstone.com
+    - DOMAIN-SUFFIX,playoverwatch.com
+    - DOMAIN-SUFFIX,playwarcraft3.com
+    - DOMAIN-SUFFIX,sc2.nosdn.127.net
+    - DOMAIN-SUFFIX,starcraft.com
+    - DOMAIN-SUFFIX,starcraft2.com
+    - DOMAIN-SUFFIX,worldofwarcraft.com
+    - DOMAIN-SUFFIX,wow.nosdn.127.net
+    - DOMAIN-SUFFIX,wowchina.com
+    - IP-CIDR,182.162.135.1/32
+    - IP-CIDR,210.242.235.6/32
+    - IP-CIDR,54.94.196.47/32
+    - IP-CIDR,182.162.132.1/32
+    - IP-CIDR,103.4.114.233/32
+    - IP-CIDR,182.162.116.1/32
+    - IP-CIDR,202.9.67.59/32
+    - IP-CIDR,203.69.111.4/32
+    - IP-CIDR,24.105.30.129/32
+    - IP-CIDR,54.207.104.145/32
+    - IP-CIDR,203.66.81.98/32
+    - IP-CIDR,211.234.110.1/32
+    - IP-CIDR,54.207.107.12/32
+    - IP-CIDR,202.9.67.254/32
+    - IP-CIDR,222.231.22.1/32
+    - IP-CIDR,103.4.115.248/32
+    - IP-CIDR,137.221.105.2/32
+    - IP-CIDR,185.60.112.157/32
+    - IP-CIDR,185.60.112.158/32
+    - IP-CIDR,185.60.114.159/32
+    - IP-CIDR,210.71.148.11/32
+    - IP-CIDR,211.115.104.1/32
+    - IP-CIDR,24.105.62.129/32
 
   # ByteDance
   - DOMAIN-SUFFIX,amemv.com
@@ -324,15 +383,31 @@ payload:
   - DOMAIN-SUFFIX,sonyentertainmentnetwork.com
 
   # SteamCN
-  - DOMAIN,steamcdn-a.akamaihd.net
-  - DOMAIN-SUFFIX,steamserver.net
-  - DOMAIN-SUFFIX,cm.steampowered.com
-  - DOMAIN-SUFFIX,steamcontent.com
-  - DOMAIN-SUFFIX,steamusercontent.com
-  - DOMAIN-SUFFIX,steamchina.com
-  - DOMAIN,csgo.wmsj.cn
-  - DOMAIN,dota2.wmsj.cn
-  - DOMAIN,wmsjsteam.com
+  - DOMAIN-SUFFIX,cm.steampowered.com,DIRECT
+  - DOMAIN-SUFFIX,steamserver.net,DIRECT
+  - IP-CIDR,45.121.184.0/24,DIRECT
+  - IP-CIDR,103.10.124.0/23,DIRECT
+  - IP-CIDR,103.28.54.0/24,DIRECT
+  - IP-CIDR,146.66.152.0/24,DIRECT
+  - IP-CIDR,146.66.155.0/24,DIRECT
+  - IP-CIDR,153.254.86.0/24,DIRECT
+  - IP-CIDR,155.133.224.0/22,DIRECT
+  - IP-CIDR,155.133.230.0/24,DIRECT
+  - IP-CIDR,155.133.232.0/23,DIRECT
+  - IP-CIDR,155.133.234.0/24,DIRECT
+  - IP-CIDR,155.133.236.0/22,DIRECT
+  - IP-CIDR,155.133.240.0/23,DIRECT
+  - IP-CIDR,155.133.244.0/23,DIRECT
+  - IP-CIDR,155.133.246.0/24,DIRECT
+  - IP-CIDR,155.133.248.0/21,DIRECT
+  - IP-CIDR,162.254.192.0/21,DIRECT
+  - IP-CIDR,185.25.182.0/23,DIRECT
+  - IP-CIDR,190.217.32.0/22,DIRECT
+  - IP-CIDR,192.69.96.0/22,DIRECT
+  - IP-CIDR,205.196.6.0/24,DIRECT
+  - IP-CIDR,208.64.200.0/22,DIRECT
+  - IP-CIDR,208.78.164.0/22,DIRECT
+  - IP-CIDR,205.185.194.0/24,DIRECT
 
   # Steam国内CDN
   # 华为云
