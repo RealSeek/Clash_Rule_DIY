@@ -368,10 +368,6 @@ payload:
   - DOMAIN,ssl-lvlt.cdn.ea.com
   - DOMAIN,origin-a.akamaihd.net
 
-  # 战网中国
-  - DOMAIN,client05.pdl.wow.battlenet.com.cn
-  - DOMAIN,client02.pdl.wow.battlenet.com.cn
-
   # Epic中国地区下载
   - DOMAIN,epicgames-download1-1251447533.file.myqcloud.com
 
