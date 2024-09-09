@@ -2,6 +2,7 @@ payload:
   # 代理列表
   # MyList && Other
   - PROCESS-NAME,Discord.exe
+  - DOMAIN-SUFFIX,claude.ai
   - PROCESS-NAME,prismlauncher.exe
   - DOMAIN-SUFFIX,obsproject.com
   - DOMAIN-SUFFIX,i.hmoe.link
