@@ -25,8 +25,6 @@
 >
 > 理论上不需要重复赘述过多的内容，根据文本内的注释自行理解即可
 ```js
-// Define the `main` function
-
 const proxyName = "代理模式";
 
 function main(params) {
@@ -42,37 +40,42 @@ function main(params) {
 }
 
 // 覆写Basic Options
-function overwriteBasicOptions (params) {
+function overwriteBasicOptions(params) {
     const otherOptions = {
         "mixed-port": 7890,
         "allow-lan": true,
         "unified-delay": true,
         "tcp-concurrent": true,
-        "find-process-mode": "strict",
+        "geodata-mode": true,
+        "fakeind-process-mode": "strict",
         "global-client-fingerprint": "chrome",
         profile: {
             "store-selected": true,
             "store-fake-ip": true,
         },
-        ipv6: false,
+        ipv6: true,
         mode: "rule",
         udp: true,
+        "skip-auth-prefixes": ["127.0.0.1/32"],
+        "lan-allowed-ips": ["0.0.0.0/0", "::/0"],
     };
-    Object.keys (otherOptions).forEach ((key) => {
-        params [key] = otherOptions [key];
+    Object.keys(otherOptions).forEach((key) => {
+        params[key] = otherOptions[key];
     });
 }
 
 // 覆写hosts
 function overwriteHosts(params) {
     const hosts = {
-        "dns.alidns.com": [
-            "223.5.5.5",
-            "223.6.6.6",
-            "2400:3200:baba::1",
-            "2400:3200::1",
-        ],
-        "doh.pub": ["120.53.53.53", "1.12.12.12"],
+        "time.facebook.com": "17.253.84.125",
+        "time.android.com": "17.253.84.125",
+        "'*.mihomo.dev'": "127.0.0.1",
+        "'.dev'": "127.0.0.1",
+        "'alpha.mihomo.dev'": "::1",
+
+        "test.com": ["1.1.1.1", "2.2.2.2"],
+
+        "home.lan": "lan",
     };
     params.hosts = hosts;
 }
@@ -86,7 +89,7 @@ function overwriteSniffer(params) {
 
         sniff: {
             HTTP: {
-                ports: ["80", "8080-8880"],
+                ports: ["80", "8080-8880", "443"],
                 "override-destination": false,
             },
 
@@ -342,9 +345,7 @@ function overwriteProxyGroups(params) {
             proxies: [
                 ...countryRegions
                     .filter((region) => availableCountryCodes.has(region.name))
-                    .flatMap((region) => [
-                        `${region.name} - 手动选择`,
-                    ]),
+                    .flatMap((region) => [`${region.name} - 手动选择`]),
             ],
         },
         {
@@ -599,7 +600,9 @@ function overwriteRules(params) {
          * 这部分域名一般会被解析到局域网 IP、需要走内网 DNS 解析、需要直连访问
          */
         "RULE-SET,Lan_ip,DIRECT",
-
+        // 使用 GEOIP 和 GEOSITE 兜底直连规则
+        "GEOIP,CN,DIRECT",
+        "GEOSITE,cn,DIRECT",
         // 兜底
         "MATCH,漏网之鱼",
     ];
@@ -933,12 +936,14 @@ function getProxiesByRegex(params, regex) {
 function overwriteDns(params) {
     const dnsOptions = {
         enable: true,
+        "cache-algorithm": "arc",
         "enhanced-mode": "fake-ip", // fake-ip 或 redir-host
         "fake-ip-range": "198.18.0.1/16",
         "prefer-h3": true, // 如果 DNS 服务器支持 DoH3 会优先使用 h3
         "use-hosts": false,
         "use-system-hosts": false,
-        ipv6: false,
+        ipv6: true,
+        "ipv6-timeout": 300,
 
         "fake-ip-filter": [
             "+.+m2m",
@@ -1130,8 +1135,10 @@ function overwriteDns(params) {
 
         // 默认的域名解析服务器
         nameserver: [
-            "https://223.5.5.5/dns-query", // 阿里云
-            "https://120.53.53.53/dns-query", // DNSPod
+            "tls://223.5.5.5",
+            "tls://119.29.29.29",
+            "https://dns.alidns.com/dns-query",
+            "https://doh.pub/dns-query",
         ],
 
         // 代理节点域名解析服务器，仅用于解析代理节点的域名，如果不填则遵循nameserver-policy、nameserver和fallback的配置
@@ -1139,6 +1146,28 @@ function overwriteDns(params) {
             "https://223.5.5.5/dns-query", // 阿里云
             "https://120.53.53.53/dns-query", // DNSPod
         ],
+
+        fallback: [
+            "8.8.8.8",
+            "8.8.4.4",
+            "tls://1.1.1.1",
+            "tls://8.8.8.8",
+            "https://cloudflare-dns.com/dns-query",
+            "https://dns.google/dns-query",
+        ],
+
+        "nameserver-policy": {
+            " geosite:cn": [
+                "https://dns.pub/dns-query",
+                "https://dns.alidns.com/dns-query",
+            ],
+        },
+
+        "fallback-filter": {
+            geoip: true,
+            "geoip-code": "CN",
+            ipcidr: ["240.0.0.0/4"],
+        },
 
         // 指定域名查询的解析服务器，可使用 geosite, 优先于 nameserver/fallback 查询
         "nameserver-policy": {
@@ -1399,6 +1428,8 @@ function overwriteDns(params) {
             "*._tcp": ["system://", "system", "dhcp://system"],
             "*.bogon": ["system://", "system", "dhcp://system"],
             "*._msdcs": ["system://", "system", "dhcp://system"],
+            // 兜底查询
+            "geosite:cn": "https://dns.pub/dns-query",
         },
     };
 
@@ -1415,7 +1446,7 @@ function getManualProxiesByRegex(params, regex) {
 }
 
 // 覆写Tunnel
-function overwriteTunnel (params) {
+function overwriteTunnel(params) {
     const tunnelOptions = {
         enable: true,
         stack: "system",
@@ -1428,4 +1459,5 @@ function overwriteTunnel (params) {
     };
     params.tun = { ...tunnelOptions };
 }
+
 ```
