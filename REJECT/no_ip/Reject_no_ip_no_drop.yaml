@@ -1,5 +1,4 @@
 payload:
-  - DOMAIN-SUFFIX,p2p.huya.com
   - # 通用 CDN 域名
   - DOMAIN-SUFFIX,bsccdn.net
   - DOMAIN-SUFFIX,gjfzpt.cn
