@@ -31,3 +31,4 @@ payload:
   - DOMAIN,alkalimakersuite-pa.clients6.google.com
   - DOMAIN,gateway.ai.cloudflare.com
   - DOMAIN-KEYWORD,openai
+  - DOMAIN-SUFFIX,api.jetbrains.ai
