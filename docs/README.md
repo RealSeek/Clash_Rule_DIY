@@ -438,6 +438,7 @@ function overwriteProxyGroups(params) {
                         `${region.name} - 自动选择`,
                         `${region.name} - 手动选择`,
                     ]),
+                "DIRECT",
             ],
             // "include-all": true,
             icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/microsoft.svg",
