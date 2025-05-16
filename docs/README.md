@@ -331,11 +331,13 @@ function overwriteProxyGroups(params) {
             name: "手动选择",
             type: "select",
             icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/link.svg",
-            "exclude-filter": "自动选择",
             proxies: [
                 ...countryRegions
                     .filter((region) => availableCountryCodes.has(region.name))
-                    .flatMap((region) => [`${region.name} - 手动选择`]),
+                    .flatMap((region) => [
+                        `${region.name} - 自动选择`,
+                        `${region.name} - 手动选择`,
+                    ]),
             ],
         },
         {
@@ -1207,27 +1209,49 @@ proxy-groups:
     type: select
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/link.svg
     proxies:
+      - 🇭🇰 香港 - 自动选择
       - 🇭🇰 香港 - 手动选择
+      - 🇹🇼 台湾 - 自动选择
       - 🇹🇼 台湾 - 手动选择
+      - 🇸🇬 新加坡 - 自动选择
       - 🇸🇬 新加坡 - 手动选择
+      - 🇦🇷 阿根廷 - 自动选择
       - 🇦🇷 阿根廷 - 手动选择
+      - 🇯🇵 日本 - 自动选择
       - 🇯🇵 日本 - 手动选择
+      - 🇺🇸 美国 - 自动选择
       - 🇺🇸 美国 - 手动选择
+      - 🇩🇪 德国 - 自动选择
       - 🇩🇪 德国 - 手动选择
+      - 🇰🇷 韩国 - 自动选择
       - 🇰🇷 韩国 - 手动选择
+      - 🇬🇧 英国 - 自动选择
       - 🇬🇧 英国 - 手动选择
+      - 🇨🇦 加拿大 - 自动选择
       - 🇨🇦 加拿大 - 手动选择
+      - 🇦🇺 澳大利亚 - 自动选择
       - 🇦🇺 澳大利亚 - 手动选择
+      - 🇪🇸 西班牙 - 自动选择
       - 🇪🇸 西班牙 - 手动选择
+      - 🇳🇱 荷兰 - 自动选择
       - 🇳🇱 荷兰 - 手动选择
+      - 🇹🇷 土耳其 - 自动选择
       - 🇹🇷 土耳其 - 手动选择
+      - 🇷🇺 俄罗斯 - 自动选择
       - 🇷🇺 俄罗斯 - 手动选择
+      - 🇮🇳 印度 - 自动选择
       - 🇮🇳 印度 - 手动选择
+      - 🇧🇷 巴西 - 自动选择
       - 🇧🇷 巴西 - 手动选择
+      - 🇮🇹 意大利 - 自动选择
       - 🇮🇹 意大利 - 手动选择
+      - 🇨🇭 瑞士 - 自动选择
       - 🇨🇭 瑞士 - 手动选择
+      - 🇸🇪 瑞典 - 自动选择
       - 🇸🇪 瑞典 - 手动选择
+      - 🇳🇴 挪威 - 自动选择
       - 🇳🇴 挪威 - 手动选择
+      - 其他 - 自动选择
       - 其他 - 手动选择
       
   - name: 负载均衡(散列)
