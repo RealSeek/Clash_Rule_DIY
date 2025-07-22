@@ -1602,7 +1602,7 @@ proxy-groups:
       
   - name: Steam地区
     type: select
-    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/google.svg
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/steam.svg
     proxies:
       - DIRECT
       - 代理模式
