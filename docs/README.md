@@ -478,6 +478,22 @@ function overwriteProxyGroups(params) {
             icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/steam.svg",
         },
         {
+            name: "Emby",
+            type: "select",
+            proxies: [
+                "DIRECT",
+                proxyName,
+                ...countryRegions
+                    .filter((region) => availableCountryCodes.has(region.name))
+                    .flatMap((region) => [
+                        `${region.name} - 自动选择`,
+                        `${region.name} - 手动选择`,
+                    ]),
+            ],
+            // "include-all": true,
+            icon: "https://cdnjs.cloudflare.com/ajax/libs/simple-icons/2.19.0/emby.svg",
+        },
+        {
             name: "漏网之鱼",
             type: "select",
             proxies: ["DIRECT", proxyName],
@@ -541,6 +557,7 @@ function overwriteRules(params) {
          * PBS、Spotify、TaiwanGood、Tiktok Intl、Twitch、ViuTV、ShowTime、iQiYi Global、Himalaya Podcast、Overcast、WeTV
          */
         "RULE-SET,Stream_no_ip,流媒体",
+        "RULE-SET,Emby_no_ip,Emby",
 
         // tg 消息
         /**
@@ -940,6 +957,13 @@ function overwriteRules(params) {
             ...ruleAnchor.classical,
             url: "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/no_ip/Stream_no_ip.yaml",
             path: "./ruleset/RealSeek/Clash_Rule_DIY/PROXY/no_ip/Stream_no_ip.yaml",
+        },
+
+        // 流媒体域名
+        Emby_no_ip: {
+            ...ruleAnchor.classical,
+            url: "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/no_ip/Emby_no_ip.yaml",
+            path: "./ruleset/RealSeek/Clash_Rule_DIY/PROXY/no_ip/Emby_no_ip.yaml",
         },
 
         // telegram 域名
@@ -1545,7 +1569,61 @@ proxy-groups:
       - 其他 - 自动选择
       - 其他 - 手动选择
       - DIRECT
-      
+
+  - name: Emby
+    type: select
+    icon: https://cdnjs.cloudflare.com/ajax/libs/simple-icons/2.19.0/emby.svg
+    proxies:
+      - 代理模式
+      - 延迟优选
+      - 故障转移
+      - 手动选择
+      - 🇭🇰 香港 - 自动选择
+      - 🇭🇰 香港 - 手动选择
+      - 🇹🇼 台湾 - 自动选择
+      - 🇹🇼 台湾 - 手动选择
+      - 🇸🇬 新加坡 - 自动选择
+      - 🇸🇬 新加坡 - 手动选择
+      - 🇦🇷 阿根廷 - 自动选择
+      - 🇦🇷 阿根廷 - 手动选择
+      - 🇯🇵 日本 - 自动选择
+      - 🇯🇵 日本 - 手动选择
+      - 🇺🇸 美国 - 自动选择
+      - 🇺🇸 美国 - 手动选择
+      - 🇩🇪 德国 - 自动选择
+      - 🇩🇪 德国 - 手动选择
+      - 🇰🇷 韩国 - 自动选择
+      - 🇰🇷 韩国 - 手动选择
+      - 🇬🇧 英国 - 自动选择
+      - 🇬🇧 英国 - 手动选择
+      - 🇨🇦 加拿大 - 自动选择
+      - 🇨🇦 加拿大 - 手动选择
+      - 🇦🇺 澳大利亚 - 自动选择
+      - 🇦🇺 澳大利亚 - 手动选择
+      - 🇪🇸 西班牙 - 自动选择
+      - 🇪🇸 西班牙 - 手动选择
+      - 🇳🇱 荷兰 - 自动选择
+      - 🇳🇱 荷兰 - 手动选择
+      - 🇹🇷 土耳其 - 自动选择
+      - 🇹🇷 土耳其 - 手动选择
+      - 🇷🇺 俄罗斯 - 自动选择
+      - 🇷🇺 俄罗斯 - 手动选择
+      - 🇮🇳 印度 - 自动选择
+      - 🇮🇳 印度 - 手动选择
+      - 🇧🇷 巴西 - 自动选择
+      - 🇧🇷 巴西 - 手动选择
+      - 🇮🇹 意大利 - 自动选择
+      - 🇮🇹 意大利 - 手动选择
+      - 🇨🇭 瑞士 - 自动选择
+      - 🇨🇭 瑞士 - 手动选择
+      - 🇸🇪 瑞典 - 自动选择
+      - 🇸🇪 瑞典 - 手动选择
+      - 🇳🇴 挪威 - 自动选择
+      - 🇳🇴 挪威 - 手动选择
+      - 其他 - 自动选择
+      - 其他 - 手动选择
+      - DIRECT
+  
   - name: GoogleFCM
     type: select
     icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/google.svg
@@ -2385,6 +2463,13 @@ rule-providers:
     format: yaml
     url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/no_ip/Stream_no_ip.yaml
     path: ./ruleset/RealSeek/Clash_Rule_DIY/PROXY/no_ip/Stream_no_ip.yaml
+  Emby_no_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/no_ip/Emby_no_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/PROXY/no_ip/Emby_no_ip.yaml
   Telegram_no_ip:
     type: http
     interval: 1800
@@ -2425,6 +2510,7 @@ rules:
   - RULE-SET,Reject_ip,REJECT
   - RULE-SET,Telegram_ip,电报消息
   - RULE-SET,Stream_ip,流媒体
+  - RULE-SET,Emby_no_ip,Emby
   - RULE-SET,Domestic_ip,DIRECT
   - RULE-SET,China_ip,DIRECT
   - RULE-SET,Lan_ip,DIRECT
