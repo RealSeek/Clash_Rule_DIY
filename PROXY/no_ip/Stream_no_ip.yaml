@@ -192,7 +192,6 @@ payload:
   - DOMAIN-SUFFIX,tv.naver.com
   - DOMAIN-SUFFIX,atv-ps.amazon.com
   - DOMAIN-SUFFIX,fls-na.amazon.com
-  - DOMAIN-SUFFIX,313445.xyz
   - DOMAIN,hbounify-prod.evergent.com
   - DOMAIN,s3-ap-southeast-1.amazonaws.com
   - DOMAIN,hbolb.onwardsmg.com

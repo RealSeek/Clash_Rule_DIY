@@ -1,0 +1,5 @@
+# 我自己遇到的 Emby 服务
+payload:
+  - DOMAIN-SUFFIX,313445.xyz
+  - DOMAIN-SUFFIX,cn2gias.uk
+  - DOMAIN-SUFFIX,emby.bangumi.ca
