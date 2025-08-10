@@ -10,3 +10,4 @@ payload:
   - DOMAIN-KEYWORD,port.nomao.top
   - DOMAIN-KEYWORD,nodeseek.com
   - DOMAIN-KEYWORD,linux.do
+  - DOMAIN-SUFFIX,maven.minecraftforge.net
