@@ -12,3 +12,4 @@ payload:
   - DOMAIN-KEYWORD,linux.do
   - DOMAIN-SUFFIX,maven.minecraftforge.net
   - DOMAIN-REGEX,^nikke-[a-z]{2}\.com$
+  - DOMAIN-KEYWORD,tokenpocket.pro
