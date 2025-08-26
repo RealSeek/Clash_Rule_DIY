@@ -13,3 +13,4 @@ payload:
   - DOMAIN-SUFFIX,maven.minecraftforge.net
   - DOMAIN-REGEX,^nikke-[a-z]{2}\.com$
   - DOMAIN-KEYWORD,tokenpocket.pro
+  - DOMAIN-KEYWORD,8comic.com
