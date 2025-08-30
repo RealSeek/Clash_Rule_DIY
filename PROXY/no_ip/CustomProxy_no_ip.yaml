@@ -14,3 +14,4 @@ payload:
   - DOMAIN-REGEX,^nikke-[a-z]{2}\.com$
   - DOMAIN-KEYWORD,tokenpocket.pro
   - DOMAIN-KEYWORD,8comic.com
+  - DOMAIN-KEYWORD,itch.io
