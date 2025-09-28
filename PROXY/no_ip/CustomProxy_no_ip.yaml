@@ -16,3 +16,7 @@ payload:
   - DOMAIN-KEYWORD,8comic.com
   - DOMAIN-KEYWORD,itch.io
   - DOMAIN-KEYWORD,forgecdn.net
+  - DOMAIN-SUFFIX,api.curseforge.com
+  - DOMAIN-SUFFIX,libraries.minecraft.net
+  - DOMAIN-SUFFIX,api.modrinth.com
+  - DOMAIN-SUFFIX,meta.prismlauncher.org
