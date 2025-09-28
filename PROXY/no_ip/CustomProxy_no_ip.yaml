@@ -20,3 +20,4 @@ payload:
   - DOMAIN-SUFFIX,libraries.minecraft.net
   - DOMAIN-SUFFIX,api.modrinth.com
   - DOMAIN-SUFFIX,meta.prismlauncher.org
+  - DOMAIN-SUFFIX,resources.download.minecraft.net
