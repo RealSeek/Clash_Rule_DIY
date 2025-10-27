@@ -886,7 +886,7 @@ function overwriteRules(params) {
         // Bilibili IP
         Bilibili: {
             ...ruleAnchor.classical,
-            url: "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/ip/Bilibili_no_ip.yaml",
+            url: "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/no_ip/Bilibili_no_ip.yaml",
             path: "./ruleset/RealSeek/Clash_Rule_DIY/PROXY/ip/Bilibili_no_ip.yaml",
         },
         
