@@ -3,4 +3,15 @@ payload:
   - DOMAIN-SUFFIX,app.bilibili.com
   - DOMAIN-SUFFIX,akamaized.net
   - DOMAIN-SUFFIX,bilibili.tv
+  - DOMAIN,www.bilibili.com
+  - DOMAIN,cm.bilibili.com
+  - DOMAIN,api.bilibili.com
+  - DOMAIN,api.vc.bilibili.com
+  - DOMAIN,api.live.bilibili.com
+  - DOMAIN,passport.bilibili.com
+  - DOMAIN,data.bilibili.com
+  - DOMAIN,broadcast.chat.bilibili.com
+  - DOMAIN,upos-hz-mirrorakam.akamaized.net
+  - DOMAIN,bangumi.bilibili.com
+  - DOMAIN,manga.bilibili.com
   - PROCESS-NAME,com.bstar.intl
