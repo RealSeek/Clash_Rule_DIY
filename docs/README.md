@@ -399,6 +399,22 @@ function overwriteProxyGroups(params) {
             icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/chatgpt.svg",
         },
         {
+            name: "Bilibili港澳台",
+            type: "select",
+            proxies: [
+                "DIRECT",
+                proxyName,
+                ...countryRegions
+                    .filter((region) => availableCountryCodes.has(region.name))
+                    .flatMap((region) => [
+                        `${region.name} - 自动选择`,
+                        `${region.name} - 手动选择`,
+                    ]),
+            ],
+            // "include-all": true,
+            icon: "https://www.bilibili.com/favicon.ico",
+        },
+        {
             name: "流媒体",
             type: "select",
             proxies: [
@@ -556,6 +572,7 @@ function overwriteRules(params) {
          * JOOX、Jwplayer、KKBOX、KKTV、Line TV、Naver TV、myTV Super、Netflix、niconico、Now E、Paramount+、PBS、Peacock、Pandora、PBS、Pornhub、SoundCloud、
          * PBS、Spotify、TaiwanGood、Tiktok Intl、Twitch、ViuTV、ShowTime、iQiYi Global、Himalaya Podcast、Overcast、WeTV
          */
+        "RULE-SET,Bilibili,Bilibili港澳台",
         "RULE-SET,Stream_no_ip,流媒体",
         "RULE-SET,Emby_no_ip,Emby",
 
@@ -866,6 +883,13 @@ function overwriteRules(params) {
 
         // ##################################################################################################################
 
+        // Bilibili IP
+        Bilibili: {
+            ...ruleAnchor.classical,
+            url: "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/ip/Bilibili_no_ip.yaml",
+            path: "./ruleset/RealSeek/Clash_Rule_DIY/PROXY/ip/Bilibili_no_ip.yaml",
+        },
+        
         // 流媒体 IP
         Stream_ip: {
             ...ruleAnchor.classical,

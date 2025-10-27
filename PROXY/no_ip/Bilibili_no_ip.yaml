@@ -1,0 +1,6 @@
+payload:
+  - DOMAIN-SUFFIX,api.bilibili.com
+  - DOMAIN-SUFFIX,app.bilibili.com
+  - DOMAIN-SUFFIX,akamaized.net
+  - DOMAIN-SUFFIX,bilibili.tv
+  - PROCESS-NAME,com.bstar.intl
