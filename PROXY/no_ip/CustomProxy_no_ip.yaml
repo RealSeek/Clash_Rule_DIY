@@ -11,7 +11,6 @@ payload:
   - DOMAIN-KEYWORD,nodeseek.com
   - DOMAIN-KEYWORD,linux.do
   - DOMAIN-SUFFIX,maven.minecraftforge.net
-  - DOMAIN-REGEX,^nikke-[a-z]{2}\.com$
   - DOMAIN-KEYWORD,tokenpocket.pro
   - DOMAIN-KEYWORD,8comic.com
   - DOMAIN-KEYWORD,itch.io
@@ -22,3 +21,5 @@ payload:
   - DOMAIN-SUFFIX,meta.prismlauncher.org
   - DOMAIN-SUFFIX,resources.download.minecraft.net
   - DOMAIN-KEYWORD,pingme.tel
+  - DOMAIN-KEYWORD,nikke-kr.com
+  - DOMAIN-KEYWORD,intlgame.com
