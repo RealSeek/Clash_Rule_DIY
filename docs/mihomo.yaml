@@ -1,0 +1,1449 @@
+#------------------------------------------------------------------------------
+proxies:
+proxy-providers:
+  # 在下方的url填入订阅链接即可
+  myclash:
+    type: http
+    url: "xxx"
+    path: ./MyClashProvider.yaml
+    interval: 21600
+    exclude-filter: 自动|故障|流量|官网|套餐|机场|订阅|年|月|失联|频道|Traffic|Expire
+    health-check:
+      enable: true
+      url: https://www.gstatic.com/generate_204
+      interval: 900
+      timeout: 3000
+      lazy: true
+      expected-status: 204
+#------------------------------------------------------------------------------
+
+# 注意！！！！ 如果无特殊需求，只需要填入订阅链接即可
+
+#开始编辑配置时，心中牢记缩进和冒号引号，任何不懂，查看官方wiki：https://wiki.metacubex.one
+#修改配置后如果内核不能启动，请查看日志，日志中会告诉你配置第几行写错
+mixed-port: 7890
+mode: rule
+allow-lan: true
+unified-delay: true
+tcp-concurrent: true
+find-process-mode: strict
+log-level: info
+ipv6: true
+#关掉后可能在部分手机上出现dns泄露，volte不可用等问题，目前IPv6可以正常使用，不建议关闭
+external-controller: 0.0.0.0:9090
+external-ui: WebUI
+external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip"
+
+
+geodata-mode: true
+geox-url:
+  geoip: "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat"
+  geosite: "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat"
+  mmdb: "https://raw.githubusercontent.com/Loyalsoldier/geoip/release/Country.mmdb"
+  asn: "https://github.com/xishang0128/geoip/releases/download/latest/GeoLite2-ASN.mmdb"
+geo-auto-update: true
+geo-update-interval: 48
+
+profile:
+  store-selected: true
+  store-fake-ip: true
+
+#嗅探器关掉本机可能出现上网异常，连接本机热点的设备可能无法上网
+sniffer:
+  enable: true
+  parse-pure-ip: true
+  force-dns-mapping: true
+  override-destination: false
+  sniff:
+    HTTP:
+      ports:
+        - 80
+        - 443
+      override-destination: false
+    TLS:
+      ports:
+        - 443
+  skip-domain:
+    - +.push.apple.com
+  skip-dst-address:
+    - 91.105.192.0/23
+    - 91.108.4.0/22
+    - 91.108.8.0/21
+    - 91.108.16.0/21
+    - 91.108.56.0/22
+    - 95.161.64.0/20
+    - 149.154.160.0/20
+    - 185.76.151.0/24
+    - 2001:67c:4e8::/48
+    - 2001:b28:f23c::/47
+    - 2001:b28:f23f::/48
+    - 2a0a:f280:203::/48
+
+#tun必须开启，否则将无法代理流量，如网页打开慢，电报卡连接中，
+#可以尝试更换堆栈，同一堆栈在不同设备上体验不同，自行尝试。
+#更换为非gvisor堆栈可能导致IPv6出现问题
+tun:
+  enable: true
+  device: Meta
+  stack: gvisor
+  auto-route: true
+  auto-redirect: false
+  auto-detect-interface: true
+  dns-hijack:
+    - any:53
+  route-exclude-address: []
+  mtu: 1500
+#exclude-package内填写的包名，网络流量不经过tun，相当于黑名单
+#默认添加MIUI镜像服务以及三星电话服务，避免系统功能不可用
+#如果想仅代理指定应用，请将exclude-package改为include-package
+#然后填上想要走代理的包名，不要忘了英文冒号和缩进。
+#目前分流规则已足够完善，白名单可能存在问题，不建议使用
+
+dns:
+  enable: true
+  listen: 0.0.0.0:1053
+  ipv6: false
+  ipv6-timeout: 300
+  respect-rules: false
+  enhanced-mode: fake-ip
+  use-hosts: false
+  use-system-hosts: false
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-filter:
+    - "*"
+    - +.lan
+    - +.local
+    - time.*.com
+    - ntp.*.com
+    - +.market.xiaomi.com
+    - localhost.ptlogin2.qq.com
+    - localhost.sec.qq.com
+    - +.qq.com
+    - +.tencent.com
+    - +.msftconnecttest.com
+    - +.msftncsi.com
+  default-nameserver:
+    - tls://223.5.5.5
+  nameserver:
+    - https://doh.pub/dns-query
+    - https://dns.alidns.com/dns-query
+  proxy-server-nameserver:
+    - https://doh.pub/dns-query
+    - https://dns.alidns.com/dns-query
+  direct-nameserver: []
+  nameserver-policy: {}
+
+proxy-groups:
+  - name: 代理模式
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/adjust.svg
+    proxies:
+      - 延迟优选
+      - 故障转移
+      - 手动选择
+      - 负载均衡(散列)
+      - 负载均衡(轮询)
+      - DIRECT
+
+  - name: 延迟优选
+    type: url-test
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/speed.svg
+    use:
+      - myclash
+    hidden: true
+
+  - name: 故障转移
+    type: fallback
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/ambulance.svg
+    use:
+      - myclash
+    hidden: true
+
+  - name: 手动选择
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/link.svg
+    proxies:
+      - 🇭🇰 香港 - 自动选择
+      - 🇭🇰 香港 - 手动选择
+      - 🇹🇼 台湾 - 自动选择
+      - 🇹🇼 台湾 - 手动选择
+      - 🇸🇬 新加坡 - 自动选择
+      - 🇸🇬 新加坡 - 手动选择
+      - 🇦🇷 阿根廷 - 自动选择
+      - 🇦🇷 阿根廷 - 手动选择
+      - 🇯🇵 日本 - 自动选择
+      - 🇯🇵 日本 - 手动选择
+      - 🇺🇸 美国 - 自动选择
+      - 🇺🇸 美国 - 手动选择
+      - 🇩🇪 德国 - 自动选择
+      - 🇩🇪 德国 - 手动选择
+      - 🇰🇷 韩国 - 自动选择
+      - 🇰🇷 韩国 - 手动选择
+      - 🇬🇧 英国 - 自动选择
+      - 🇬🇧 英国 - 手动选择
+      - 🇨🇦 加拿大 - 自动选择
+      - 🇨🇦 加拿大 - 手动选择
+      - 🇦🇺 澳大利亚 - 自动选择
+      - 🇦🇺 澳大利亚 - 手动选择
+      - 🇪🇸 西班牙 - 自动选择
+      - 🇪🇸 西班牙 - 手动选择
+      - 🇳🇱 荷兰 - 自动选择
+      - 🇳🇱 荷兰 - 手动选择
+      - 🇹🇷 土耳其 - 自动选择
+      - 🇹🇷 土耳其 - 手动选择
+      - 🇷🇺 俄罗斯 - 自动选择
+      - 🇷🇺 俄罗斯 - 手动选择
+      - 🇮🇳 印度 - 自动选择
+      - 🇮🇳 印度 - 手动选择
+      - 🇧🇷 巴西 - 自动选择
+      - 🇧🇷 巴西 - 手动选择
+      - 🇮🇹 意大利 - 自动选择
+      - 🇮🇹 意大利 - 手动选择
+      - 🇨🇭 瑞士 - 自动选择
+      - 🇨🇭 瑞士 - 手动选择
+      - 🇸🇪 瑞典 - 自动选择
+      - 🇸🇪 瑞典 - 手动选择
+      - 🇳🇴 挪威 - 自动选择
+      - 🇳🇴 挪威 - 手动选择
+      - 其他 - 自动选择
+      - 其他 - 手动选择
+
+  - name: 负载均衡(散列)
+    type: load-balance
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/balance.svg
+    interval: 300
+    strategy: consistent-hashing
+    lazy: true
+    max-failed-times: 3
+    use:
+      - myclash
+    hidden: true
+
+  - name: 负载均衡(轮询)
+    type: load-balance
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/merry_go.svg
+    interval: 300
+    max-failed-times: 3
+    strategy: round-robin
+    lazy: true
+    use:
+      - myclash
+    hidden: true
+
+  - name: 电报消息
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/telegram.svg
+    proxies:
+      - 代理模式
+      - 延迟优选
+      - 故障转移
+      - 手动选择
+      - 🇭🇰 香港 - 自动选择
+      - 🇭🇰 香港 - 手动选择
+      - 🇹🇼 台湾 - 自动选择
+      - 🇹🇼 台湾 - 手动选择
+      - 🇸🇬 新加坡 - 自动选择
+      - 🇸🇬 新加坡 - 手动选择
+      - 🇦🇷 阿根廷 - 自动选择
+      - 🇦🇷 阿根廷 - 手动选择
+      - 🇯🇵 日本 - 自动选择
+      - 🇯🇵 日本 - 手动选择
+      - 🇺🇸 美国 - 自动选择
+      - 🇺🇸 美国 - 手动选择
+      - 🇩🇪 德国 - 自动选择
+      - 🇩🇪 德国 - 手动选择
+      - 🇰🇷 韩国 - 自动选择
+      - 🇰🇷 韩国 - 手动选择
+      - 🇬🇧 英国 - 自动选择
+      - 🇬🇧 英国 - 手动选择
+      - 🇨🇦 加拿大 - 自动选择
+      - 🇨🇦 加拿大 - 手动选择
+      - 🇦🇺 澳大利亚 - 自动选择
+      - 🇦🇺 澳大利亚 - 手动选择
+      - 🇪🇸 西班牙 - 自动选择
+      - 🇪🇸 西班牙 - 手动选择
+      - 🇳🇱 荷兰 - 自动选择
+      - 🇳🇱 荷兰 - 手动选择
+      - 🇹🇷 土耳其 - 自动选择
+      - 🇹🇷 土耳其 - 手动选择
+      - 🇷🇺 俄罗斯 - 自动选择
+      - 🇷🇺 俄罗斯 - 手动选择
+      - 🇮🇳 印度 - 自动选择
+      - 🇮🇳 印度 - 手动选择
+      - 🇧🇷 巴西 - 自动选择
+      - 🇧🇷 巴西 - 手动选择
+      - 🇮🇹 意大利 - 自动选择
+      - 🇮🇹 意大利 - 手动选择
+      - 🇨🇭 瑞士 - 自动选择
+      - 🇨🇭 瑞士 - 手动选择
+      - 🇸🇪 瑞典 - 自动选择
+      - 🇸🇪 瑞典 - 手动选择
+      - 🇳🇴 挪威 - 自动选择
+      - 🇳🇴 挪威 - 手动选择
+      - 其他 - 自动选择
+      - 其他 - 手动选择
+      - DIRECT
+
+  - name: AI
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/chatgpt.svg
+    proxies:
+      - 代理模式
+      - 延迟优选
+      - 故障转移
+      - 手动选择
+      - 🇭🇰 香港 - 自动选择
+      - 🇭🇰 香港 - 手动选择
+      - 🇹🇼 台湾 - 自动选择
+      - 🇹🇼 台湾 - 手动选择
+      - 🇸🇬 新加坡 - 自动选择
+      - 🇸🇬 新加坡 - 手动选择
+      - 🇦🇷 阿根廷 - 自动选择
+      - 🇦🇷 阿根廷 - 手动选择
+      - 🇯🇵 日本 - 自动选择
+      - 🇯🇵 日本 - 手动选择
+      - 🇺🇸 美国 - 自动选择
+      - 🇺🇸 美国 - 手动选择
+      - 🇩🇪 德国 - 自动选择
+      - 🇩🇪 德国 - 手动选择
+      - 🇰🇷 韩国 - 自动选择
+      - 🇰🇷 韩国 - 手动选择
+      - 🇬🇧 英国 - 自动选择
+      - 🇬🇧 英国 - 手动选择
+      - 🇨🇦 加拿大 - 自动选择
+      - 🇨🇦 加拿大 - 手动选择
+      - 🇦🇺 澳大利亚 - 自动选择
+      - 🇦🇺 澳大利亚 - 手动选择
+      - 🇪🇸 西班牙 - 自动选择
+      - 🇪🇸 西班牙 - 手动选择
+      - 🇳🇱 荷兰 - 自动选择
+      - 🇳🇱 荷兰 - 手动选择
+      - 🇹🇷 土耳其 - 自动选择
+      - 🇹🇷 土耳其 - 手动选择
+      - 🇷🇺 俄罗斯 - 自动选择
+      - 🇷🇺 俄罗斯 - 手动选择
+      - 🇮🇳 印度 - 自动选择
+      - 🇮🇳 印度 - 手动选择
+      - 🇧🇷 巴西 - 自动选择
+      - 🇧🇷 巴西 - 手动选择
+      - 🇮🇹 意大利 - 自动选择
+      - 🇮🇹 意大利 - 手动选择
+      - 🇨🇭 瑞士 - 自动选择
+      - 🇨🇭 瑞士 - 手动选择
+      - 🇸🇪 瑞典 - 自动选择
+      - 🇸🇪 瑞典 - 手动选择
+      - 🇳🇴 挪威 - 自动选择
+      - 🇳🇴 挪威 - 手动选择
+      - 其他 - 自动选择
+      - 其他 - 手动选择
+      - DIRECT
+
+  - name: 流媒体
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/youtube.svg
+    proxies:
+      - 代理模式
+      - 延迟优选
+      - 故障转移
+      - 手动选择
+      - 🇭🇰 香港 - 自动选择
+      - 🇭🇰 香港 - 手动选择
+      - 🇹🇼 台湾 - 自动选择
+      - 🇹🇼 台湾 - 手动选择
+      - 🇸🇬 新加坡 - 自动选择
+      - 🇸🇬 新加坡 - 手动选择
+      - 🇦🇷 阿根廷 - 自动选择
+      - 🇦🇷 阿根廷 - 手动选择
+      - 🇯🇵 日本 - 自动选择
+      - 🇯🇵 日本 - 手动选择
+      - 🇺🇸 美国 - 自动选择
+      - 🇺🇸 美国 - 手动选择
+      - 🇩🇪 德国 - 自动选择
+      - 🇩🇪 德国 - 手动选择
+      - 🇰🇷 韩国 - 自动选择
+      - 🇰🇷 韩国 - 手动选择
+      - 🇬🇧 英国 - 自动选择
+      - 🇬🇧 英国 - 手动选择
+      - 🇨🇦 加拿大 - 自动选择
+      - 🇨🇦 加拿大 - 手动选择
+      - 🇦🇺 澳大利亚 - 自动选择
+      - 🇦🇺 澳大利亚 - 手动选择
+      - 🇪🇸 西班牙 - 自动选择
+      - 🇪🇸 西班牙 - 手动选择
+      - 🇳🇱 荷兰 - 自动选择
+      - 🇳🇱 荷兰 - 手动选择
+      - 🇹🇷 土耳其 - 自动选择
+      - 🇹🇷 土耳其 - 手动选择
+      - 🇷🇺 俄罗斯 - 自动选择
+      - 🇷🇺 俄罗斯 - 手动选择
+      - 🇮🇳 印度 - 自动选择
+      - 🇮🇳 印度 - 手动选择
+      - 🇧🇷 巴西 - 自动选择
+      - 🇧🇷 巴西 - 手动选择
+      - 🇮🇹 意大利 - 自动选择
+      - 🇮🇹 意大利 - 手动选择
+      - 🇨🇭 瑞士 - 自动选择
+      - 🇨🇭 瑞士 - 手动选择
+      - 🇸🇪 瑞典 - 自动选择
+      - 🇸🇪 瑞典 - 手动选择
+      - 🇳🇴 挪威 - 自动选择
+      - 🇳🇴 挪威 - 手动选择
+      - 其他 - 自动选择
+      - 其他 - 手动选择
+      - DIRECT
+
+  - name: 苹果服务
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/apple.svg
+    proxies:
+      - 代理模式
+      - 延迟优选
+      - 故障转移
+      - 手动选择
+      - 🇭🇰 香港 - 自动选择
+      - 🇭🇰 香港 - 手动选择
+      - 🇹🇼 台湾 - 自动选择
+      - 🇹🇼 台湾 - 手动选择
+      - 🇸🇬 新加坡 - 自动选择
+      - 🇸🇬 新加坡 - 手动选择
+      - 🇦🇷 阿根廷 - 自动选择
+      - 🇦🇷 阿根廷 - 手动选择
+      - 🇯🇵 日本 - 自动选择
+      - 🇯🇵 日本 - 手动选择
+      - 🇺🇸 美国 - 自动选择
+      - 🇺🇸 美国 - 手动选择
+      - 🇩🇪 德国 - 自动选择
+      - 🇩🇪 德国 - 手动选择
+      - 🇰🇷 韩国 - 自动选择
+      - 🇰🇷 韩国 - 手动选择
+      - 🇬🇧 英国 - 自动选择
+      - 🇬🇧 英国 - 手动选择
+      - 🇨🇦 加拿大 - 自动选择
+      - 🇨🇦 加拿大 - 手动选择
+      - 🇦🇺 澳大利亚 - 自动选择
+      - 🇦🇺 澳大利亚 - 手动选择
+      - 🇪🇸 西班牙 - 自动选择
+      - 🇪🇸 西班牙 - 手动选择
+      - 🇳🇱 荷兰 - 自动选择
+      - 🇳🇱 荷兰 - 手动选择
+      - 🇹🇷 土耳其 - 自动选择
+      - 🇹🇷 土耳其 - 手动选择
+      - 🇷🇺 俄罗斯 - 自动选择
+      - 🇷🇺 俄罗斯 - 手动选择
+      - 🇮🇳 印度 - 自动选择
+      - 🇮🇳 印度 - 手动选择
+      - 🇧🇷 巴西 - 自动选择
+      - 🇧🇷 巴西 - 手动选择
+      - 🇮🇹 意大利 - 自动选择
+      - 🇮🇹 意大利 - 手动选择
+      - 🇨🇭 瑞士 - 自动选择
+      - 🇨🇭 瑞士 - 手动选择
+      - 🇸🇪 瑞典 - 自动选择
+      - 🇸🇪 瑞典 - 手动选择
+      - 🇳🇴 挪威 - 自动选择
+      - 🇳🇴 挪威 - 手动选择
+      - 其他 - 自动选择
+      - 其他 - 手动选择
+      - DIRECT
+
+  - name: 微软服务
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/microsoft.svg
+    proxies:
+      - 代理模式
+      - 延迟优选
+      - 故障转移
+      - 手动选择
+      - 🇭🇰 香港 - 自动选择
+      - 🇭🇰 香港 - 手动选择
+      - 🇹🇼 台湾 - 自动选择
+      - 🇹🇼 台湾 - 手动选择
+      - 🇸🇬 新加坡 - 自动选择
+      - 🇸🇬 新加坡 - 手动选择
+      - 🇦🇷 阿根廷 - 自动选择
+      - 🇦🇷 阿根廷 - 手动选择
+      - 🇯🇵 日本 - 自动选择
+      - 🇯🇵 日本 - 手动选择
+      - 🇺🇸 美国 - 自动选择
+      - 🇺🇸 美国 - 手动选择
+      - 🇩🇪 德国 - 自动选择
+      - 🇩🇪 德国 - 手动选择
+      - 🇰🇷 韩国 - 自动选择
+      - 🇰🇷 韩国 - 手动选择
+      - 🇬🇧 英国 - 自动选择
+      - 🇬🇧 英国 - 手动选择
+      - 🇨🇦 加拿大 - 自动选择
+      - 🇨🇦 加拿大 - 手动选择
+      - 🇦🇺 澳大利亚 - 自动选择
+      - 🇦🇺 澳大利亚 - 手动选择
+      - 🇪🇸 西班牙 - 自动选择
+      - 🇪🇸 西班牙 - 手动选择
+      - 🇳🇱 荷兰 - 自动选择
+      - 🇳🇱 荷兰 - 手动选择
+      - 🇹🇷 土耳其 - 自动选择
+      - 🇹🇷 土耳其 - 手动选择
+      - 🇷🇺 俄罗斯 - 自动选择
+      - 🇷🇺 俄罗斯 - 手动选择
+      - 🇮🇳 印度 - 自动选择
+      - 🇮🇳 印度 - 手动选择
+      - 🇧🇷 巴西 - 自动选择
+      - 🇧🇷 巴西 - 手动选择
+      - 🇮🇹 意大利 - 自动选择
+      - 🇮🇹 意大利 - 手动选择
+      - 🇨🇭 瑞士 - 自动选择
+      - 🇨🇭 瑞士 - 手动选择
+      - 🇸🇪 瑞典 - 自动选择
+      - 🇸🇪 瑞典 - 手动选择
+      - 🇳🇴 挪威 - 自动选择
+      - 🇳🇴 挪威 - 手动选择
+      - 其他 - 自动选择
+      - 其他 - 手动选择
+      - DIRECT
+
+  - name: Emby
+    type: select
+    icon: https://cdnjs.cloudflare.com/ajax/libs/simple-icons/2.19.0/emby.svg
+    proxies:
+      - 代理模式
+      - 延迟优选
+      - 故障转移
+      - 手动选择
+      - 🇭🇰 香港 - 自动选择
+      - 🇭🇰 香港 - 手动选择
+      - 🇹🇼 台湾 - 自动选择
+      - 🇹🇼 台湾 - 手动选择
+      - 🇸🇬 新加坡 - 自动选择
+      - 🇸🇬 新加坡 - 手动选择
+      - 🇦🇷 阿根廷 - 自动选择
+      - 🇦🇷 阿根廷 - 手动选择
+      - 🇯🇵 日本 - 自动选择
+      - 🇯🇵 日本 - 手动选择
+      - 🇺🇸 美国 - 自动选择
+      - 🇺🇸 美国 - 手动选择
+      - 🇩🇪 德国 - 自动选择
+      - 🇩🇪 德国 - 手动选择
+      - 🇰🇷 韩国 - 自动选择
+      - 🇰🇷 韩国 - 手动选择
+      - 🇬🇧 英国 - 自动选择
+      - 🇬🇧 英国 - 手动选择
+      - 🇨🇦 加拿大 - 自动选择
+      - 🇨🇦 加拿大 - 手动选择
+      - 🇦🇺 澳大利亚 - 自动选择
+      - 🇦🇺 澳大利亚 - 手动选择
+      - 🇪🇸 西班牙 - 自动选择
+      - 🇪🇸 西班牙 - 手动选择
+      - 🇳🇱 荷兰 - 自动选择
+      - 🇳🇱 荷兰 - 手动选择
+      - 🇹🇷 土耳其 - 自动选择
+      - 🇹🇷 土耳其 - 手动选择
+      - 🇷🇺 俄罗斯 - 自动选择
+      - 🇷🇺 俄罗斯 - 手动选择
+      - 🇮🇳 印度 - 自动选择
+      - 🇮🇳 印度 - 手动选择
+      - 🇧🇷 巴西 - 自动选择
+      - 🇧🇷 巴西 - 手动选择
+      - 🇮🇹 意大利 - 自动选择
+      - 🇮🇹 意大利 - 手动选择
+      - 🇨🇭 瑞士 - 自动选择
+      - 🇨🇭 瑞士 - 手动选择
+      - 🇸🇪 瑞典 - 自动选择
+      - 🇸🇪 瑞典 - 手动选择
+      - 🇳🇴 挪威 - 自动选择
+      - 🇳🇴 挪威 - 手动选择
+      - 其他 - 自动选择
+      - 其他 - 手动选择
+      - DIRECT
+
+  - name: GoogleFCM
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/google.svg
+    proxies:
+      - DIRECT
+      - 代理模式
+      - 延迟优选
+      - 故障转移
+      - 手动选择
+      - 🇭🇰 香港 - 自动选择
+      - 🇭🇰 香港 - 手动选择
+      - 🇹🇼 台湾 - 自动选择
+      - 🇹🇼 台湾 - 手动选择
+      - 🇸🇬 新加坡 - 自动选择
+      - 🇸🇬 新加坡 - 手动选择
+      - 🇦🇷 阿根廷 - 自动选择
+      - 🇦🇷 阿根廷 - 手动选择
+      - 🇯🇵 日本 - 自动选择
+      - 🇯🇵 日本 - 手动选择
+      - 🇺🇸 美国 - 自动选择
+      - 🇺🇸 美国 - 手动选择
+      - 🇩🇪 德国 - 自动选择
+      - 🇩🇪 德国 - 手动选择
+      - 🇰🇷 韩国 - 自动选择
+      - 🇰🇷 韩国 - 手动选择
+      - 🇬🇧 英国 - 自动选择
+      - 🇬🇧 英国 - 手动选择
+      - 🇨🇦 加拿大 - 自动选择
+      - 🇨🇦 加拿大 - 手动选择
+      - 🇦🇺 澳大利亚 - 自动选择
+      - 🇦🇺 澳大利亚 - 手动选择
+      - 🇪🇸 西班牙 - 自动选择
+      - 🇪🇸 西班牙 - 手动选择
+      - 🇳🇱 荷兰 - 自动选择
+      - 🇳🇱 荷兰 - 手动选择
+      - 🇹🇷 土耳其 - 自动选择
+      - 🇹🇷 土耳其 - 手动选择
+      - 🇷🇺 俄罗斯 - 自动选择
+      - 🇷🇺 俄罗斯 - 手动选择
+      - 🇮🇳 印度 - 自动选择
+      - 🇮🇳 印度 - 手动选择
+      - 🇧🇷 巴西 - 自动选择
+      - 🇧🇷 巴西 - 手动选择
+      - 🇮🇹 意大利 - 自动选择
+      - 🇮🇹 意大利 - 手动选择
+      - 🇨🇭 瑞士 - 自动选择
+      - 🇨🇭 瑞士 - 手动选择
+      - 🇸🇪 瑞典 - 自动选择
+      - 🇸🇪 瑞典 - 手动选择
+      - 🇳🇴 挪威 - 自动选择
+      - 🇳🇴 挪威 - 手动选择
+      - 其他 - 自动选择
+      - 其他 - 手动选择
+
+  - name: Steam地区
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/steam.svg
+    proxies:
+      - DIRECT
+      - 代理模式
+      - 延迟优选
+      - 故障转移
+      - 手动选择
+      - 🇭🇰 香港 - 自动选择
+      - 🇭🇰 香港 - 手动选择
+      - 🇹🇼 台湾 - 自动选择
+      - 🇹🇼 台湾 - 手动选择
+      - 🇸🇬 新加坡 - 自动选择
+      - 🇸🇬 新加坡 - 手动选择
+      - 🇦🇷 阿根廷 - 自动选择
+      - 🇦🇷 阿根廷 - 手动选择
+      - 🇯🇵 日本 - 自动选择
+      - 🇯🇵 日本 - 手动选择
+      - 🇺🇸 美国 - 自动选择
+      - 🇺🇸 美国 - 手动选择
+      - 🇩🇪 德国 - 自动选择
+      - 🇩🇪 德国 - 手动选择
+      - 🇰🇷 韩国 - 自动选择
+      - 🇰🇷 韩国 - 手动选择
+      - 🇬🇧 英国 - 自动选择
+      - 🇬🇧 英国 - 手动选择
+      - 🇨🇦 加拿大 - 自动选择
+      - 🇨🇦 加拿大 - 手动选择
+      - 🇦🇺 澳大利亚 - 自动选择
+      - 🇦🇺 澳大利亚 - 手动选择
+      - 🇪🇸 西班牙 - 自动选择
+      - 🇪🇸 西班牙 - 手动选择
+      - 🇳🇱 荷兰 - 自动选择
+      - 🇳🇱 荷兰 - 手动选择
+      - 🇹🇷 土耳其 - 自动选择
+      - 🇹🇷 土耳其 - 手动选择
+      - 🇷🇺 俄罗斯 - 自动选择
+      - 🇷🇺 俄罗斯 - 手动选择
+      - 🇮🇳 印度 - 自动选择
+      - 🇮🇳 印度 - 手动选择
+      - 🇧🇷 巴西 - 自动选择
+      - 🇧🇷 巴西 - 手动选择
+      - 🇮🇹 意大利 - 自动选择
+      - 🇮🇹 意大利 - 手动选择
+      - 🇨🇭 瑞士 - 自动选择
+      - 🇨🇭 瑞士 - 手动选择
+      - 🇸🇪 瑞典 - 自动选择
+      - 🇸🇪 瑞典 - 手动选择
+      - 🇳🇴 挪威 - 自动选择
+      - 🇳🇴 挪威 - 手动选择
+      - 其他 - 自动选择
+      - 其他 - 手动选择
+
+  - name: 漏网之鱼
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/fish.svg
+    proxies:
+      - DIRECT
+      - 代理模式
+
+  # ====================香港===================================
+  - name: "🇭🇰 香港 - 自动选择"
+    type: fallback
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/hk.svg
+    use:
+      - myclash
+    filter: "香港|HK|Hong Kong|🇭🇰"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: true
+
+  - name: "🇭🇰 香港 - 手动选择"
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/hk.svg
+    use:
+      - myclash
+    filter: "香港|HK|Hong Kong|🇭🇰"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: false
+    # ===========================================================
+
+  # ====================台湾===================================
+  - name: "🇹🇼 台湾 - 自动选择"
+    type: fallback
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/tw.svg
+    use:
+      - myclash
+    filter: "台湾|TW|Taiwan|🇹🇼"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: true
+
+  - name: "🇹🇼 台湾 - 手动选择"
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/tw.svg
+    use:
+      - myclash
+    filter: "台湾|TW|Taiwan|🇹🇼"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: false
+  # ===========================================================
+
+  # ====================新加坡===================================
+  - name: "🇸🇬 新加坡 - 自动选择"
+    type: fallback
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/sg.svg
+    use:
+      - myclash
+    filter: "新加坡|狮城|SG|Singapore|🇸🇬"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: true
+
+  - name: "🇸🇬 新加坡 - 手动选择"
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/sg.svg
+    use:
+      - myclash
+    filter: "新加坡|狮城|SG|Singapore|🇸🇬"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: false
+    # ===========================================================
+
+  # ====================阿根廷===================================
+  - name: "🇦🇷 阿根廷 - 自动选择"
+    type: fallback
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/ar.svg
+    use:
+      - myclash
+    filter: "阿根廷|AR|Argentina|🇦🇷"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: true
+
+  - name: "🇦🇷 阿根廷 - 手动选择"
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/ar.svg
+    use:
+      - myclash
+    filter: "阿根廷|AR|Argentina|🇦🇷"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: false
+  # ===========================================================
+
+  # ====================日本===================================
+  - name: "🇯🇵 日本 - 自动选择"
+    type: fallback
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/jp.svg
+    use:
+      - myclash
+    filter: "日本|JP|Japan|🇯🇵"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: true
+
+  - name: "🇯🇵 日本 - 手动选择"
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/jp.svg
+    use:
+      - myclash
+    filter: "日本|JP|Japan|🇯🇵"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: false
+  # ===========================================================
+
+  # ====================美国===================================
+  - name: "🇺🇸 美国 - 自动选择"
+    type: fallback
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/us.svg
+    use:
+      - myclash
+    filter: "美国|US|USA|United States|America|🇺🇸"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: true
+
+  - name: "🇺🇸 美国 - 手动选择"
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/us.svg
+    use:
+      - myclash
+    filter: "美国|US|USA|United States|America|🇺🇸"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: false
+  # ===========================================================
+
+  # ====================德国===================================
+  - name: "🇩🇪 德国 - 自动选择"
+    type: fallback
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/de.svg
+    use:
+      - myclash
+    filter: "德国|DE|Germany|🇩🇪"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: true
+
+  - name: "🇩🇪 德国 - 手动选择"
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/de.svg
+    use:
+      - myclash
+    filter: "德国|DE|Germany|🇩🇪"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: false
+  # ===========================================================
+
+  # ====================韩国===================================
+  - name: "🇰🇷 韩国 - 自动选择"
+    type: fallback
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/kr.svg
+    use:
+      - myclash
+    filter: "韩国|KR|Korea|South Korea|🇰🇷"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: true
+
+  - name: "🇰🇷 韩国 - 手动选择"
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/kr.svg
+    use:
+      - myclash
+    filter: "韩国|KR|Korea|South Korea|🇰🇷"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: false
+  # ===========================================================
+
+  # ====================英国===================================
+  - name: "🇬🇧 英国 - 自动选择"
+    type: fallback
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/gb.svg
+    use:
+      - myclash
+    filter: "英国|UK|United Kingdom|Britain|Great Britain|🇬🇧"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: true
+
+  - name: "🇬🇧 英国 - 手动选择"
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/gb.svg
+    use:
+      - myclash
+    filter: "英国|UK|United Kingdom|Britain|Great Britain|🇬🇧"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: false
+  # ===========================================================
+
+  # ====================加拿大===================================
+  - name: "🇨🇦 加拿大 - 自动选择"
+    type: fallback
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/ca.svg
+    use:
+      - myclash
+    filter: "加拿大|CA|Canada|🇨🇦"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: true
+
+  - name: "🇨🇦 加拿大 - 手动选择"
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/ca.svg
+    use:
+      - myclash
+    filter: "加拿大|CA|Canada|🇨🇦"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: false
+  # ===========================================================
+
+  # ====================澳大利亚===================================
+  - name: "🇦🇺 澳大利亚 - 自动选择"
+    type: fallback
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/au.svg
+    use:
+      - myclash
+    filter: "澳大利亚|AU|Australia|🇦🇺"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: true
+
+  - name: "🇦🇺 澳大利亚 - 手动选择"
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/au.svg
+    use:
+      - myclash
+    filter: "澳大利亚|AU|Australia|🇦🇺"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: false
+  # ===========================================================
+
+  # ====================西班牙===================================
+  - name: "🇪🇸 西班牙 - 自动选择"
+    type: fallback
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/es.svg
+    use:
+      - myclash
+    filter: "西班牙|ES|Spain|🇪🇸"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: true
+
+  - name: "🇪🇸 西班牙 - 手动选择"
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/es.svg
+    use:
+      - myclash
+    filter: "西班牙|ES|Spain|🇪🇸"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: false
+  # ===========================================================
+
+  # ====================荷兰===================================
+  - name: "🇳🇱 荷兰 - 自动选择"
+    type: fallback
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/nl.svg
+    use:
+      - myclash
+    filter: "荷兰|NL|Netherlands|🇳🇱"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: true
+
+  - name: "🇳🇱 荷兰 - 手动选择"
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/nl.svg
+    use:
+      - myclash
+    filter: "荷兰|NL|Netherlands|🇳🇱"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: false
+  # ===========================================================
+
+  # ====================土耳其===================================
+  - name: "🇹🇷 土耳其 - 自动选择"
+    type: fallback
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/tr.svg
+    use:
+      - myclash
+    filter: "土耳其|TR|Turkey|🇹🇷"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: true
+
+  - name: "🇹🇷 土耳其 - 手动选择"
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/tr.svg
+    use:
+      - myclash
+    filter: "土耳其|TR|Turkey|🇹🇷"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: false
+  # ===========================================================
+
+  # ====================俄罗斯===================================
+  - name: "🇷🇺 俄罗斯 - 自动选择"
+    type: fallback
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/ru.svg
+    use:
+      - myclash
+    filter: "俄罗斯|RU|Russia|🇷🇺"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: true
+
+  - name: "🇷🇺 俄罗斯 - 手动选择"
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/ru.svg
+    use:
+      - myclash
+    filter: "俄罗斯|RU|Russia|🇷🇺"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: false
+  # ===========================================================
+
+  # ====================印度===================================
+  - name: "🇮🇳 印度 - 自动选择"
+    type: fallback
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/in.svg
+    use:
+      - myclash
+    filter: "印度|IN|India|🇮🇳"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: true
+
+  - name: "🇮🇳 印度 - 手动选择"
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/in.svg
+    use:
+      - myclash
+    filter: "印度|IN|India|🇮🇳"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: false
+  # ===========================================================
+
+  # ====================巴西===================================
+  - name: "🇧🇷 巴西 - 自动选择"
+    type: fallback
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/br.svg
+    use:
+      - myclash
+    filter: "巴西|BR|Brazil|🇧🇷"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: true
+
+  - name: "🇧🇷 巴西 - 手动选择"
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/br.svg
+    use:
+      - myclash
+    filter: "巴西|BR|Brazil|🇧🇷"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: false
+  # ===========================================================
+
+  # ====================意大利===================================
+  - name: "🇮🇹 意大利 - 自动选择"
+    type: fallback
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/it.svg
+    use:
+      - myclash
+    filter: "意大利|IT|Italy|🇮🇹"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: true
+
+  - name: "🇮🇹 意大利 - 手动选择"
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/it.svg
+    use:
+      - myclash
+    filter: "意大利|IT|Italy|🇮🇹"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: false
+  # ===========================================================
+
+  # ====================瑞士===================================
+  - name: "🇨🇭 瑞士 - 自动选择"
+    type: fallback
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/ch.svg
+    use:
+      - myclash
+    filter: "瑞士|CH|Switzerland|🇨🇭"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: true
+
+  - name: "🇨🇭 瑞士 - 手动选择"
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/ch.svg
+    use:
+      - myclash
+    filter: "瑞士|CH|Switzerland|🇨🇭"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: false
+  # ===========================================================
+
+  # ====================瑞典===================================
+  - name: "🇸🇪 瑞典 - 自动选择"
+    type: fallback
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/se.svg
+    use:
+      - myclash
+    filter: "瑞典|SE|Sweden|🇸🇪"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: true
+
+  - name: "🇸🇪 瑞典 - 手动选择"
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/se.svg
+    use:
+      - myclash
+    filter: "瑞典|SE|Sweden|🇸🇪"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: false
+  # ===========================================================
+
+  # ====================挪威===================================
+  - name: "🇳🇴 挪威 - 自动选择"
+    type: fallback
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/no.svg
+    use:
+      - myclash
+    filter: "挪威|NO|Norway|🇳🇴"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: true
+
+  - name: "🇳🇴 挪威 - 手动选择"
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/no.svg
+    use:
+      - myclash
+    filter: "挪威|NO|Norway|🇳🇴"
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+    hidden: false
+  # ===========================================================
+
+  # ====================其他===================================
+  - name: "其他 - 自动选择"
+    type: fallback
+    use:
+      - myclash
+    exclude-filter: 香港|日本|新加坡|台湾|美国|英国|阿根廷|俄罗斯|土耳其|韩国|印度|德国|加拿大|澳大利亚|法国|乌克兰
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+
+  - name: "其他 - 手动选择"
+    type: select
+    use:
+      - myclash
+    exclude-filter: 香港|日本|新加坡|台湾|美国|英国|阿根廷|俄罗斯|土耳其|韩国|印度|德国|加拿大|澳大利亚|法国|乌克兰
+    url: https://cp.cloudflare.com/generate_204
+    interval: 300
+  # ===========================================================
+
+#-------------------------------------------------------------------
+#用户自定义规则，文件在模块目录/rule-provider/
+#如有需要请参考官方文档写入
+#如果想要删除两个自定义规则，需要把上面dns配置内对自定义规则的设置删除，否则内核将无法启动
+
+rule-providers:
+  Reject_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/REJECT/ip/Reject_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/REJECT/ip/Reject_ip.yaml
+  Reject_no_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/REJECT/no_ip/Reject_no_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/REJECT/no_ip/Reject_no_ip.yaml
+  Reject_domainset:
+    type: http
+    interval: 1800
+    behavior: domain
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/REJECT/no_ip/Reject_domainset.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/REJECT/no_ip/Reject_domainset.yaml
+  Reject_no_ip_drop:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/REJECT/no_ip/Reject_no_ip_drop.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/REJECT/no_ip/Reject_no_ip_drop.yaml
+  Reject_no_ip_no_drop:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/REJECT/no_ip/Reject_no_ip_no_drop.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/REJECT/no_ip/Reject_no_ip_no_drop.yaml
+  China_ip:
+    type: http
+    interval: 1800
+    behavior: ipcidr
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/DIRECT/ip/China_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/DIRECT/ip/China_ip.yaml
+  Domestic_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/DIRECT/ip/Domestic_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/DIRECT/ip/Domestic_ip.yaml
+  GoogleFCM_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/DIRECT/ip/GoogleFCM_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/DIRECT/ip/GoogleFCM_ip.yaml
+  Lan_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/DIRECT/ip/Lan_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/DIRECT/ip/Lan_ip.yaml
+  NetEaseMusic_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/DIRECT/ip/NetEaseMusic_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/DIRECT/ip/NetEaseMusic_ip.yaml
+  SteamCN_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/DIRECT/ip/SteamCN_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/DIRECT/ip/SteamCN_ip.yaml
+  AppleCDN_no_ip:
+    type: http
+    interval: 1800
+    behavior: domain
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/DIRECT/no_ip/AppleCDN_no_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/DIRECT/no_ip/AppleCDN_no_ip.yaml
+  AppleCN_no_ip:
+    type: http
+    interval: 1800
+    behavior: domain
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/DIRECT/no_ip/AppleCN_no_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/DIRECT/no_ip/AppleCN_no_ip.yaml
+  Direct_no_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/DIRECT/no_ip/Direct_no_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/DIRECT/no_ip/Direct_no_ip.yaml
+  Domestic_no_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/DIRECT/no_ip/Domestic_no_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/DIRECT/no_ip/Domestic_no_ip.yaml
+  GoogleFCM_no_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/DIRECT/no_ip/GoogleFCM_no_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/DIRECT/no_ip/GoogleFCM_no_ip.yaml
+  Lan_no_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/DIRECT/no_ip/Lan_no_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/DIRECT/no_ip/Lan_no_ip.yaml
+  MicrosoftCDN_no_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/DIRECT/no_ip/MicrosoftCDN_no_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/DIRECT/no_ip/MicrosoftCDN_no_ip.yaml
+  NetEaseMusic_no_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/DIRECT/no_ip/NetEaseMusic_no_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/DIRECT/no_ip/NetEaseMusic_no_ip.yaml
+  SteamCN_no_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/DIRECT/no_ip/SteamCN_no_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/DIRECT/no_ip/SteamCN_no_ip.yaml
+  SteamRegion_no_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/DIRECT/no_ip/SteamRegion_no_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/DIRECT/no_ip/SteamRegion_no_ip.yaml
+  Stream_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/ip/Stream_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/PROXY/ip/Stream_ip.yaml
+  Telegram_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/ip/Telegram_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/PROXY/ip/Telegram_ip.yaml
+  AI_no_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/no_ip/AI_no_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/PROXY/no_ip/AI_no_ip.yaml
+  Apple_no_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/no_ip/Apple_no_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/PROXY/no_ip/Apple_no_ip.yaml
+  CDN_domainset:
+    type: http
+    interval: 1800
+    behavior: domain
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/no_ip/CDN_domainset.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/PROXY/no_ip/CDN_domainset.yaml
+  CDN_no_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/no_ip/CDN_no_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/PROXY/no_ip/CDN_no_ip.yaml
+  CustomProxy_no_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/no_ip/CustomProxy_no_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/PROXY/no_ip/CustomProxy_no_ip.yaml
+  Download_domainset:
+    type: http
+    interval: 1800
+    behavior: domain
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/no_ip/Download_domainset.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/PROXY/no_ip/Download_domainset.yaml
+  Download_no_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/no_ip/Download_no_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/PROXY/no_ip/Download_no_ip.yaml
+  Global_no_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/no_ip/Global_no_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/PROXY/no_ip/Global_no_ip.yaml
+  Microsoft_no_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/no_ip/Microsoft_no_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/PROXY/no_ip/Microsoft_no_ip.yaml
+  Steam_no_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/no_ip/Steam_no_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/PROXY/no_ip/Steam_no_ip.yaml
+  Stream_no_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/no_ip/Stream_no_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/PROXY/no_ip/Stream_no_ip.yaml
+  Emby_no_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/no_ip/Emby_no_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/PROXY/no_ip/Emby_no_ip.yaml
+  Telegram_no_ip:
+    type: http
+    interval: 1800
+    behavior: classical
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/no_ip/Telegram_no_ip.yaml
+    path: ./ruleset/RealSeek/Clash_Rule_DIY/PROXY/no_ip/Telegram_no_ip.yaml
+rules:
+  - RULE-SET,Reject_no_ip,REJECT
+  - RULE-SET,Reject_domainset,REJECT
+  - RULE-SET,Reject_no_ip_drop,REJECT-DROP
+  - RULE-SET,Reject_no_ip_no_drop,REJECT
+  - RULE-SET,CustomProxy_no_ip,代理模式
+  - RULE-SET,GoogleFCM_no_ip,GoogleFCM
+  - RULE-SET,NetEaseMusic_no_ip,DIRECT
+  - RULE-SET,SteamRegion_no_ip,Steam地区
+  - RULE-SET,SteamCN_no_ip,DIRECT
+  - RULE-SET,Steam_no_ip,代理模式
+  - RULE-SET,CDN_domainset,代理模式
+  - RULE-SET,CDN_no_ip,代理模式
+  - RULE-SET,Stream_no_ip,流媒体
+  - RULE-SET,Telegram_no_ip,电报消息
+  - RULE-SET,AppleCDN_no_ip,DIRECT
+  - RULE-SET,AppleCN_no_ip,DIRECT
+  - RULE-SET,MicrosoftCDN_no_ip,DIRECT
+  - RULE-SET,Download_domainset,代理模式
+  - RULE-SET,Download_no_ip,代理模式
+  - RULE-SET,Apple_no_ip,苹果服务
+  - RULE-SET,Microsoft_no_ip,微软服务
+  - RULE-SET,AI_no_ip,AI
+  - RULE-SET,Global_no_ip,代理模式
+  - RULE-SET,Domestic_no_ip,DIRECT
+  - RULE-SET,Direct_no_ip,DIRECT
+  - RULE-SET,Lan_no_ip,DIRECT
+  - RULE-SET,GoogleFCM_ip,GoogleFCM
+  - RULE-SET,NetEaseMusic_ip,DIRECT
+  - RULE-SET,SteamCN_ip,DIRECT
+  - RULE-SET,Reject_ip,REJECT
+  - RULE-SET,Telegram_ip,电报消息
+  - RULE-SET,Stream_ip,流媒体
+  - RULE-SET,Emby_no_ip,Emby
+  - RULE-SET,Domestic_ip,DIRECT
+  - RULE-SET,China_ip,DIRECT
+  - RULE-SET,Lan_ip,DIRECT
+  - GEOIP,CN,DIRECT
+  - GEOSITE,cn,DIRECT
+  - MATCH,漏网之鱼
