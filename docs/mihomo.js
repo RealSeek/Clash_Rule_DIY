@@ -508,6 +508,7 @@ function overwriteRules(params) {
     const customRules = [
         // 在此添加自定义规则，优先级次于ad。例子：
         // "DOMAIN,baidu.com,DIRECT",
+        "AND,((NETWORK,udp),(DST-PORT,443)),REJECT"
     ];
 
     // 广告拦截 / 隐私保护 / Malware 拦截 / Phiishing 拦截
@@ -1006,86 +1007,8 @@ function overwriteDns(params) {
         ipv6: true,
 
         "fake-ip-filter": [
-            "*",
-            "+.lan",
-            "+.local",
-            "time.*.com",
-            "ntp.*.com",
-            "+.market.xiaomi.com",
-            "localhost.ptlogin2.qq.com",
-            "localhost.sec.qq.com",
-            "+.qq.com",
-            "+.tencent.com",
-            "+.msftconnecttest.com",
-            "+.msftncsi.com",
-            "doh.echs.top",
-            "dns.google",
-            "dns.quad9.net",
-            "time.*.gov",
-            "time.*.edu.cn",
-            "time.*.apple.com",
-            "time.*.com",
-            "time1.*.com",
-            "time2.*.com",
-            "time3.*.com",
-            "time4.*.com",
-            "time5.*.com",
-            "time6.*.com",
-            "time7.*.com",
-            "time8.*.com",
-            "time9.*.com",
-            "+.ntp.*",
-            "ntp.*.com",
-            "ntp1.*.com",
-            "ntp2.*.com",
-            "ntp3.*.com",
-            "ntp4.*.com",
-            "ntp5.*.com",
-            "ntp6.*.com",
-            "ntp7.*.com",
-            "ntp8.*.com",
-            "ntp9.*.com",
-            "+.time.edu.cn",
-            "+.ntp.org.cn",
-            "+.pool.ntp.org",
-            "api-jooxtt.sanook.com",
-            "+.msftconnecttest.com",
-            "+.msftncsi.com",
-            "+.srv.nintendo.net",
-            "+.stun.playstation.net",
-            "xbox.*.microsoft.com",
-            "xnotify.xboxlive.com",
-            "+.ipv6.microsoft.com",
-            "+.battlenet.com.cn",
-            "+.wotgame.cn",
-            "+.wggames.cn",
-            "+.wowsgame.cn",
-            "+.wargaming.net",
-            "proxy.golang.org",
-            "stun.*.*",
-            "stun.*.*.*",
-            "+.stun.*.*",
-            "+.stun.*.*.*",
-            "+.stun.*.*.*.*",
-            "heartbeat.belkin.com",
-            "+.linksys.com",
-            "+.linksyssmartwifi.com",
-            "+.router.asus.com",
-            "mesu.apple.com",
-            "swscan.apple.com",
-            "swquery.apple.com",
-            "swdownload.apple.com",
-            "swcdn.apple.com",
-            "swdist.apple.com",
-            "lens.l.google.com",
-            "stun.l.google.com",
-            "+.square-enix.com",
-            "+.finalfantasyxiv.com",
-            "+.ffxiv.com",
-            "+.mcdn.bilivideo.cn",
-            "+.media.dssott.com",
-            "+.pvp.net",
-
+            "geosite:private",
+            "geosite:category-ntp",
         ],
 
         "default-nameserver": [
@@ -1093,28 +1016,29 @@ function overwriteDns(params) {
         ],
 
         nameserver: [
-            "https://dns.alidns.com/dns-query",
-            "https://doh.pub/dns-query",
+            "https://1.1.1.1/dns-query",
+            "https://8.8.8.8/dns-query",
         ],
 
         "proxy-server-nameserver": [
-            "https://doh.pub/dns-query",
-            "https://dns.alidns.com/dns-query",
+            "https://223.5.5.5/dns-query",
+            "https://223.6.6.6/dns-query",
         ],
 
+        "respect-rules": true,
+
+        "direct-nameserver": [
+            "https://223.5.5.5/dns-query",
+            "https://223.6.6.6/dns-query",
+        ],
+
+        "direct-nameserver-follow-policy": true,
+
         "nameserver-policy": {
-            "dl.google.com": [
-                "https://dns.pub/dns-query"
-            ],
-            "geosite:googlefcm": [
-                "https://dns.pub/dns-query"
-            ],
-            "services.googleapis.cn": [
-                "https://dns.google/dns-query#代理模式"
-            ],
-            "geosite:geolocation-!cn": [
-                "https://dns.google/dns-query#代理模式"
-            ],
+            "geosite:cn": [
+                "https://223.5.5.5/dns-query",
+                "https://223.6.6.6/dns-query",
+            ]
         }
     };
 
