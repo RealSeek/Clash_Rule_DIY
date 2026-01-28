@@ -274,6 +274,7 @@ payload:
   - DOMAIN-KEYWORD,-spotify-com
   - DOMAIN-KEYWORD,-tiktokcdn-com
   - DOMAIN-KEYWORD,tvbanywhere
+  - DOMAIN-KEYWORD,iyf.tv
   - PROCESS-NAME,com.amazon.avod.thirdpartyclient
   - PROCESS-NAME,tv
   - PROCESS-NAME,music
