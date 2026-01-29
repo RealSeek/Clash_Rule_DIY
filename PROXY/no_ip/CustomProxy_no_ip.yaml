@@ -24,6 +24,3 @@ payload:
   - DOMAIN-KEYWORD,nikke-
   - DOMAIN-KEYWORD,intlgame.com
   - DOMAIN-KEYWORD,po18
-  - DOMAIN-REGEX,s[0-9]+-e[0-9]+
-  - DOMAIN-KEYWORD,dudupro.com
-  - DOMAIN-KEYWORD,anygate.vip

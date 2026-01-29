@@ -275,6 +275,9 @@ payload:
   - DOMAIN-KEYWORD,-tiktokcdn-com
   - DOMAIN-KEYWORD,tvbanywhere
   - DOMAIN-KEYWORD,iyf.tv
+  - DOMAIN-REGEX,s[0-9]+-e[0-9]+
+  - DOMAIN-KEYWORD,dudupro.com
+  - DOMAIN-KEYWORD,anygate.vip
   - PROCESS-NAME,com.amazon.avod.thirdpartyclient
   - PROCESS-NAME,tv
   - PROCESS-NAME,music
