@@ -1054,19 +1054,19 @@ function getManualProxiesByRegex(params, regex) {
         : ["DIRECT", "手动选择", proxyName];
 }
 
-// 覆写Tunnel
-function overwriteTunnel(params) {
-    const tunnelOptions = {
-        enable: true,
-        stack: "System",
-        device: "Mihomo",
-        "dns-hijack": ["any:53"],
-        "auto-route": true,
-        "auto-redirect": false,
-        "auto-detect-interface": true,
-        "strict-route": false,
-        "route-exclude-address": [],
-        mtu: 1500,
-    };
-    params.tun = { ...tunnelOptions };
-}
+// 覆写Tunnel （有需要自行开启）
+// function overwriteTunnel(params) {
+//     const tunnelOptions = {
+//         enable: true,
+//         stack: "System",
+//         device: "Mihomo",
+//         "dns-hijack": ["any:53"],
+//         "auto-route": true,
+//         "auto-redirect": false,
+//         "auto-detect-interface": true,
+//         "strict-route": false,
+//         "route-exclude-address": [],
+//         mtu: 1500,
+//     };
+//     params.tun = { ...tunnelOptions };
+// }
