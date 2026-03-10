@@ -7,7 +7,7 @@ function main(params) {
     overwriteProxyGroups(params);
     overwriteRules(params);
     overwriteDns(params);
-    overwriteTunnel(params);
+    // overwriteTunnel(params); 有需要自行打开
     return params;
 }
 
