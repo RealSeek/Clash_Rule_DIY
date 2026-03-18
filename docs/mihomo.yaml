@@ -115,6 +115,7 @@ dns:
     - +.local
     - time.*.com
     - ntp.*.com
+    - rule-set:FakeIPFilter_domainset
     - +.market.xiaomi.com
     - localhost.ptlogin2.qq.com
     - localhost.sec.qq.com
@@ -1274,6 +1275,13 @@ rule-providers:
     format: yaml
     url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/DIRECT/no_ip/Lan_no_ip.yaml
     path: ./ruleset/RealSeek/Clash_Rule_DIY/DIRECT/no_ip/Lan_no_ip.yaml
+  FakeIPFilter_domainset:
+    type: http
+    interval: 1800
+    behavior: domain
+    format: mrs
+    url: https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/fakeip-filter.mrs
+    path: ./ruleset/DustinWin/ruleset_geodata/fakeip-filter.mrs
   MicrosoftCDN_no_ip:
     type: http
     interval: 1800

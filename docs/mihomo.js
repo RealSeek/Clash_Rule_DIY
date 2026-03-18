@@ -868,11 +868,14 @@ function overwriteRules(params) {
             path: "./ruleset/RealSeek/Clash_Rule_DIY/DIRECT/no_ip/Lan_no_ip.yaml",
         },
 
-        // fake-ip 过滤补充域名
+        // fake-ip 过滤补充规则，直接使用外部 mrs 域名规则集
         FakeIPFilter_domainset: {
-            ...ruleAnchor.domain,
-            url: "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/DIRECT/no_ip/FakeIPFilter_domainset.yaml",
-            path: "./ruleset/RealSeek/Clash_Rule_DIY/DIRECT/no_ip/FakeIPFilter_domainset.yaml",
+            type: "http",
+            interval: 1800,
+            behavior: "domain",
+            format: "mrs",
+            url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/fakeip-filter.mrs",
+            path: "./ruleset/DustinWin/ruleset_geodata/fakeip-filter.mrs",
         },
 
         // 微软中国 CDN
