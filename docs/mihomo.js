@@ -3,6 +3,7 @@ const proxyName = "代理模式";
 function main(params) {
     if (!params.proxies) return params;
     overwriteBasicOptions(params);
+    overwriteHosts(params);
     overwriteSniffer(params);
     overwriteProxyGroups(params);
     overwriteRules(params);
@@ -18,8 +19,10 @@ function overwriteBasicOptions(params) {
         "allow-lan": true,
         "unified-delay": true,
         "tcp-concurrent": true,
+        "keep-alive-interval": 30,
+        "keep-alive-idle": 15,
         "geodata-mode": true,
-        "fakeind-process-mode": "strict",
+        "find-process-mode": "strict",
         "global-client-fingerprint": "chrome",
         profile: {
             "store-selected": true,
@@ -33,6 +36,42 @@ function overwriteBasicOptions(params) {
     Object.keys(otherOptions).forEach((key) => {
         params[key] = otherOptions[key];
     });
+}
+
+// 覆写 Hosts
+function overwriteHosts(params) {
+    const customHosts = {
+        "miwifi.com": "192.168.31.2",
+        "services.googleapis.cn": "services.googleapis.com",
+        "cn.bing.com": "global.bing.com",
+        "dns.alidns.com": [
+            "223.5.5.5",
+            "223.6.6.6",
+            "2400:3200::1",
+            "2400:3200:baba::1",
+        ],
+        "doh.pub": [
+            "1.12.12.12",
+            "1.12.12.21",
+            "120.53.53.53",
+        ],
+        "dns.google": [
+            "8.8.8.8",
+            "8.8.4.4",
+            "2001:4860:4860::8888",
+            "2001:4860:4860::8844",
+        ],
+        "cloudflare-dns.com": [
+            "1.1.1.1",
+            "1.0.0.1",
+            "2606:4700:4700::1111",
+            "2606:4700:4700::1001",
+        ],
+    };
+    params["hosts"] = {
+        ...(params["hosts"] || {}),
+        ...customHosts,
+    };
 }
 
 function overwriteSniffer(params) {
@@ -506,9 +545,11 @@ function overwriteProxyGroups(params) {
 // 修改规则
 function overwriteRules(params) {
     const customRules = [
-        // 在此添加自定义规则，优先级次于ad。例子：
+        // 在此添加自定义规则，优先级高于广告规则。例子：
         // "DOMAIN,baidu.com,DIRECT",
-        "AND,((NETWORK,udp),(DST-PORT,443)),REJECT"
+        "AND,((NOT,((OR,((PROCESS-NAME,mihomo),(PROCESS-NAME,ClashMeta))))),(DST-PORT,853)),REJECT",
+        // 如需更高隐私或更强的 DNS/QUIC 防绕过，可自行开启下面这条规则
+        // "AND,((NETWORK,udp),(DST-PORT,443)),REJECT",
     ];
 
     // 广告拦截 / 隐私保护 / Malware 拦截 / Phiishing 拦截
@@ -649,7 +690,7 @@ function overwriteRules(params) {
         "MATCH,漏网之鱼",
     ];
 
-    const allNonipRules = [...adNonipRules, ...customRules, ...nonipRules];
+    const allNonipRules = [...customRules, ...adNonipRules, ...nonipRules];
 
     // 规则
     // 需要非IP类规则写在 IP类规则之前！
@@ -827,6 +868,13 @@ function overwriteRules(params) {
             path: "./ruleset/RealSeek/Clash_Rule_DIY/DIRECT/no_ip/Lan_no_ip.yaml",
         },
 
+        // fake-ip 过滤补充域名
+        FakeIPFilter_domainset: {
+            ...ruleAnchor.domain,
+            url: "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/DIRECT/no_ip/FakeIPFilter_domainset.yaml",
+            path: "./ruleset/RealSeek/Clash_Rule_DIY/DIRECT/no_ip/FakeIPFilter_domainset.yaml",
+        },
+
         // 微软中国 CDN
         MicrosoftCDN_no_ip: {
             ...ruleAnchor.classical,
@@ -1000,46 +1048,60 @@ function overwriteDns(params) {
     const dnsOptions = {
         enable: true,
         "listen": "0.0.0.0:1053",
+        "cache-algorithm": "arc",
         "enhanced-mode": "fake-ip", // fake-ip 或 redir-host
+        "fake-ip-filter-mode": "blacklist",
         "fake-ip-range": "198.18.0.1/16",
-        "use-hosts": false,
+        "use-hosts": true,
         "use-system-hosts": false,
         ipv6: true,
+        "respect-rules": true,
 
         "fake-ip-filter": [
-            "geosite:private",
-            "geosite:category-ntp",
+            "rule-set:Lan_no_ip",
+            "rule-set:Direct_no_ip",
+            "rule-set:Domestic_no_ip",
+            "rule-set:FakeIPFilter_domainset",
+            "+.pub.3gppnetwork.org",
+            "+.bing.com",
+            "+.miwifi.com",
+            "+.docker.io",
+            "+.market.xiaomi.com",
+            "+.push.apple.com",
         ],
 
         "default-nameserver": [
-            "tls://223.5.5.5",
+            "https://1.12.12.21/dns-query",
+            "https://223.5.5.5/dns-query",
         ],
 
         nameserver: [
-            "https://1.1.1.1/dns-query",
-            "https://8.8.8.8/dns-query",
+            "https://dns.google/dns-query",
+            "https://xxxxxxxxxx.cloudflare-gateway.com/dns-query",
         ],
 
         "proxy-server-nameserver": [
-            "https://223.5.5.5/dns-query",
-            "https://223.6.6.6/dns-query",
+            "https://dns.alidns.com/dns-query",
+            "https://doh.pub/dns-query",
         ],
 
-        "respect-rules": true,
-
         "direct-nameserver": [
-            "https://223.5.5.5/dns-query",
-            "https://223.6.6.6/dns-query",
+            "https://dns.alidns.com/dns-query",
+            "https://doh.pub/dns-query",
         ],
 
         "direct-nameserver-follow-policy": true,
 
         "nameserver-policy": {
-            "geosite:cn": [
-                "https://223.5.5.5/dns-query",
-                "https://223.6.6.6/dns-query",
-            ]
-        }
+            "geosite:cn,private": [
+                "https://doh.pub/dns-query",
+                "https://dns.alidns.com/dns-query",
+            ],
+            "geosite:geolocation-!cn,gfw,!cn": [
+                "https://dns.google/dns-query",
+                "https://xxxxxxxxxx.cloudflare-gateway.com/dns-query",
+            ],
+        },
     };
 
     params["dns"] = dnsOptions;
