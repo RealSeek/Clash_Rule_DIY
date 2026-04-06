@@ -1081,7 +1081,7 @@ function overwriteDns(params) {
 
         nameserver: [
             "https://dns.google/dns-query",
-            "https://xxxxxxxxxx.cloudflare-gateway.com/dns-query",
+            "https://cloudflare-dns.com/dns-query",
         ],
 
         "proxy-server-nameserver": [
@@ -1103,7 +1103,7 @@ function overwriteDns(params) {
             ],
             "geosite:geolocation-!cn,gfw,!cn": [
                 "https://dns.google/dns-query",
-                "https://xxxxxxxxxx.cloudflare-gateway.com/dns-query",
+                "https://cloudflare-dns.com/dns-query",
             ],
         },
     };
