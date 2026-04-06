@@ -15,6 +15,7 @@ function main(params) {
 // 覆写Basic Options
 function overwriteBasicOptions(params) {
     const otherOptions = {
+        "log-level": "warning",
         "mixed-port": 7890,
         "allow-lan": true,
         "unified-delay": true,
@@ -145,7 +146,7 @@ function overwriteProxyGroups(params) {
             code: "AR",
             name: "🇦🇷 阿根廷",
             icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/ar.svg",
-            regex: /(阿根廷|AR|Argentina|🇦🇷)/i,
+            regex: /\b(阿根廷|AR|Argentina|🇦🇷)\b/i,
         },
         {
             code: "JP",
@@ -163,7 +164,7 @@ function overwriteProxyGroups(params) {
             code: "DE",
             name: "🇩🇪 德国",
             icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/de.svg",
-            regex: /(德国|DE|Germany|🇩🇪)/i,
+            regex: /\b(德国|DE|Germany|🇩🇪)\b/i,
         },
         {
             code: "KR",
@@ -205,7 +206,7 @@ function overwriteProxyGroups(params) {
             code: "TR",
             name: "🇹🇷 土耳其",
             icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/tr.svg",
-            regex: /(土耳其|TR|Turkey|🇹🇷)/i,
+            regex: /\b(土耳其|TR|Turkey|🇹🇷)\b/i,
         },
         {
             code: "RU",
@@ -223,31 +224,31 @@ function overwriteProxyGroups(params) {
             code: "BR",
             name: "🇧🇷 巴西",
             icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/br.svg",
-            regex: /(巴西|BR|Brazil|🇧🇷)/i,
+            regex: /\b(巴西|BR|Brazil|🇧🇷)\b/i,
         },
         {
             code: "IT",
             name: "🇮🇹 意大利",
             icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/it.svg",
-            regex: /(意大利|IT|Italy|🇮🇹)/i,
+            regex: /\b(意大利|IT|Italy|🇮🇹)\b/i,
         },
         {
             code: "CH",
             name: "🇨🇭 瑞士",
             icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/ch.svg",
-            regex: /(瑞士|CH|Switzerland|🇨🇭)/i,
+            regex: /\b(瑞士|CH|Switzerland|🇨🇭)\b/i,
         },
         {
             code: "SE",
             name: "🇸🇪 瑞典",
             icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/se.svg",
-            regex: /(瑞典|SE|Sweden|🇸🇪)/i,
+            regex: /\b(瑞典|SE|Sweden|🇸🇪)\b/i,
         },
         {
             code: "NO",
             name: "🇳🇴 挪威",
             icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/flags/no.svg",
-            regex: /(挪威|NO|Norway|🇳🇴)/i,
+            regex: /\b(挪威|NO|Norway|🇳🇴)\b/i,
         },
         {
             name: "其它",
@@ -288,7 +289,7 @@ function overwriteProxyGroups(params) {
     const autoProxyGroups = autoProxyGroupRegexs
         .map((item) => ({
             name: item.name,
-            type: "fallback",
+            type: "url-test",
             url: "http://www.gstatic.com/generate_204",
             interval: 300,
             tolerance: 50,
@@ -918,7 +919,7 @@ function overwriteRules(params) {
         Bilibili: {
             ...ruleAnchor.classical,
             url: "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/no_ip/Bilibili_no_ip.yaml",
-            path: "./ruleset/RealSeek/Clash_Rule_DIY/PROXY/ip/Bilibili_no_ip.yaml",
+            path: "./ruleset/RealSeek/Clash_Rule_DIY/PROXY/no_ip/Bilibili_no_ip.yaml",
         },
 
         // 流媒体 IP
