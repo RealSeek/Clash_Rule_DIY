@@ -555,8 +555,8 @@ function overwriteRules(params) {
         // 在此添加自定义规则，优先级高于广告规则。例子：
         // "DOMAIN,baidu.com,DIRECT",
         "AND,((NOT,((OR,((PROCESS-NAME,mihomo),(PROCESS-NAME,ClashMeta))))),(DST-PORT,853)),REJECT",
-        // Discord UDP 流量强制代理（语音/视频）
-        "AND,((PROCESS-NAME,Discord.exe),(NETWORK,udp))," + proxyName,
+        // Discord UDP 流量强制代理（语音/视频，全平台）
+        "AND,((OR,((PROCESS-NAME,Discord.exe),(PROCESS-NAME,Discord),(PROCESS-NAME,com.discord),(PROCESS-NAME,discord),(PROCESS-NAME,com.aliucord))),(NETWORK,udp))," + proxyName,
         // 如需更高隐私或更强的 DNS/QUIC 防绕过，可自行开启下面这条规则
         // "AND,((NETWORK,udp),(DST-PORT,443)),REJECT",
     ];
