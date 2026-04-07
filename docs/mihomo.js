@@ -46,7 +46,6 @@ function overwriteHosts(params) {
     const customHosts = {
         "miwifi.com": "192.168.31.2",
         "services.googleapis.cn": "services.googleapis.com",
-        "cn.bing.com": "global.bing.com",
         "dns.alidns.com": [
             "223.5.5.5",
             "223.6.6.6",
