@@ -8,6 +8,8 @@ function main(params) {
     overwriteProxyGroups(params);
     overwriteRules(params);
     overwriteDns(params);
+    // Force enable UDP for all proxies
+    params.proxies.forEach((p) => { p.udp = true; });
     // overwriteTunnel(params); 有需要自行打开
     return params;
 }
@@ -89,6 +91,10 @@ function overwriteSniffer(params) {
             },
 
             TLS: {
+                ports: ["443"],
+            },
+
+            QUIC: {
                 ports: ["443"],
             },
         },
@@ -661,6 +667,9 @@ function overwriteRules(params) {
         // 广告拦截 / 隐私保护 / Malware 拦截 / Phiishing 拦截（ip）
         "RULE-SET,Reject_ip,REJECT",
 
+        // Discord 语音/媒体服务器 IP（每日自动更新）
+        "RULE-SET,Discord_ip," + proxyName,
+
         // telegram ip
         "RULE-SET,Telegram_ip,电报消息",
 
@@ -934,6 +943,13 @@ function overwriteRules(params) {
             ...ruleAnchor.classical,
             url: "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/ip/Telegram_ip.yaml",
             path: "./ruleset/RealSeek/Clash_Rule_DIY/PROXY/ip/Telegram_ip.yaml",
+        },
+
+        // Discord 语音/媒体服务器 IP（每日自动更新）
+        Discord_ip: {
+            ...ruleAnchor.ip,
+            url: "https://raw.githubusercontent.com/RealSeek/discord-servers/refs/heads/main/data/mihomo-discord-ip.yaml",
+            path: "./ruleset/RealSeek/discord-servers/data/mihomo-discord-ip.yaml",
         },
 
         // ##################################################################################################################

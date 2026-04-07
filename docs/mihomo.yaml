@@ -1324,6 +1324,13 @@ rule-providers:
     format: yaml
     url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/ip/Telegram_ip.yaml
     path: ./ruleset/RealSeek/Clash_Rule_DIY/PROXY/ip/Telegram_ip.yaml
+  Discord_ip:
+    type: http
+    interval: 1800
+    behavior: ipcidr
+    format: yaml
+    url: https://raw.githubusercontent.com/RealSeek/discord-servers/refs/heads/main/data/mihomo-discord-ip.yaml
+    path: ./ruleset/RealSeek/discord-servers/data/mihomo-discord-ip.yaml
   AI_no_ip:
     type: http
     interval: 1800
@@ -1446,6 +1453,7 @@ rules:
   - RULE-SET,NetEaseMusic_ip,DIRECT
   - RULE-SET,SteamCN_ip,DIRECT
   - RULE-SET,Reject_ip,REJECT
+  - RULE-SET,Discord_ip,代理模式
   - RULE-SET,Telegram_ip,电报消息
   - RULE-SET,Stream_ip,流媒体
   - RULE-SET,Emby_no_ip,Emby
