@@ -1,0 +1,56 @@
+name: Convert YAML rulesets to MRS
+
+on:
+  push:
+    branches: [mihomo]
+    paths:
+      - 'REJECT/no_ip/Reject_domainset.yaml'
+      - 'DIRECT/ip/China_ip.yaml'
+      - 'PROXY/no_ip/CDN_domainset.yaml'
+      - 'PROXY/no_ip/Download_domainset.yaml'
+  workflow_dispatch:
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install mihomo
+        run: |
+          LATEST_VERSION=$(curl -s https://api.github.com/repos/MetaCubeX/mihomo/releases/latest | jq -r '.tag_name')
+          wget -q "https://github.com/MetaCubeX/mihomo/releases/download/${LATEST_VERSION}/mihomo-linux-amd64-${LATEST_VERSION}.gz"
+          gunzip "mihomo-linux-amd64-${LATEST_VERSION}.gz"
+          chmod +x "mihomo-linux-amd64-${LATEST_VERSION}"
+          sudo mv "mihomo-linux-amd64-${LATEST_VERSION}" /usr/local/bin/mihomo
+          mihomo version
+
+      - name: Convert domain rulesets to MRS
+        run: |
+          mihomo convert-ruleset domain yaml \
+            REJECT/no_ip/Reject_domainset.yaml \
+            REJECT/no_ip/Reject_domainset.mrs
+
+          mihomo convert-ruleset domain yaml \
+            PROXY/no_ip/CDN_domainset.yaml \
+            PROXY/no_ip/CDN_domainset.mrs
+
+          mihomo convert-ruleset domain yaml \
+            PROXY/no_ip/Download_domainset.yaml \
+            PROXY/no_ip/Download_domainset.mrs
+
+      - name: Convert ipcidr rulesets to MRS
+        run: |
+          mihomo convert-ruleset ipcidr yaml \
+            DIRECT/ip/China_ip.yaml \
+            DIRECT/ip/China_ip.mrs
+
+      - name: Commit and push
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add -A '*.mrs'
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "[bot] Update MRS binary rulesets"
+          git push

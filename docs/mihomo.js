@@ -770,8 +770,9 @@ function overwriteRules(params) {
 
         Reject_domainset: {
             ...ruleAnchor.domain,
-            url: "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/REJECT/no_ip/Reject_domainset.yaml",
-            path: "./ruleset/RealSeek/Clash_Rule_DIY/REJECT/no_ip/Reject_domainset.yaml",
+            format: "mrs",
+            url: "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/REJECT/no_ip/Reject_domainset.mrs",
+            path: "./ruleset/RealSeek/Clash_Rule_DIY/REJECT/no_ip/Reject_domainset.mrs",
         },
 
         Reject_no_ip_drop: {
@@ -797,8 +798,9 @@ function overwriteRules(params) {
         // 国内常见互联网公司和服务的 IP
         China_ip: {
             ...ruleAnchor.ip,
-            url: "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/DIRECT/ip/China_ip.yaml",
-            path: "./ruleset/RealSeek/Clash_Rule_DIY/DIRECT/ip/China_ip.yaml",
+            format: "mrs",
+            url: "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/DIRECT/ip/China_ip.mrs",
+            path: "./ruleset/RealSeek/Clash_Rule_DIY/DIRECT/ip/China_ip.mrs",
         },
 
         // 国内常见互联网公司和服务的 IP
@@ -973,8 +975,9 @@ function overwriteRules(params) {
         // 常需要代理的静态 CDN
         CDN_domainset: {
             ...ruleAnchor.domain,
-            url: "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/no_ip/CDN_domainset.yaml",
-            path: "./ruleset/RealSeek/Clash_Rule_DIY/PROXY/no_ip/CDN_domainset.yaml",
+            format: "mrs",
+            url: "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/no_ip/CDN_domainset.mrs",
+            path: "./ruleset/RealSeek/Clash_Rule_DIY/PROXY/no_ip/CDN_domainset.mrs",
         },
 
         // 常需要代理的静态 CDN
@@ -994,8 +997,9 @@ function overwriteRules(params) {
         // 软件更新、操作系统等大文件下载
         Download_domainset: {
             ...ruleAnchor.domain,
-            url: "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/no_ip/Download_domainset.yaml",
-            path: "./ruleset/RealSeek/Clash_Rule_DIY/PROXY/no_ip/Download_domainset.yaml",
+            format: "mrs",
+            url: "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/no_ip/Download_domainset.mrs",
+            path: "./ruleset/RealSeek/Clash_Rule_DIY/PROXY/no_ip/Download_domainset.mrs",
         },
 
         // 软件更新、操作系统等大文件下载
