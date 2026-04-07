@@ -1423,6 +1423,7 @@ rule-providers:
     url: https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/no_ip/Telegram_no_ip.yaml
     path: ./ruleset/RealSeek/Clash_Rule_DIY/PROXY/no_ip/Telegram_no_ip.yaml
 rules:
+  - AND,((PROCESS-NAME,Discord.exe),(NETWORK,udp)),代理模式
   - RULE-SET,Reject_no_ip,REJECT
   - RULE-SET,Reject_domainset,REJECT
   - RULE-SET,Reject_no_ip_drop,REJECT-DROP
