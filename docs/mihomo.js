@@ -671,6 +671,9 @@ function overwriteRules(params) {
         // Discord 语音/媒体服务器 IP（每日自动更新）
         "RULE-SET,Discord_ip," + proxyName,
 
+        // ai 相关 IP 段（Anthropic）
+        "RULE-SET,AI_ip,AI",
+
         // telegram ip
         "RULE-SET,Telegram_ip,电报消息",
 
@@ -962,6 +965,13 @@ function overwriteRules(params) {
             ...ruleAnchor.classical,
             url: "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/no_ip/AI_no_ip.yaml",
             path: "./ruleset/RealSeek/Clash_Rule_DIY/PROXY/no_ip/AI_no_ip.yaml",
+        },
+
+        // ai 相关 IP 段（Anthropic IP ranges & ASN）
+        AI_ip: {
+            ...ruleAnchor.classical,
+            url: "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/ip/AI_ip.yaml",
+            path: "./ruleset/RealSeek/Clash_Rule_DIY/PROXY/ip/AI_ip.yaml",
         },
 
         // apple
