@@ -2,6 +2,35 @@ payload:
   - DOMAIN-SUFFIX,steam.caigamer.com
   - DOMAIN-SUFFIX,99.df1319.com
   # 以上是自定义内容
+  # 国内 AI 服务
+  - DOMAIN-SUFFIX,deepseek.com
+  - DOMAIN-SUFFIX,doubao.com
+  - DOMAIN-SUFFIX,maoxiangai.com
+  - DOMAIN-SUFFIX,myparallelstory.com
+  - DOMAIN-SUFFIX,pixeldance.com
+  - DOMAIN-SUFFIX,coze.site
+  - DOMAIN-SUFFIX,rwkv.com
+  - DOMAIN-SUFFIX,qianwen.com
+  - DOMAIN-SUFFIX,qwen.ai
+  - DOMAIN-SUFFIX,qwenlm.ai
+  - DOMAIN-SUFFIX,tongyi.com
+  - DOMAIN-SUFFIX,hailuoai.com
+  - DOMAIN-SUFFIX,minimaxi.com
+  - DOMAIN-SUFFIX,xingyeai.com
+  - DOMAIN-SUFFIX,baichuan-ai.com
+  # 国内服务补充
+  - DOMAIN-SUFFIX,bilibili.cc
+  - DOMAIN-SUFFIX,bilibili.net
+  - DOMAIN-SUFFIX,bilibiligame.co
+  - DOMAIN-SUFFIX,bilibiligame.net
+  - DOMAIN-SUFFIX,bilibilipay.com
+  - DOMAIN-SUFFIX,bytedance.net
+  - DOMAIN-SUFFIX,bytedanceapi.com
+  - DOMAIN-SUFFIX,aliyuncdn.com
+  - DOMAIN-SUFFIX,ctripbiz.com
+  - DOMAIN-SUFFIX,miwifi.com
+  - DOMAIN-SUFFIX,tendawifi.com
+  - DOMAIN-SUFFIX,hiwifi.com
   - DOMAIN-SUFFIX,chaoxing.cc
   - DOMAIN-SUFFIX,3.cn
   - DOMAIN-SUFFIX,6.cn

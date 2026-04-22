@@ -63,6 +63,9 @@ sniffer:
     TLS:
       ports:
         - 443
+    QUIC:
+      ports:
+        - 443
   skip-domain:
     - +.push.apple.com
   skip-dst-address:
@@ -93,6 +96,17 @@ tun:
     - any:53
   route-exclude-address: []
   mtu: 1500
+  exclude-package:
+    - com.samsung.android.messaging
+    - com.samsung.android.app.telephonyui
+    - com.samsung.android.dialer
+    - com.samsung.android.incallui
+    - com.samsung.android.smartcallprovider
+    - com.samsung.android.intellivoiceservice
+    - com.android.settings
+    - com.qti.qcc
+    - com.sec.epdg
+    - com.sec.imsservice
 #exclude-package内填写的包名，网络流量不经过tun，相当于黑名单
 #默认添加MIUI镜像服务以及三星电话服务，避免系统功能不可用
 #如果想仅代理指定应用，请将exclude-package改为include-package
@@ -132,7 +146,10 @@ dns:
     - https://doh.pub/dns-query
     - https://dns.alidns.com/dns-query
   direct-nameserver: []
-  nameserver-policy: {}
+  nameserver-policy:
+    'rule-set:Domestic_no_ip,Direct_no_ip,Lan_no_ip,GoogleFCM_no_ip':
+      - https://doh.pub/dns-query
+      - https://dns.alidns.com/dns-query
 
 proxy-groups:
   - name: 代理模式
@@ -669,6 +686,13 @@ proxy-groups:
     proxies:
       - DIRECT
       - 代理模式
+
+  - name: 广告屏蔽
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/bug.svg
+    proxies:
+      - REJECT-DROP
+      - PASS
 
   # ====================香港===================================
   - name: "🇭🇰 香港 - 自动选择"
@@ -1424,10 +1448,10 @@ rule-providers:
     path: ./ruleset/RealSeek/Clash_Rule_DIY/PROXY/no_ip/Telegram_no_ip.yaml
 rules:
   - AND,((OR,((PROCESS-NAME,Discord.exe),(PROCESS-NAME,Discord),(PROCESS-NAME,com.discord),(PROCESS-NAME,discord),(PROCESS-NAME,com.aliucord))),(NETWORK,udp)),代理模式
-  - RULE-SET,Reject_no_ip,REJECT
-  - RULE-SET,Reject_domainset,REJECT
-  - RULE-SET,Reject_no_ip_drop,REJECT-DROP
-  - RULE-SET,Reject_no_ip_no_drop,REJECT
+  - RULE-SET,Reject_no_ip,广告屏蔽
+  - RULE-SET,Reject_domainset,广告屏蔽
+  - RULE-SET,Reject_no_ip_drop,广告屏蔽
+  - RULE-SET,Reject_no_ip_no_drop,广告屏蔽
   - RULE-SET,CustomProxy_no_ip,代理模式
   - RULE-SET,GoogleFCM_no_ip,GoogleFCM
   - RULE-SET,NetEaseMusic_no_ip,DIRECT

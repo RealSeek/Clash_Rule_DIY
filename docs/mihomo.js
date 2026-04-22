@@ -10,7 +10,7 @@ function main(params) {
     overwriteDns(params);
     // Force enable UDP for all proxies
     params.proxies.forEach((p) => { p.udp = true; });
-    // overwriteTunnel(params); 有需要自行打开
+    overwriteTunnel(params);
     return params;
 }
 
@@ -530,7 +530,7 @@ function overwriteProxyGroups(params) {
         {
             name: "广告屏蔽",
             type: "select",
-            proxies: ["REJECT" ,"DIRECT", proxyName],
+            proxies: ["REJECT-DROP", "PASS"],
             icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/bug.svg",
         },
         {
@@ -1151,19 +1151,31 @@ function getManualProxiesByRegex(params, regex) {
         : ["DIRECT", "手动选择", proxyName];
 }
 
-// 覆写Tunnel （有需要自行开启）
-// function overwriteTunnel(params) {
-//     const tunnelOptions = {
-//         enable: true,
-//         stack: "System",
-//         device: "Mihomo",
-//         "dns-hijack": ["any:53"],
-//         "auto-route": true,
-//         "auto-redirect": false,
-//         "auto-detect-interface": true,
-//         "strict-route": false,
-//         "route-exclude-address": [],
-//         mtu: 1500,
-//     };
-//     params.tun = { ...tunnelOptions };
-// }
+// 覆写Tunnel
+function overwriteTunnel(params) {
+    const tunnelOptions = {
+        enable: true,
+        stack: "gvisor",
+        device: "Meta",
+        "dns-hijack": ["any:53"],
+        "auto-route": true,
+        "auto-redirect": false,
+        "auto-detect-interface": true,
+        "strict-route": false,
+        "route-exclude-address": [],
+        mtu: 1500,
+        "exclude-package": [
+            "com.samsung.android.messaging",
+            "com.samsung.android.app.telephonyui",
+            "com.samsung.android.dialer",
+            "com.samsung.android.incallui",
+            "com.samsung.android.smartcallprovider",
+            "com.samsung.android.intellivoiceservice",
+            "com.android.settings",
+            "com.qti.qcc",
+            "com.sec.epdg",
+            "com.sec.imsservice",
+        ],
+    };
+    params.tun = { ...tunnelOptions };
+}
