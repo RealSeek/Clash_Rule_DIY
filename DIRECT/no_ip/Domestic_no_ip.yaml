@@ -1,6 +1,7 @@
 payload:
   - DOMAIN-SUFFIX,steam.caigamer.com
   - DOMAIN-SUFFIX,99.df1319.com
+  - DOMAIN-SUFFIX,api-huacloud.net
   # 以上是自定义内容
   # 国内 AI 服务
   - DOMAIN-SUFFIX,deepseek.com
