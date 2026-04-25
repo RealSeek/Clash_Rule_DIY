@@ -320,7 +320,7 @@ function overwriteProxyGroups(params) {
         {
             name: proxyName,
             type: "select",
-            url: "http://www.gstatic.com/generate_204",
+            url: "https://www.gstatic.com/generate_204",
             icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/adjust.svg",
             proxies: [
                 "延迟优选",
@@ -363,7 +363,7 @@ function overwriteProxyGroups(params) {
         {
             name: "负载均衡 (散列)",
             type: "load-balance",
-            url: "http://www.gstatic.com/generate_204",
+            url: "https://www.gstatic.com/generate_204",
             icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/balance.svg",
             interval: 300,
             "max-failed-times": 3,
@@ -376,7 +376,7 @@ function overwriteProxyGroups(params) {
         {
             name: "负载均衡 (轮询)",
             type: "load-balance",
-            url: "http://www.gstatic.com/generate_204",
+            url: "https://www.gstatic.com/generate_204",
             icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/merry_go.svg",
             interval: 300,
             "max-failed-times": 3,
