@@ -1193,7 +1193,11 @@ function overwriteDns(params) {
         "direct-nameserver-follow-policy": true,
 
         "nameserver-policy": {
-            "rule-set:cn_domain,rule-set:private_domain": [
+            "rule-set:cn_domain": [
+                "https://doh.pub/dns-query",
+                "https://dns.alidns.com/dns-query",
+            ],
+            "rule-set:private_domain": [
                 "https://doh.pub/dns-query",
                 "https://dns.alidns.com/dns-query",
             ],
