@@ -24,7 +24,6 @@ function overwriteBasicOptions(params) {
         "tcp-concurrent": true,
         "keep-alive-interval": 30,
         "keep-alive-idle": 15,
-        "geodata-mode": true,
         "find-process-mode": "strict",
         "global-client-fingerprint": "chrome",
         profile: {
@@ -699,9 +698,11 @@ function overwriteRules(params) {
          * 这部分域名一般会被解析到局域网 IP、需要走内网 DNS 解析、需要直连访问
          */
         "RULE-SET,Lan_ip,DIRECT",
-        // 使用 GEOIP 和 GEOSITE 兜底直连规则
-        "GEOIP,CN,DIRECT",
-        "GEOSITE,cn,DIRECT",
+        // 使用 rule-set 兜底直连规则（替代 GEOIP/GEOSITE）
+        "RULE-SET,cn_domain,DIRECT",
+        "RULE-SET,private_domain,DIRECT",
+        "RULE-SET,cn_ip,DIRECT",
+        "RULE-SET,private_ip,DIRECT",
         // 兜底
         "MATCH,漏网之鱼",
     ];
@@ -889,11 +890,12 @@ function overwriteRules(params) {
         // fake-ip 过滤补充规则，直接使用外部 mrs 域名规则集
         FakeIPFilter_domainset: {
             type: "http",
-            interval: 1800,
+            interval: 86400,
             behavior: "domain",
             format: "mrs",
-            url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/fakeip-filter.mrs",
+            url: "https://ghfast.top/github.com/DustinWin/ruleset_geodata/raw/refs/heads/mihomo-ruleset/fakeip-filter.mrs",
             path: "./ruleset/DustinWin/ruleset_geodata/fakeip-filter.mrs",
+            proxy: "DIRECT",
         },
 
         // 微软中国 CDN
@@ -1063,6 +1065,69 @@ function overwriteRules(params) {
         },
 
         // ##################################################################################################################
+
+        /**
+         * 外部规则集（替代 GEOIP/GEOSITE）
+         */
+
+        // ##################################################################################################################
+
+        // 中国大陆域名
+        cn_domain: {
+            type: "http",
+            interval: 86400,
+            behavior: "domain",
+            format: "mrs",
+            url: "https://ghfast.top/github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/cn.mrs",
+            path: "./ruleset/MetaCubeX/meta-rules-dat/geo/geosite/cn.mrs",
+            proxy: "DIRECT",
+        },
+
+        // 私有域名
+        private_domain: {
+            type: "http",
+            interval: 86400,
+            behavior: "domain",
+            format: "mrs",
+            url: "https://ghfast.top/github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/private.mrs",
+            path: "./ruleset/MetaCubeX/meta-rules-dat/geo/geosite/private.mrs",
+            proxy: "DIRECT",
+        },
+
+        // 中国大陆 IP
+        cn_ip: {
+            type: "http",
+            interval: 86400,
+            behavior: "ipcidr",
+            format: "mrs",
+            url: "https://ghfast.top/github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/cn.mrs",
+            path: "./ruleset/MetaCubeX/meta-rules-dat/geo/geoip/cn.mrs",
+            proxy: "DIRECT",
+        },
+
+        // 私有 IP
+        private_ip: {
+            type: "http",
+            interval: 86400,
+            behavior: "ipcidr",
+            format: "mrs",
+            url: "https://ghfast.top/github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/private.mrs",
+            path: "./ruleset/MetaCubeX/meta-rules-dat/geo/geoip/private.mrs",
+            proxy: "DIRECT",
+        },
+
+        // 代理域名（用于 DNS nameserver-policy）
+        proxy_domain: {
+            type: "http",
+            interval: 86400,
+            behavior: "domain",
+            format: "mrs",
+            url: "https://ghfast.top/github.com/DustinWin/ruleset_geodata/raw/refs/heads/mihomo-ruleset/proxy.mrs",
+            path: "./ruleset/DustinWin/ruleset_geodata/proxy.mrs",
+            proxy: "DIRECT",
+        },
+
+        // ##################################################################################################################
     };
 
     // 插入远程规则
@@ -1130,11 +1195,11 @@ function overwriteDns(params) {
         "direct-nameserver-follow-policy": true,
 
         "nameserver-policy": {
-            "geosite:cn,private": [
+            "rule-set:cn_domain,rule-set:private_domain": [
                 "https://doh.pub/dns-query",
                 "https://dns.alidns.com/dns-query",
             ],
-            "geosite:geolocation-!cn,gfw,!cn": [
+            "rule-set:proxy_domain": [
                 "https://dns.google/dns-query",
                 "https://cloudflare-dns.com/dns-query",
             ],
