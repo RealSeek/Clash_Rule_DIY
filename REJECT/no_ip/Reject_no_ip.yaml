@@ -55,6 +55,9 @@ payload:
   - DOMAIN-SUFFIX,httpdns.n.netease.com
   - DOMAIN,httpdns-sdk.n.netease.com
   - DOMAIN,httpdns.push.heytapmobi.com
+  - DOMAIN,virusinfo-cloudscan-cn.heytapmobi.com
+  - DOMAIN,cloudconf-app-cn.heytapmobi.com
+  - DOMAIN,opav-cse.avlyun.com
   - DOMAIN,httpdns.push.oppomobile.com
   - DOMAIN,dns.weixin.qq.com.cn
   - DOMAIN-KEYWORD,.estream.
