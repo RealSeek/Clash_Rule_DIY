@@ -554,6 +554,7 @@ payload:
   - DOMAIN-SUFFIX,whoer.net
   - DOMAIN-SUFFIX,akamai.net
   - DOMAIN-SUFFIX,fastly.net
+  - DOMAIN-SUFFIX,flowercloud.net
   - DOMAIN-SUFFIX,ipleak.net
   - DOMAIN-SUFFIX,sc-cdn.net
   - DOMAIN-SUFFIX,yandex.net
