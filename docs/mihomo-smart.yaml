@@ -130,13 +130,15 @@ dns:
     - +.msftconnecttest.com
     - +.msftncsi.com
   default-nameserver:
-    - tls://223.5.5.5
+    - system
+    - 119.29.29.29
+    - '2402:4e00::'
   nameserver:
-    - https://doh.pub/dns-query
-    - https://dns.alidns.com/dns-query
+    - system
   proxy-server-nameserver:
-    - https://doh.pub/dns-query
-    - https://dns.alidns.com/dns-query
+    - https://hydrogen1693.com:44443/dns-query/6298716b-6151-4dcd-bc48-7cdee12b7a49
+    - https://subprime7404.com:44443/dns-query/6298716b-6151-4dcd-bc48-7cdee12b7a49
+    - https://tribunal2944.com/dns-query/6298716b-6151-4dcd-bc48-7cdee12b7a49
   direct-nameserver: []
   nameserver-policy:
     'rule-set:Domestic_no_ip,Direct_no_ip,Lan_no_ip,GoogleFCM_no_ip':
