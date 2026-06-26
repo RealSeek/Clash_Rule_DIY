@@ -146,6 +146,11 @@ function ObjKA(i) {
   AMK = Object.entries(i);
 }
 function operator(pro) {
+  // 记录每个节点对象的原始名称，用于后续同步更新 dialer-proxy。
+  // 不向节点对象写入临时字段，避免影响 Sub-Store/组合订阅环境中的对象处理。
+  const originNameMap = new Map();
+  pro.forEach((e) => originNameMap.set(e, e.name));
+
   const Allmap = {};
   const outList = getList(outputName);
   let inputList,
@@ -172,13 +177,6 @@ function operator(pro) {
     });
   }
   const BLKEYS = BLKEY ? BLKEY.split("+") : "";
-
-  // ==================== 新增：保存原始节点名 ====================
-  // 在重命名之前，记录每个节点的原始名称，用于后续更新 dialer-proxy 引用
-  pro.forEach((e) => {
-    e._originName = e.name;
-  });
-  // ===============================================================
 
   pro.forEach((e) => {
     let bktf = false,
@@ -304,11 +302,12 @@ function operator(pro) {
   // 1. 构建映射表：旧名称 → 新名称（数组，处理同名情况）
   const renameMap = {};
   pro.forEach((e) => {
-    if (e._originName != null) {
-      if (!renameMap[e._originName]) {
-        renameMap[e._originName] = [];
+    const oldName = originNameMap.get(e);
+    if (oldName != null) {
+      if (!renameMap[oldName]) {
+        renameMap[oldName] = [];
       }
-      renameMap[e._originName].push(e.name);
+      renameMap[oldName].push(e.name);
     }
   });
 
@@ -356,8 +355,6 @@ function operator(pro) {
         }
       }
     }
-    // 清理临时字段
-    delete e._originName;
   });
 
   if (DPDEBUG) {
@@ -370,7 +367,7 @@ function operator(pro) {
 // prettier-ignore
 function getList(arg) { switch (arg) { case 'us': return EN; case 'gq': return FG; case 'quan': return QC; default: return ZH; }}
 // prettier-ignore
-function jxh(e) { const n = e.reduce((e, n) => { const t = e.find((e) => e.name === n.name); if (t) { t.count++; t.items.push({ ...n, name: `${n.name}${XHFGF}${t.count.toString().padStart(2, "0")}`, }); } else { e.push({ name: n.name, count: 1, items: [{ ...n, name: `${n.name}${XHFGF}01` }] }); } return e; }, []);const t=(typeof Array.prototype.flatMap==='function'?n.flatMap((e) => e.items):n.reduce((acc, e) => acc.concat(e.items),[])); e.splice(0, e.length, ...t); return e;}
+function jxh(e) { const n = e.reduce((e, n) => { const t = e.find((e) => e.name === n.name); if (t) { t.count++; n.name = `${n.name}${XHFGF}${t.count.toString().padStart(2, "0")}`; t.items.push(n); } else { const baseName = n.name; n.name = `${baseName}${XHFGF}01`; e.push({ name: baseName, count: 1, items: [n] }); } return e; }, []);const t=(typeof Array.prototype.flatMap==='function'?n.flatMap((e) => e.items):n.reduce((acc, e) => acc.concat(e.items),[])); e.splice(0, e.length, ...t); return e;}
 // prettier-ignore
 function oneP(e) { const t = e.reduce((e, t) => { const n = t.name.replace(/[^A-Za-z0-9\u00C0-\u017F\u4E00-\u9FFF]+\d+$/, ""); if (!e[n]) { e[n] = []; } e[n].push(t); return e; }, {}); for (const e in t) { if (t[e].length === 1 && t[e][0].name.endsWith("01")) { t[e][0].name= t[e][0].name.replace(/[^.]01/, "") } } return e; }
 // prettier-ignore
