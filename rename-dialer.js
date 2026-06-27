@@ -147,9 +147,15 @@ function ObjKA(i) {
 }
 function operator(pro) {
   // 记录每个节点对象的原始名称，用于后续同步更新 dialer-proxy。
-  // 不向节点对象写入临时字段，避免影响 Sub-Store/组合订阅环境中的对象处理。
-  const originNameMap = new Map();
-  pro.forEach((e) => originNameMap.set(e, e.name));
+  // 不向节点对象写入临时字段，也不使用 Map/WeakMap，尽量兼容 Sub-Store 的脚本运行环境。
+  const originNameList = [];
+  pro.forEach((e) => originNameList.push([e, e.name]));
+  function getOriginName(proxy) {
+    for (let i = 0; i < originNameList.length; i++) {
+      if (originNameList[i][0] === proxy) return originNameList[i][1];
+    }
+    return undefined;
+  }
 
   const Allmap = {};
   const outList = getList(outputName);
@@ -302,7 +308,7 @@ function operator(pro) {
   // 1. 构建映射表：旧名称 → 新名称（数组，处理同名情况）
   const renameMap = {};
   pro.forEach((e) => {
-    const oldName = originNameMap.get(e);
+    const oldName = getOriginName(e);
     if (oldName != null) {
       if (!renameMap[oldName]) {
         renameMap[oldName] = [];
