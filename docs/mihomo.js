@@ -1168,6 +1168,8 @@ function overwriteDns(params) {
             "+.docker.io",
             "+.market.xiaomi.com",
             "+.push.apple.com",
+            "+.ts.net",
+            "100.64.0.0/10",
         ],
 
         "default-nameserver": [
@@ -1176,6 +1178,7 @@ function overwriteDns(params) {
         ],
 
         nameserver: [
+            "ts://tailscale",
             "https://dns.google/dns-query",
             "https://cloudflare-dns.com/dns-query",
         ],
@@ -1193,6 +1196,9 @@ function overwriteDns(params) {
         "direct-nameserver-follow-policy": true,
 
         "nameserver-policy": {
+            "+.ts.net": [
+                "100.100.100.100#system"
+            ],
             "rule-set:cn_domain": [
                 "https://doh.pub/dns-query",
                 "https://dns.alidns.com/dns-query",
