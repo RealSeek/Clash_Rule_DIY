@@ -25,7 +25,6 @@ function overwriteBasicOptions(params) {
         "keep-alive-interval": 30,
         "keep-alive-idle": 15,
         "find-process-mode": "strict",
-        "global-client-fingerprint": "chrome",
         profile: {
             "store-selected": true,
             "store-fake-ip": true,
