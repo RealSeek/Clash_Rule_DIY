@@ -1178,8 +1178,8 @@ function overwriteDns(params) {
 
         nameserver: [
             "ts://tailscale",
-            "https://1.1.1.1/dns-query",
-            "https://8.8.8.8/dns-query",
+            "https://1.1.1.1/dns-query#代理模式",
+            "https://8.8.8.8/dns-query#代理模式",
         ],
 
         "proxy-server-nameserver": [
@@ -1207,8 +1207,8 @@ function overwriteDns(params) {
                 "https://dns.alidns.com/dns-query",
             ],
             "rule-set:proxy_domain": [
-                "https://1.1.1.1/dns-query",
-                "https://8.8.8.8/dns-query",
+                "https://1.1.1.1/dns-query#代理模式",
+                "https://8.8.8.8/dns-query#代理模式",
             ],
         },
     };
