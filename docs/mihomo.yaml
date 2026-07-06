@@ -116,7 +116,6 @@ dns:
   use-system-hosts: false
   fake-ip-range: 198.18.0.1/16
   fake-ip-filter:
-    - "*"
     - +.lan
     - +.local
     - time.*.com
@@ -134,12 +133,16 @@ dns:
     - 119.29.29.29
     - '2402:4e00::'
   nameserver:
-    - system
+    - "https://1.1.1.1/dns-query#RULES"
+    - "https://8.8.8.8/dns-query#RULES"
   proxy-server-nameserver:
     - https://hydrogen1693.com:44443/dns-query/6298716b-6151-4dcd-bc48-7cdee12b7a49
     - https://subprime7404.com:44443/dns-query/6298716b-6151-4dcd-bc48-7cdee12b7a49
     - https://tribunal2944.com/dns-query/6298716b-6151-4dcd-bc48-7cdee12b7a49
-  direct-nameserver: []
+  direct-nameserver:
+    - https://doh.pub/dns-query
+    - https://dns.alidns.com/dns-query
+  direct-nameserver-follow-policy: true
   nameserver-policy:
     'rule-set:Domestic_no_ip,Direct_no_ip,Lan_no_ip,GoogleFCM_no_ip':
       - https://doh.pub/dns-query
