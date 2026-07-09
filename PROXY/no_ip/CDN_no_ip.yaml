@@ -6,6 +6,7 @@ payload:
   - DOMAIN-KEYWORD,web-assets.zendesk
   - DOMAIN-KEYWORD,-res.cloudinary.com
   - DOMAIN-KEYWORD,dsn.algolia.net
+  - DOMAIN-KEYWORD,ldstatic.com
   - DOMAIN-REGEX,^appcenter-filemanagement-[\w.-]*?\.cloudapp\.net$
   - DOMAIN-REGEX,^proxy-[\w.-]*?\.dailymotion\.com$
   - DOMAIN-REGEX,^static[\w.-]*?\.tgstat\.ru$
