@@ -155,7 +155,6 @@ payload:
   - IP-CIDR,182.254.116.117/32,no-resolve
   - IP-CIDR,182.254.118.119/32,no-resolve
   - IP-CIDR,186.76.76.200/32,no-resolve
-  - IP-CIDR,203.107.1.0/24,no-resolve
   - IP-CIDR,203.119.204.66/32,no-resolve
   - IP-CIDR,203.119.238.194/32,no-resolve
   - IP-CIDR6,2402:db40:5100:1011::5/128,no-resolve
