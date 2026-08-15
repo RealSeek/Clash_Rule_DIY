@@ -1199,7 +1199,7 @@ function overwriteDns(params) {
 
         "nameserver-policy": {
             "+.et.net": [
-                "100.100.100.101"
+                "100.100.100.101#EasyTier"
             ],
 
             "+.ts.net": [
