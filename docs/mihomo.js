@@ -551,6 +551,8 @@ function overwriteRules(params) {
     const customRules = [
         // 在此添加自定义规则，优先级高于广告规则。例子：
         // "DOMAIN,baidu.com,DIRECT",
+        "IP-CIDR,10.126.0.0/24,DIRECT,no-resolve",
+        "IP-CIDR,100.100.100.101/32,DIRECT,no-resolve",
         "AND,((NOT,((OR,((PROCESS-NAME,mihomo),(PROCESS-NAME,ClashMeta))))),(DST-PORT,853)),REJECT",
         // Discord UDP 流量强制代理（语音/视频，全平台）
         "AND,((OR,((PROCESS-NAME,Discord.exe),(PROCESS-NAME,Discord),(PROCESS-NAME,com.discord),(PROCESS-NAME,discord),(PROCESS-NAME,com.aliucord))),(NETWORK,udp))," + proxyName,
@@ -1161,6 +1163,7 @@ function overwriteDns(params) {
             "rule-set:Direct_no_ip",
             "rule-set:Domestic_no_ip",
             "rule-set:FakeIPFilter_domainset",
+            "+.et.net",
             "+.pub.3gppnetwork.org",
             "+.bing.com",
             "+.miwifi.com",
@@ -1195,6 +1198,10 @@ function overwriteDns(params) {
         "direct-nameserver-follow-policy": true,
 
         "nameserver-policy": {
+            "+.et.net": [
+                "100.100.100.101#system"
+            ],
+
             "+.ts.net": [
                 "100.100.100.100#system"
             ],
@@ -1236,7 +1243,13 @@ function overwriteTunnel(params) {
         "auto-redirect": false,
         "auto-detect-interface": true,
         "strict-route": false,
-        "route-exclude-address": [],
+        "route-exclude-address": [
+            "10.126.0.0/24",
+            "100.100.100.101/32"
+        ],
+        "exclude-interface": [
+            "EasyTier"
+        ],
         mtu: 1500,
         "exclude-package": [
             "com.samsung.android.messaging",
