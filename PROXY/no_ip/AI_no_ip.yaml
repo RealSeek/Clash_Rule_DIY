@@ -6,7 +6,9 @@ payload:
   - DOMAIN-SUFFIX,claude.com
   - DOMAIN-SUFFIX,clau.de
   - DOMAIN-SUFFIX,claudemcpclient.com
+  - DOMAIN-SUFFIX,claudemcpcontent.com
   - DOMAIN-SUFFIX,claudeusercontent.com
+  - DOMAIN-SUFFIX,claudeusercontent.ai
   - DOMAIN-SUFFIX,jasper.ai
   - DOMAIN-SUFFIX,openart.ai
   - DOMAIN-SUFFIX,perplexity.ai
@@ -17,6 +19,7 @@ payload:
   - DOMAIN-SUFFIX,chatgpt.com
   - DOMAIN-SUFFIX,deepmind.com
   - DOMAIN-SUFFIX,anthropic.com
+  - DOMAIN-SUFFIX,anthropiccdn.com
   - DOMAIN,anthropic.com.cdn.cloudflare.net
   - DOMAIN,servd-anthropic-website.b-cdn.net
   - DOMAIN,anthropic.auth0.com
