@@ -5,6 +5,7 @@
 | 文件 | 平台 |
 | --- | --- |
 | [linux.yaml](linux.yaml) | Linux。eBPF 透明入站，同时开 TUN `mips` + `bbr` |
+| [linux.js](linux.js) | Linux / Android Root 模块的 JS 覆写，接入已有订阅节点及 provider；eBPF 默认只代理本机 |
 | [windows.yaml](windows.yaml) | Windows。没有 eBPF，透明入站由 TUN `mips` + `bbr` 承担 |
 
 两份都不再配置 Mihomo 内嵌 EasyTier，组网统一交给独立 `easytier-core`。Mihomo 只保留固定 overlay 和监听端口排除，为固定地址的 EasyTier 节点配置原生 `hosts`，并强制 EasyTier 进程直连；新增固定 IP 节点时同步补充对应的 `*.et.net` 主机名。Windows 和 Linux 都不写死可能变化的公共节点 IP。
@@ -13,6 +14,22 @@
 
 - `proxy-providers.myclash.url`
 - Linux 的 `listeners.shared.interface` 改成下联网卡。热点用 `wlan0`，桥接用 `br0` 或 `br-lan`
+
+## 手机 JS 覆写
+
+手机已通过 Root 模块运行 `liuran001/mihomo` 时，可将 `linux.js` 添加到支持 `main(params)` 的远程脚本覆写入口。内核自身不执行 JS，必须由模块或管理端执行覆写；如果入口只接受 YAML，不能直接填 JS 链接。
+
+发布后的拉取地址：
+
+```text
+https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/docs/fork/linux.js
+```
+
+脚本保留订阅的 `proxies` / `proxy-providers`，不内置 `myclash` 订阅地址、不改节点协议参数。分流、DNS、策略组名称与独立 `icon` 字段来自 `linux.yaml`，不改原来的 `mihomo.yaml` 翻译。只有内联节点的订阅中，空地区组回退到 `智能优选`，不回退直连。
+
+脚本开头的 `enableEBPF` 默认为 `true`，需要带 `with_ebpf` 的内核、root、cgroup v2。内核不满足条件时改为 `false`，保留 TUN `mips` + `bbr`。`sharedInterfaces` 默认为空，只开启 eBPF 本机入口；要接管热点流量时再填写实际下联网卡，例如 `["wlan0"]`，不沿用 Linux 模板的 `br-lan`。
+
+模块已有的 TUN 开关、设备和句柄、监听端口、控制器及认证设置保留；覆写协议栈为 `mips` + `bbr`，eBPF 开启时关闭 `auto-redirect` 和 `strict-route`。EasyTier 固定 overlay 和源端口排除与模块原有排除合并，仍然不配置 Mihomo 内嵌 EasyTier，也不写死公共节点 IP。
 
 ## 四项分别落在哪
 
