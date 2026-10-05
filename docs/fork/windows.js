@@ -1,21 +1,7 @@
-// liuran001/mihomo Alpha: Root/Linux override, derived from linux.yaml.
-// Requires with_ebpf and cgroup v2 when enableEBPF is true.
-const enableEBPF = true;
-const sharedInterfaces = []; // Example: ["wlan0"] for hotspot sharing.
-
-const subscriptionExclude = "自动|故障|流量|官网|套餐|机场|订阅|年|月|失联|频道|Traffic|Expire";
-const easytierProcessNames = ["easytier-core", "cc.ptoe.easytier.compose"];
-const easytierDirectDomains = [
-    "DOMAIN-SUFFIX,et.net,DIRECT",
-    "DOMAIN-SUFFIX,hot-chilli.net,DIRECT",
-    "DOMAIN-SUFFIX,fitauto.ru,DIRECT",
-    "DOMAIN-SUFFIX,radiojar.com,DIRECT",
-    "DOMAIN-SUFFIX,turn.cloudflare.com,DIRECT",
-    "DOMAIN-SUFFIX,twilio.com,DIRECT",
-    "DOMAIN-SUFFIX,lifesizecloud.com,DIRECT",
-    "DOMAIN-SUFFIX,blackberry.com,DIRECT",
-];
-const linuxConfig = {
+// liuran001/mihomo Alpha: Windows override, derived from fork/windows.yaml.
+// Windows uses one TUN entry; EasyTier remains an independent process and is always direct.
+const subscriptionExclude = "自动|智能调度|智能选择|故障|流量|官网|套餐|机场|订阅|年|月|失联|频道|Traffic|Expire";
+const windowsConfig = {
     "mixed-port": 7890,
     "mode": "rule",
     "allow-lan": true,
@@ -90,7 +76,6 @@ const linuxConfig = {
         "congestion-controller": "bbr",
         "device": "Meta",
         "auto-route": true,
-        "auto-redirect": false,
         "strict-route": false,
         "auto-detect-interface": true,
         "dns-hijack": [
@@ -105,14 +90,14 @@ const linuxConfig = {
             11012,
             11013
         ],
-        "mtu": 1380
+        "mtu": 1500
     },
     "dns": {
         "enable": true,
         "listen": "0.0.0.0:1053",
         "ipv6": true,
         "ipv6-timeout": 300,
-        "prefer-h3": false,
+        "prefer-h3": true,
         "respect-rules": true,
         "enhanced-mode": "fake-ip",
         "fake-ip-filter-mode": "blacklist",
@@ -205,8 +190,8 @@ const linuxConfig = {
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
             "interval": 300,
-            "timeout": 8000,
-            "lazy": false,
+            "timeout": 5000,
+            "lazy": true,
             "tolerance": 50,
             "hidden": true
         },
@@ -223,8 +208,8 @@ const linuxConfig = {
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
             "interval": 300,
-            "timeout": 8000,
-            "lazy": false,
+            "timeout": 5000,
+            "lazy": true,
             "prefer-asn": true,
             "policy-priority": "IEPL:1.5",
             "uselightgbm": true,
@@ -241,8 +226,8 @@ const linuxConfig = {
             ],
             "url": "https://cp.cloudflare.com/generate_204",
             "interval": 300,
-            "timeout": 8000,
-            "lazy": false,
+            "timeout": 5000,
+            "lazy": true,
             "expected-status": 204,
             "hidden": true
         },
@@ -412,8 +397,8 @@ const linuxConfig = {
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
             "interval": 300,
-            "timeout": 8000,
-            "lazy": false,
+            "timeout": 5000,
+            "lazy": true,
             "prefer-asn": true,
             "policy-priority": "IEPL:1.5",
             "uselightgbm": true,
@@ -445,8 +430,8 @@ const linuxConfig = {
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
             "interval": 300,
-            "timeout": 8000,
-            "lazy": false,
+            "timeout": 5000,
+            "lazy": true,
             "prefer-asn": true,
             "policy-priority": "IEPL:1.5",
             "uselightgbm": true,
@@ -478,8 +463,8 @@ const linuxConfig = {
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
             "interval": 300,
-            "timeout": 8000,
-            "lazy": false,
+            "timeout": 5000,
+            "lazy": true,
             "prefer-asn": true,
             "policy-priority": "IEPL:1.5",
             "uselightgbm": true,
@@ -511,8 +496,8 @@ const linuxConfig = {
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
             "interval": 300,
-            "timeout": 8000,
-            "lazy": false,
+            "timeout": 5000,
+            "lazy": true,
             "prefer-asn": true,
             "policy-priority": "IEPL:1.5",
             "uselightgbm": true,
@@ -544,8 +529,8 @@ const linuxConfig = {
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
             "interval": 300,
-            "timeout": 8000,
-            "lazy": false,
+            "timeout": 5000,
+            "lazy": true,
             "prefer-asn": true,
             "policy-priority": "IEPL:1.5",
             "uselightgbm": true,
@@ -577,8 +562,8 @@ const linuxConfig = {
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
             "interval": 300,
-            "timeout": 8000,
-            "lazy": false,
+            "timeout": 5000,
+            "lazy": true,
             "prefer-asn": true,
             "policy-priority": "IEPL:1.5",
             "uselightgbm": true,
@@ -610,8 +595,8 @@ const linuxConfig = {
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
             "interval": 300,
-            "timeout": 8000,
-            "lazy": false,
+            "timeout": 5000,
+            "lazy": true,
             "prefer-asn": true,
             "policy-priority": "IEPL:1.5",
             "uselightgbm": true,
@@ -643,8 +628,8 @@ const linuxConfig = {
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
             "interval": 300,
-            "timeout": 8000,
-            "lazy": false,
+            "timeout": 5000,
+            "lazy": true,
             "prefer-asn": true,
             "policy-priority": "IEPL:1.5",
             "uselightgbm": true,
@@ -676,8 +661,8 @@ const linuxConfig = {
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
             "interval": 300,
-            "timeout": 8000,
-            "lazy": false,
+            "timeout": 5000,
+            "lazy": true,
             "prefer-asn": true,
             "policy-priority": "IEPL:1.5",
             "uselightgbm": true,
@@ -709,8 +694,8 @@ const linuxConfig = {
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
             "interval": 300,
-            "timeout": 8000,
-            "lazy": false,
+            "timeout": 5000,
+            "lazy": true,
             "prefer-asn": true,
             "policy-priority": "IEPL:1.5",
             "uselightgbm": true,
@@ -742,8 +727,8 @@ const linuxConfig = {
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
             "interval": 300,
-            "timeout": 8000,
-            "lazy": false,
+            "timeout": 5000,
+            "lazy": true,
             "prefer-asn": true,
             "policy-priority": "IEPL:1.5",
             "uselightgbm": true,
@@ -775,8 +760,8 @@ const linuxConfig = {
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
             "interval": 300,
-            "timeout": 8000,
-            "lazy": false,
+            "timeout": 5000,
+            "lazy": true,
             "prefer-asn": true,
             "policy-priority": "IEPL:1.5",
             "uselightgbm": true,
@@ -808,8 +793,8 @@ const linuxConfig = {
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
             "interval": 300,
-            "timeout": 8000,
-            "lazy": false,
+            "timeout": 5000,
+            "lazy": true,
             "prefer-asn": true,
             "policy-priority": "IEPL:1.5",
             "uselightgbm": true,
@@ -841,8 +826,8 @@ const linuxConfig = {
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
             "interval": 300,
-            "timeout": 8000,
-            "lazy": false,
+            "timeout": 5000,
+            "lazy": true,
             "prefer-asn": true,
             "policy-priority": "IEPL:1.5",
             "uselightgbm": true,
@@ -874,8 +859,8 @@ const linuxConfig = {
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
             "interval": 300,
-            "timeout": 8000,
-            "lazy": false,
+            "timeout": 5000,
+            "lazy": true,
             "prefer-asn": true,
             "policy-priority": "IEPL:1.5",
             "uselightgbm": true,
@@ -907,8 +892,8 @@ const linuxConfig = {
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
             "interval": 300,
-            "timeout": 8000,
-            "lazy": false,
+            "timeout": 5000,
+            "lazy": true,
             "prefer-asn": true,
             "policy-priority": "IEPL:1.5",
             "uselightgbm": true,
@@ -940,8 +925,8 @@ const linuxConfig = {
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
             "interval": 300,
-            "timeout": 8000,
-            "lazy": false,
+            "timeout": 5000,
+            "lazy": true,
             "prefer-asn": true,
             "policy-priority": "IEPL:1.5",
             "uselightgbm": true,
@@ -973,8 +958,8 @@ const linuxConfig = {
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
             "interval": 300,
-            "timeout": 8000,
-            "lazy": false,
+            "timeout": 5000,
+            "lazy": true,
             "prefer-asn": true,
             "policy-priority": "IEPL:1.5",
             "uselightgbm": true,
@@ -1006,8 +991,8 @@ const linuxConfig = {
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
             "interval": 300,
-            "timeout": 8000,
-            "lazy": false,
+            "timeout": 5000,
+            "lazy": true,
             "prefer-asn": true,
             "policy-priority": "IEPL:1.5",
             "uselightgbm": true,
@@ -1039,8 +1024,8 @@ const linuxConfig = {
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
             "interval": 300,
-            "timeout": 8000,
-            "lazy": false,
+            "timeout": 5000,
+            "lazy": true,
             "prefer-asn": true,
             "policy-priority": "IEPL:1.5",
             "uselightgbm": true,
@@ -1072,8 +1057,8 @@ const linuxConfig = {
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
             "interval": 300,
-            "timeout": 8000,
-            "lazy": false,
+            "timeout": 5000,
+            "lazy": true,
             "prefer-asn": true,
             "policy-priority": "IEPL:1.5",
             "uselightgbm": true,
@@ -1104,8 +1089,8 @@ const linuxConfig = {
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
             "interval": 300,
-            "timeout": 8000,
-            "lazy": false,
+            "timeout": 5000,
+            "lazy": true,
             "prefer-asn": true,
             "policy-priority": "IEPL:1.5",
             "uselightgbm": true,
@@ -1476,18 +1461,10 @@ const linuxConfig = {
         }
     },
     "rules": [
-        "PROCESS-NAME,easytier-core,DIRECT",
-        "PROCESS-NAME,cc.ptoe.easytier.compose,DIRECT",
-        "DOMAIN-SUFFIX,et.net,DIRECT",
-        "DOMAIN-SUFFIX,hot-chilli.net,DIRECT",
-        "DOMAIN-SUFFIX,fitauto.ru,DIRECT",
-        "DOMAIN-SUFFIX,radiojar.com,DIRECT",
-        "DOMAIN-SUFFIX,turn.cloudflare.com,DIRECT",
-        "DOMAIN-SUFFIX,twilio.com,DIRECT",
-        "DOMAIN-SUFFIX,lifesizecloud.com,DIRECT",
-        "DOMAIN-SUFFIX,blackberry.com,DIRECT",
+        "PROCESS-NAME,easytier-gui.exe,DIRECT",
+        "PROCESS-NAME,easytier-core.exe,DIRECT",
         "IP-CIDR,10.126.0.0/24,DIRECT,no-resolve",
-        "IP-CIDR,192.168.0.0/16,DIRECT,no-resolve",
+        "IP-CIDR,100.100.100.101/32,DIRECT,no-resolve",
         "AND,((OR,((PROCESS-NAME,Discord.exe),(PROCESS-NAME,Discord),(PROCESS-NAME,com.discord),(PROCESS-NAME,discord),(PROCESS-NAME,com.aliucord))),(NETWORK,udp)),代理模式",
         "RULE-SET,Reject_no_ip,广告屏蔽",
         "RULE-SET,Reject_domainset,广告屏蔽",
@@ -1532,45 +1509,16 @@ const linuxConfig = {
         "RULE-SET,private_ip,DIRECT",
         "MATCH,漏网之鱼"
     ]
-};
-const ebpfListener = {
-    "name": "ebpf-in",
-    "type": "ebpf",
-    "mode": "hybrid",
-    "network": [
-        "tcp",
-        "udp"
-    ],
-    "udp-timeout": 300,
-    "bypass-rule-set": [
-        "cn_ip"
-    ],
-    "bypass-tun-direct": true,
-    "fakeip-icmp": "reply",
-    "local": {
-        "enable": true,
-        "data-plane": "cgroup",
-        "dns-mode": "hijack",
-        "ipv6": true,
-        "bypass-private-address": true
-    },
-    "shared": {
-        "enable": false,
-        "interface": [],
-        "data-plane": "packet_rewrite",
-        "dns-mode": "hijack",
-        "ipv6": true,
-        "bypass-private-address": false
-    }
-};
+}
+;
 
 function main(params) {
-    const config = JSON.parse(JSON.stringify(linuxConfig));
+    const config = JSON.parse(JSON.stringify(windowsConfig));
     const providers = Object.keys(params["proxy-providers"] || {});
     const excluded = new RegExp(subscriptionExclude, "i");
     const nodes = (params.proxies || []).filter((proxy) => !excluded.test(proxy.name));
     if (!nodes.length && !providers.length) {
-        throw new Error("Linux override requires proxies or proxy-providers from a subscription.");
+        throw new Error("Windows override requires proxies or proxy-providers from a subscription.");
     }
 
     config["proxy-groups"].forEach((group) => {
@@ -1587,27 +1535,18 @@ function main(params) {
             group["exclude-filter"] = [subscriptionExclude, group["exclude-filter"]]
                 .filter(Boolean).join("|");
         } else {
-            // Inline nodes are already filtered; keep the fallback outside the region filter.
             delete group.filter;
             delete group["exclude-filter"];
             if (!group.proxies.length) group.proxies = ["智能优选"];
         }
     });
 
-    // Make country smart/manual groups available to every service selector.
     const countryGroupNames = config["proxy-groups"]
         .filter((group) => / - (智能选择|手动选择)$/.test(group.name))
         .map((group) => group.name);
     const serviceGroups = new Set([
-        "电报消息",
-        "AI",
-        "流媒体",
-        "苹果服务",
-        "微软服务",
-        "Emby",
-        "GoogleFCM",
-        "Steam地区",
-        "漏网之鱼",
+        "电报消息", "AI", "流媒体", "苹果服务", "微软服务",
+        "Emby", "GoogleFCM", "Steam地区", "漏网之鱼",
     ]);
     config["proxy-groups"].forEach((group) => {
         if (!serviceGroups.has(group.name)) return;
@@ -1623,36 +1562,26 @@ function main(params) {
 
     config.hosts = { ...(params.hosts || {}), ...config.hosts };
     config.profile = { ...(params.profile || {}), ...config.profile };
-
-    // Module-owned ports, controller, authentication and TUN handles stay with the module.
     if (params["mixed-port"] !== undefined) config["mixed-port"] = params["mixed-port"];
     for (const key of ["external-controller", "external-ui", "external-ui-url", "secret", "external-controller-cors"]) {
         if (params[key] !== undefined) config[key] = params[key];
     }
     if (params.dns && params.dns.listen !== undefined) config.dns.listen = params.dns.listen;
-    const moduleTun = params.tun || {};
     config.tun = {
         ...config.tun,
-        ...moduleTun,
-        stack: config.tun.stack,
-        "congestion-controller": config.tun["congestion-controller"],
+        ...(params.tun || {}),
+        stack: windowsConfig.tun.stack,
+        "congestion-controller": windowsConfig.tun["congestion-controller"],
     };
     for (const key of ["inet4-route-exclude-address", "exclude-src-port"]) {
         config.tun[key] = [...new Set([
-            ...linuxConfig.tun[key],
-            ...(moduleTun[key] || []),
+            ...windowsConfig.tun[key],
+            ...((params.tun || {})[key] || []),
         ])];
     }
-
-    const listeners = (params.listeners || []).filter((listener) => listener.type !== "ebpf");
-    if (enableEBPF) {
-        const listener = JSON.parse(JSON.stringify(ebpfListener));
-        listener.shared.enable = sharedInterfaces.length > 0;
-        listener.shared.interface = sharedInterfaces.slice();
-        listeners.push(listener);
-        config.tun["auto-redirect"] = false;
-        config.tun["strict-route"] = false;
-    }
-    config.listeners = listeners;
+    config.dns["fake-ip-filter"] = [...new Set([
+        ...config.dns["fake-ip-filter"],
+        "100.100.100.101/32",
+    ])];
     return Object.assign(params, config);
 }
