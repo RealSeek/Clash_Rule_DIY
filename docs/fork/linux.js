@@ -97,7 +97,8 @@ const linuxConfig = {
             "any:53"
         ],
         "inet4-route-exclude-address": [
-            "10.126.0.0/24"
+            "10.126.0.0/24",
+            "100.100.100.101/32"
         ],
         "exclude-src-port": [
             11010,
@@ -169,6 +170,9 @@ const linuxConfig = {
         ],
         "direct-nameserver-follow-policy": true,
         "nameserver-policy": {
+            "+.et.net": [
+                "100.100.100.101"
+            ],
             "rule-set:proxy_domain": [
                 "https://1.1.1.1/dns-query#代理模式",
                 "https://8.8.8.8/dns-query#代理模式"
@@ -1630,6 +1634,10 @@ function main(params) {
         if (params[key] !== undefined) config[key] = params[key];
     }
     if (params.dns && params.dns.listen !== undefined) config.dns.listen = params.dns.listen;
+    config.dns["fake-ip-filter"] = [...new Set([
+        ...config.dns["fake-ip-filter"],
+        "100.100.100.101/32",
+    ])];
     const moduleTun = params.tun || {};
     config.tun = {
         ...config.tun,

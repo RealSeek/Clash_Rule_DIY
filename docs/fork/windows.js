@@ -82,7 +82,8 @@ const windowsConfig = {
             "any:53"
         ],
         "inet4-route-exclude-address": [
-            "10.126.0.0/24"
+            "10.126.0.0/24",
+            "100.100.100.101/32"
         ],
         "exclude-src-port": [
             11010,
@@ -154,6 +155,9 @@ const windowsConfig = {
         ],
         "direct-nameserver-follow-policy": true,
         "nameserver-policy": {
+            "+.et.net": [
+                "100.100.100.101"
+            ],
             "rule-set:proxy_domain": [
                 "https://1.1.1.1/dns-query#代理模式",
                 "https://8.8.8.8/dns-query#代理模式"
@@ -1463,6 +1467,7 @@ const windowsConfig = {
     "rules": [
         "PROCESS-NAME,easytier-gui.exe,DIRECT",
         "PROCESS-NAME,easytier-core.exe,DIRECT",
+        "DOMAIN-SUFFIX,et.net,DIRECT",
         "IP-CIDR,10.126.0.0/24,DIRECT,no-resolve",
         "IP-CIDR,100.100.100.101/32,DIRECT,no-resolve",
         "AND,((OR,((PROCESS-NAME,Discord.exe),(PROCESS-NAME,Discord),(PROCESS-NAME,com.discord),(PROCESS-NAME,discord),(PROCESS-NAME,com.aliucord))),(NETWORK,udp)),代理模式",
