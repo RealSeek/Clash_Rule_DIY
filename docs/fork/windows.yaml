@@ -71,7 +71,7 @@ tun:
   auto-detect-interface: true
   dns-hijack:
     - any:53
-  inet4-route-exclude-address:
+  route-exclude-address:
     - 10.126.0.0/24
   exclude-src-port:
     - 11010

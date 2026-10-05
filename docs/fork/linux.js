@@ -100,7 +100,7 @@ const linuxConfig = {
         "dns-hijack": [
             "any:53"
         ],
-        "inet4-route-exclude-address": [
+        "route-exclude-address": [
             "10.126.0.0/24",
             "100.100.100.101/32"
         ],
@@ -1649,12 +1649,14 @@ function main(params) {
         stack: config.tun.stack,
         "congestion-controller": config.tun["congestion-controller"],
     };
-    for (const key of ["inet4-route-exclude-address", "exclude-src-port"]) {
+    for (const key of ["route-exclude-address", "exclude-src-port"]) {
         config.tun[key] = [...new Set([
             ...linuxConfig.tun[key],
             ...(moduleTun[key] || []),
+            ...(key === "route-exclude-address" ? (moduleTun["inet4-route-exclude-address"] || []) : []),
         ])];
     }
+    delete config.tun["inet4-route-exclude-address"];
 
     const listeners = (params.listeners || []).filter((listener) => listener.type !== "ebpf");
     if (enableEBPF) {

@@ -99,7 +99,7 @@ tun:
   dns-hijack:
     - any:53
   # 只排除固定的 EasyTier overlay；公共节点 IP 可能变化，不在这里写死。
-  inet4-route-exclude-address:
+  route-exclude-address:
     - 10.126.0.0/24
   exclude-src-port:
     - 11010

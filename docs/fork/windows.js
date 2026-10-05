@@ -85,7 +85,7 @@ const windowsConfig = {
         "dns-hijack": [
             "any:53"
         ],
-        "inet4-route-exclude-address": [
+        "route-exclude-address": [
             "10.126.0.0/24",
             "100.100.100.101/32"
         ],
@@ -1582,12 +1582,14 @@ function main(params) {
         stack: windowsConfig.tun.stack,
         "congestion-controller": windowsConfig.tun["congestion-controller"],
     };
-    for (const key of ["inet4-route-exclude-address", "exclude-src-port"]) {
+    for (const key of ["route-exclude-address", "exclude-src-port"]) {
         config.tun[key] = [...new Set([
             ...windowsConfig.tun[key],
             ...((params.tun || {})[key] || []),
+            ...(key === "route-exclude-address" ? ((params.tun || {})["inet4-route-exclude-address"] || []) : []),
         ])];
     }
+    delete config.tun["inet4-route-exclude-address"];
     config.dns["fake-ip-filter"] = [...new Set([
         ...config.dns["fake-ip-filter"],
         "100.100.100.101/32",
