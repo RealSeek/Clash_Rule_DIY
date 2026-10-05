@@ -14,6 +14,10 @@ const windowsConfig = {
     "external-controller": "127.0.0.1:9090",
     "external-ui": "WebUI",
     "external-ui-url": "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
+    "external-controller-cors": {
+        "allow-origins": ["*"],
+        "allow-private-network": true
+    },
     "profile": {
         "store-selected": true,
         "store-fake-ip": true
