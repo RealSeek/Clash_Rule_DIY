@@ -81,6 +81,7 @@ const windowsConfig = {
         "auto-route": true,
         "strict-route": false,
         "auto-detect-interface": true,
+        "route-exclude-address": ["100.64.0.0/10", "fd7a:115c:a1e0::/48"],
         "exclude-src-port": [41641],
         "dns-hijack": [
             "any:53"
