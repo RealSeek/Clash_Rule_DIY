@@ -1,6 +1,11 @@
 // liuran001/mihomo Alpha: Windows override, derived from fork/windows.yaml.
 // Windows uses one TUN entry.
 const subscriptionExclude = "自动|智能调度|智能选择|故障|流量|官网|套餐|机场|订阅|年|月|失联|频道|Traffic|Expire";
+const tailscaleProxy = { "name": "tailscale", "type": "tailscale", "hostname": "realseek-pc", "udp": true, "accept-routes": true, "advertise-routes": ["192.168.0.0/16"], "advertise-exit-node": true };
+function getTailscaleAuthKey(params) {
+    const args = typeof $arguments === "object" && $arguments ? $arguments : params.arguments || {};
+    return args["auth-key"] || args.auth_key || args.authKey || "";
+}
 const windowsConfig = {
     "mixed-port": 7890,
     "mode": "rule",
@@ -1503,7 +1508,12 @@ const windowsConfig = {
 ;
 
 function main(params) {
-    const config = JSON.parse(JSON.stringify(windowsConfig));    const providers = Object.keys(params["proxy-providers"] || {});
+    const config = JSON.parse(JSON.stringify(windowsConfig));
+    const tailscale = { ...tailscaleProxy };
+    const authKey = getTailscaleAuthKey(params);
+    if (authKey) tailscale["auth-key"] = authKey;
+    config.proxies = [...(params.proxies || []).filter((proxy) => proxy.name !== tailscale.name), tailscale];
+    const providers = Object.keys(params["proxy-providers"] || {});
     const excluded = new RegExp(subscriptionExclude, "i");
     const nodes = (params.proxies || []).filter((proxy) => !excluded.test(proxy.name));
     if (!nodes.length && !providers.length) {
