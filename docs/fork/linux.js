@@ -6,7 +6,7 @@ const sharedInterfaces = []; // Example: ["wlan0"] for hotspot sharing.
 const subscriptionExclude = "自动|故障|流量|官网|套餐|机场|订阅|年|月|失联|频道|Traffic|Expire";
 const easytierProcessNames = ["easytier-core", "cc.ptoe.easytier.compose"];
 const easytierDirectDomains = [
-    "DOMAIN-SUFFIX,et.net,DIRECT",
+    "DOMAIN,easytier.weiai.org.cn,DIRECT",
     "DOMAIN-SUFFIX,hot-chilli.net,DIRECT",
     "DOMAIN-SUFFIX,fitauto.ru,DIRECT",
     "DOMAIN-SUFFIX,radiojar.com,DIRECT",
@@ -15,6 +15,37 @@ const easytierDirectDomains = [
     "DOMAIN-SUFFIX,lifesizecloud.com,DIRECT",
     "DOMAIN-SUFFIX,blackberry.com,DIRECT",
 ];
+const easytierProxy = {
+    "name": "easytier",
+    "type": "easytier",
+    "network-name": "RealSeek-EasyTierNetwork",
+    "network-secret": "RealSeek-1060",
+    "instance-name": "RealSeek-EasyTierNetwork",
+    "hostname": "realseek-phone",
+    "ipv4": "10.126.0.12/24",
+    "peers": [
+        "tcp://easytier.weiai.org.cn:11010"
+    ],
+    "listeners": [
+        "udp://0.0.0.0:11010",
+        "tcp://0.0.0.0:11010",
+    ],
+    "udp": true,
+    "accept-dns": true,
+    "latency-first": true,
+    "enable-kcp-proxy": true,
+    "enable-quic-proxy": true,
+    "disable-p2p": false,
+    "mtu": 1360
+};
+const easytierInbound = {
+    "name": "easytier-in",
+    "type": "easytier",
+    "proxy": "easytier",
+    "listen": "0.0.0.0",
+    "port": 17890,
+    "network": ["tcp", "udp"]
+};
 const linuxConfig = {
     "mixed-port": 7890,
     "mode": "rule",
@@ -175,7 +206,7 @@ const linuxConfig = {
         "direct-nameserver-follow-policy": true,
         "nameserver-policy": {
             "+.et.net": [
-                "100.100.100.101"
+                "et://easytier"
             ],
             "rule-set:proxy_domain": [
                 "https://1.1.1.1/dns-query#代理模式",
@@ -1484,9 +1515,6 @@ const linuxConfig = {
         }
     },
     "rules": [
-        "PROCESS-NAME,easytier-core,DIRECT",
-        "PROCESS-NAME,cc.ptoe.easytier.compose,DIRECT",
-        "DOMAIN-SUFFIX,et.net,DIRECT",
         "DOMAIN-SUFFIX,hot-chilli.net,DIRECT",
         "DOMAIN-SUFFIX,fitauto.ru,DIRECT",
         "DOMAIN-SUFFIX,radiojar.com,DIRECT",
@@ -1494,7 +1522,6 @@ const linuxConfig = {
         "DOMAIN-SUFFIX,twilio.com,DIRECT",
         "DOMAIN-SUFFIX,lifesizecloud.com,DIRECT",
         "DOMAIN-SUFFIX,blackberry.com,DIRECT",
-        "IP-CIDR,10.126.0.0/24,DIRECT,no-resolve",
         "IP-CIDR,192.168.0.0/16,DIRECT,no-resolve",
         "AND,((OR,((PROCESS-NAME,Discord.exe),(PROCESS-NAME,Discord),(PROCESS-NAME,com.discord),(PROCESS-NAME,discord),(PROCESS-NAME,com.aliucord))),(NETWORK,udp)),代理模式",
         "RULE-SET,Reject_no_ip,广告屏蔽",
@@ -1574,9 +1601,11 @@ const ebpfListener = {
 
 function main(params) {
     const config = JSON.parse(JSON.stringify(linuxConfig));
+    const subscriptionNodes = (params.proxies || []).filter((proxy) => proxy.name !== easytierProxy.name);
+    config.proxies = [...subscriptionNodes, JSON.parse(JSON.stringify(easytierProxy))];
     const providers = Object.keys(params["proxy-providers"] || {});
     const excluded = new RegExp(subscriptionExclude, "i");
-    const nodes = (params.proxies || []).filter((proxy) => !excluded.test(proxy.name));
+    const nodes = subscriptionNodes.filter((proxy) => !excluded.test(proxy.name));
     if (!nodes.length && !providers.length) {
         throw new Error("Linux override requires proxies or proxy-providers from a subscription.");
     }
@@ -1658,7 +1687,9 @@ function main(params) {
     }
     delete config.tun["inet4-route-exclude-address"];
 
-    const listeners = (params.listeners || []).filter((listener) => listener.type !== "ebpf");
+    const listeners = (params.listeners || []).filter((listener) =>
+        listener.type !== "ebpf" && listener.name !== easytierInbound.name);
+    listeners.push(JSON.parse(JSON.stringify(easytierInbound)));
     if (enableEBPF) {
         const listener = JSON.parse(JSON.stringify(ebpfListener));
         listener.shared.enable = sharedInterfaces.length > 0;

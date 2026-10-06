@@ -134,6 +134,8 @@ dns:
     - https://120.53.53.53/dns-query
   direct-nameserver-follow-policy: true
   nameserver-policy:
+    "+.et.net":
+      - 100.100.100.101
     "rule-set:proxy_domain":
       - https://1.1.1.1/dns-query#代理模式
       - https://8.8.8.8/dns-query#代理模式

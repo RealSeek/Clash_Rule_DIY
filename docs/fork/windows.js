@@ -1,6 +1,42 @@
 // liuran001/mihomo Alpha: Windows override, derived from fork/windows.yaml.
-// Windows uses one TUN entry; EasyTier remains an independent process and is always direct.
+// Windows uses one TUN entry and the fork's native EasyTier proxy/inbound.
 const subscriptionExclude = "自动|智能调度|智能选择|故障|流量|官网|套餐|机场|订阅|年|月|失联|频道|Traffic|Expire";
+const easytierProxy = {
+    "name": "easytier",
+    "type": "easytier",
+    "network-name": "RealSeek-EasyTierNetwork",
+    "network-secret": "RealSeek-1060",
+    "instance-name": "RealSeek-EasyTierNetwork",
+    "hostname": "realseek-pc",
+    "ipv4": "10.126.0.10/24",
+    "peers": [
+        "tcp://easytier.weiai.org.cn:11010"
+    ],
+    "listeners": [
+        "udp://0.0.0.0:11010",
+        "tcp://0.0.0.0:11010",
+        "wg://0.0.0.0:11011",
+        "ws://0.0.0.0:11011/",
+        "wss://0.0.0.0:11012/",
+        "quic://0.0.0.0:11012",
+        "faketcp://0.0.0.0:11013"
+    ],
+    "udp": true,
+    "accept-dns": true,
+    "latency-first": true,
+    "enable-kcp-proxy": true,
+    "enable-quic-proxy": true,
+    "disable-p2p": false,
+    "mtu": 1360
+};
+const easytierInbound = {
+    "name": "easytier-in",
+    "type": "easytier",
+    "proxy": "easytier",
+    "listen": "0.0.0.0",
+    "port": 17890,
+    "network": ["tcp", "udp"]
+};
 const windowsConfig = {
     "mixed-port": 7890,
     "mode": "rule",
@@ -160,7 +196,7 @@ const windowsConfig = {
         "direct-nameserver-follow-policy": true,
         "nameserver-policy": {
             "+.et.net": [
-                "100.100.100.101"
+                "et://easytier"
             ],
             "rule-set:proxy_domain": [
                 "https://1.1.1.1/dns-query#代理模式",
@@ -1326,6 +1362,12 @@ const windowsConfig = {
             "url": "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/PROXY/no_ip/AI_no_ip.yaml",
             "path": "./ruleset/RealSeek/Clash_Rule_DIY/PROXY/no_ip/AI_no_ip.yaml"
         },
+        "AI_Gateway": {
+            "type": "file",
+            "behavior": "classical",
+            "format": "yaml",
+            "path": "./ruleset/RealSeek/AI_Gateway.yaml"
+        },
         "Apple_no_ip": {
             "type": "http",
             "interval": 1800,
@@ -1469,11 +1511,6 @@ const windowsConfig = {
         }
     },
     "rules": [
-        "PROCESS-NAME,easytier-gui.exe,DIRECT",
-        "PROCESS-NAME,easytier-core.exe,DIRECT",
-        "DOMAIN-SUFFIX,et.net,DIRECT",
-        "IP-CIDR,10.126.0.0/24,DIRECT,no-resolve",
-        "IP-CIDR,100.100.100.101/32,DIRECT,no-resolve",
         "AND,((OR,((PROCESS-NAME,Discord.exe),(PROCESS-NAME,Discord),(PROCESS-NAME,com.discord),(PROCESS-NAME,discord),(PROCESS-NAME,com.aliucord))),(NETWORK,udp)),代理模式",
         "RULE-SET,Reject_no_ip,广告屏蔽",
         "RULE-SET,Reject_domainset,广告屏蔽",
@@ -1496,6 +1533,7 @@ const windowsConfig = {
         "RULE-SET,Download_no_ip,代理模式",
         "RULE-SET,Apple_no_ip,苹果服务",
         "RULE-SET,Microsoft_no_ip,微软服务",
+        "RULE-SET,AI_Gateway,AI",
         "RULE-SET,AI_no_ip,AI",
         "RULE-SET,Global_no_ip,代理模式",
         "RULE-SET,Domestic_no_ip,DIRECT",
@@ -1523,9 +1561,11 @@ const windowsConfig = {
 
 function main(params) {
     const config = JSON.parse(JSON.stringify(windowsConfig));
+    const subscriptionNodes = (params.proxies || []).filter((proxy) => proxy.name !== easytierProxy.name);
+    config.proxies = [...subscriptionNodes, JSON.parse(JSON.stringify(easytierProxy))];
     const providers = Object.keys(params["proxy-providers"] || {});
     const excluded = new RegExp(subscriptionExclude, "i");
-    const nodes = (params.proxies || []).filter((proxy) => !excluded.test(proxy.name));
+    const nodes = subscriptionNodes.filter((proxy) => !excluded.test(proxy.name));
     if (!nodes.length && !providers.length) {
         throw new Error("Windows override requires proxies or proxy-providers from a subscription.");
     }
@@ -1594,5 +1634,8 @@ function main(params) {
         ...config.dns["fake-ip-filter"],
         "100.100.100.101/32",
     ])];
+    const listeners = (params.listeners || []).filter((listener) => listener.name !== easytierInbound.name);
+    listeners.push(JSON.parse(JSON.stringify(easytierInbound)));
+    config.listeners = listeners;
     return Object.assign(params, config);
 }
