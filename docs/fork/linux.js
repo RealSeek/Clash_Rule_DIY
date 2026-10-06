@@ -1458,9 +1458,9 @@ const linuxConfig = {
         }
     },
     "rules": [
-        "IN-TYPE,TAILSCALE,智能优选",
-        "IP-CIDR,100.64.0.0/10,智能优选,no-resolve",
-        "IP-CIDR6,fd7a:115c:a1e0::/48,智能优选,no-resolve",
+        "IN-TYPE,TAILSCALE,tailscale",
+        "IP-CIDR,100.64.0.0/10,DIRECT,no-resolve",
+        "IP-CIDR6,fd7a:115c:a1e0::/48,DIRECT,no-resolve",
         "DOMAIN-SUFFIX,hot-chilli.net,DIRECT",
         "DOMAIN-SUFFIX,fitauto.ru,DIRECT",
         "DOMAIN-SUFFIX,radiojar.com,DIRECT",
