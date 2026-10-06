@@ -1,7 +1,7 @@
 // liuran001/mihomo Alpha: Windows override, derived from fork/windows.yaml.
 // Windows uses one TUN entry.
 const subscriptionExclude = "自动|智能调度|智能选择|故障|流量|官网|套餐|机场|订阅|年|月|失联|频道|Traffic|Expire";
-const tailscaleProxy = { "name": "tailscale", "type": "tailscale", "hostname": "realseek-pc", "udp": true, "accept-routes": true, "advertise-routes": ["192.168.0.0/16"], "advertise-exit-node": true };
+const tailscaleProxy = { "name": "tailscale", "type": "tailscale", "hostname": "realseek-pc", "listen-port": 41641, "udp": true, "accept-routes": true, "advertise-routes": ["192.168.0.0/16"], "advertise-exit-node": true };
 function getTailscaleAuthKey(params) {
     const args = typeof $arguments === "object" && $arguments ? $arguments : params.arguments || {};
     return args["auth-key"] || args.auth_key || args.authKey || "";
@@ -81,7 +81,6 @@ const windowsConfig = {
         "auto-route": true,
         "strict-route": false,
         "auto-detect-interface": true,
-        "route-exclude-address": ["100.64.0.0/10", "fd7a:115c:a1e0::/48"],
         "exclude-src-port": [41641],
         "dns-hijack": [
             "any:53"
@@ -1461,9 +1460,8 @@ const windowsConfig = {
         }
     },
     "rules": [
-        "IN-TYPE,TAILSCALE,tailscale",
-        "IP-CIDR,100.64.0.0/10,DIRECT,no-resolve",
-        "IP-CIDR6,fd7a:115c:a1e0::/48,DIRECT,no-resolve",
+        "IP-CIDR,100.64.0.0/10,tailscale,no-resolve",
+        "IP-CIDR6,fd7a:115c:a1e0::/48,tailscale,no-resolve",
         "AND,((OR,((PROCESS-NAME,Discord.exe),(PROCESS-NAME,Discord),(PROCESS-NAME,com.discord),(PROCESS-NAME,discord),(PROCESS-NAME,com.aliucord))),(NETWORK,udp)),代理模式",
         "RULE-SET,Reject_no_ip,广告屏蔽",
         "RULE-SET,Reject_domainset,广告屏蔽",
@@ -1572,6 +1570,8 @@ function main(params) {
     config.tun = {
         ...config.tun,
         ...(params.tun || {}),
+        "route-exclude-address": (params.tun?.["route-exclude-address"] || []).filter((prefix) => prefix !== "100.64.0.0/10" && prefix !== "fd7a:115c:a1e0::/48"),
+        "exclude-src-port": [...new Set([...(params.tun?.["exclude-src-port"] || []), tailscaleProxy["listen-port"]])],
         stack: windowsConfig.tun.stack,
         "congestion-controller": windowsConfig.tun["congestion-controller"],
     };
