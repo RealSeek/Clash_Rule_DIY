@@ -1,42 +1,6 @@
 // liuran001/mihomo Alpha: Windows override, derived from fork/windows.yaml.
-// Windows uses one TUN entry and the fork's native EasyTier proxy/inbound.
+// Windows uses one TUN entry.
 const subscriptionExclude = "自动|智能调度|智能选择|故障|流量|官网|套餐|机场|订阅|年|月|失联|频道|Traffic|Expire";
-const easytierProxy = {
-    "name": "easytier",
-    "type": "easytier",
-    "network-name": "RealSeek-EasyTierNetwork",
-    "network-secret": "RealSeek-1060",
-    "instance-name": "RealSeek-EasyTierNetwork",
-    "hostname": "realseek-pc",
-    "ipv4": "10.126.0.10/24",
-    "peers": [
-        "tcp://easytier.weiai.org.cn:11010"
-    ],
-    "listeners": [
-        "udp://0.0.0.0:11010",
-        "tcp://0.0.0.0:11010",
-        "wg://0.0.0.0:11011",
-        "ws://0.0.0.0:11011/",
-        "wss://0.0.0.0:11012/",
-        "quic://0.0.0.0:11012",
-        "faketcp://0.0.0.0:11013"
-    ],
-    "udp": true,
-    "accept-dns": true,
-    "latency-first": true,
-    "enable-kcp-proxy": true,
-    "enable-quic-proxy": true,
-    "disable-p2p": false,
-    "mtu": 1360
-};
-const easytierInbound = {
-    "name": "easytier-in",
-    "type": "easytier",
-    "proxy": "easytier",
-    "listen": "0.0.0.0",
-    "port": 17890,
-    "network": ["tcp", "udp"]
-};
 const windowsConfig = {
     "mixed-port": 7890,
     "mode": "rule",
@@ -57,10 +21,6 @@ const windowsConfig = {
     "profile": {
         "store-selected": true,
         "store-fake-ip": true
-    },
-    "hosts": {
-        "realseek-pc.et.net": "10.126.0.10",
-        "realseek-server.et.net": "10.126.0.11"
     },
     "sniffer": {
         "enable": true,
@@ -87,11 +47,9 @@ const windowsConfig = {
             }
         },
         "skip-domain": [
-            "+.push.apple.com",
-            "+.et.net"
+            "+.push.apple.com"
         ],
         "skip-dst-address": [
-            "10.126.0.0/24",
             "91.105.192.0/23",
             "91.108.4.0/22",
             "91.108.8.0/21",
@@ -121,16 +79,6 @@ const windowsConfig = {
         "dns-hijack": [
             "any:53"
         ],
-        "route-exclude-address": [
-            "10.126.0.0/24",
-            "100.100.100.101/32"
-        ],
-        "exclude-src-port": [
-            11010,
-            11011,
-            11012,
-            11013
-        ],
         "mtu": 1500
     },
     "dns": {
@@ -150,8 +98,6 @@ const windowsConfig = {
         "fake-ip-filter": [
             "+.lan",
             "+.local",
-            "+.et.net",
-            "10.126.0.0/24",
             "time.*.com",
             "ntp.*.com",
             "+.msftconnecttest.com",
@@ -195,9 +141,6 @@ const windowsConfig = {
         ],
         "direct-nameserver-follow-policy": true,
         "nameserver-policy": {
-            "+.et.net": [
-                "et://easytier"
-            ],
             "rule-set:proxy_domain": [
                 "https://1.1.1.1/dns-query#代理模式",
                 "https://8.8.8.8/dns-query#代理模式"
@@ -1560,12 +1503,9 @@ const windowsConfig = {
 ;
 
 function main(params) {
-    const config = JSON.parse(JSON.stringify(windowsConfig));
-    const subscriptionNodes = (params.proxies || []).filter((proxy) => proxy.name !== easytierProxy.name);
-    config.proxies = [...subscriptionNodes, JSON.parse(JSON.stringify(easytierProxy))];
-    const providers = Object.keys(params["proxy-providers"] || {});
+    const config = JSON.parse(JSON.stringify(windowsConfig));    const providers = Object.keys(params["proxy-providers"] || {});
     const excluded = new RegExp(subscriptionExclude, "i");
-    const nodes = subscriptionNodes.filter((proxy) => !excluded.test(proxy.name));
+    const nodes = (params.proxies || []).filter((proxy) => !excluded.test(proxy.name));
     if (!nodes.length && !providers.length) {
         throw new Error("Windows override requires proxies or proxy-providers from a subscription.");
     }
@@ -1608,8 +1548,6 @@ function main(params) {
             ...(keep.has("DIRECT") ? ["DIRECT"] : []),
         ];
     });
-
-    config.hosts = { ...(params.hosts || {}), ...config.hosts };
     config.profile = { ...(params.profile || {}), ...config.profile };
     if (params["mixed-port"] !== undefined) config["mixed-port"] = params["mixed-port"];
     for (const key of ["external-controller", "external-ui", "external-ui-url", "secret", "external-controller-cors"]) {
@@ -1622,20 +1560,8 @@ function main(params) {
         stack: windowsConfig.tun.stack,
         "congestion-controller": windowsConfig.tun["congestion-controller"],
     };
-    for (const key of ["route-exclude-address", "exclude-src-port"]) {
-        config.tun[key] = [...new Set([
-            ...windowsConfig.tun[key],
-            ...((params.tun || {})[key] || []),
-            ...(key === "route-exclude-address" ? ((params.tun || {})["inet4-route-exclude-address"] || []) : []),
-        ])];
-    }
-    delete config.tun["inet4-route-exclude-address"];
     config.dns["fake-ip-filter"] = [...new Set([
-        ...config.dns["fake-ip-filter"],
-        "100.100.100.101/32",
+        ...config.dns["fake-ip-filter"],,
     ])];
-    const listeners = (params.listeners || []).filter((listener) => listener.name !== easytierInbound.name);
-    listeners.push(JSON.parse(JSON.stringify(easytierInbound)));
-    config.listeners = listeners;
     return Object.assign(params, config);
 }

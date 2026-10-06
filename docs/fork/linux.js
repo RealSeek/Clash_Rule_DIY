@@ -4,48 +4,6 @@ const enableEBPF = true;
 const sharedInterfaces = []; // Example: ["wlan0"] for hotspot sharing.
 
 const subscriptionExclude = "自动|故障|流量|官网|套餐|机场|订阅|年|月|失联|频道|Traffic|Expire";
-const easytierProcessNames = ["easytier-core", "cc.ptoe.easytier.compose"];
-const easytierDirectDomains = [
-    "DOMAIN,easytier.weiai.org.cn,DIRECT",
-    "DOMAIN-SUFFIX,hot-chilli.net,DIRECT",
-    "DOMAIN-SUFFIX,fitauto.ru,DIRECT",
-    "DOMAIN-SUFFIX,radiojar.com,DIRECT",
-    "DOMAIN-SUFFIX,turn.cloudflare.com,DIRECT",
-    "DOMAIN-SUFFIX,twilio.com,DIRECT",
-    "DOMAIN-SUFFIX,lifesizecloud.com,DIRECT",
-    "DOMAIN-SUFFIX,blackberry.com,DIRECT",
-];
-const easytierProxy = {
-    "name": "easytier",
-    "type": "easytier",
-    "network-name": "RealSeek-EasyTierNetwork",
-    "network-secret": "RealSeek-1060",
-    "instance-name": "RealSeek-EasyTierNetwork",
-    "hostname": "realseek-phone",
-    "ipv4": "10.126.0.12/24",
-    "peers": [
-        "tcp://easytier.weiai.org.cn:11010"
-    ],
-    "listeners": [
-        "udp://0.0.0.0:11010",
-        "tcp://0.0.0.0:11010",
-    ],
-    "udp": true,
-    "accept-dns": true,
-    "latency-first": true,
-    "enable-kcp-proxy": true,
-    "enable-quic-proxy": true,
-    "disable-p2p": false,
-    "mtu": 1360
-};
-const easytierInbound = {
-    "name": "easytier-in",
-    "type": "easytier",
-    "proxy": "easytier",
-    "listen": "0.0.0.0",
-    "port": 17890,
-    "network": ["tcp", "udp"]
-};
 const linuxConfig = {
     "mixed-port": 7890,
     "mode": "rule",
@@ -66,10 +24,6 @@ const linuxConfig = {
     "profile": {
         "store-selected": true,
         "store-fake-ip": true
-    },
-    "hosts": {
-        "realseek-pc.et.net": "10.126.0.10",
-        "realseek-server.et.net": "10.126.0.11"
     },
     "sniffer": {
         "enable": true,
@@ -96,11 +50,9 @@ const linuxConfig = {
             }
         },
         "skip-domain": [
-            "+.push.apple.com",
-            "+.et.net"
+            "+.push.apple.com"
         ],
         "skip-dst-address": [
-            "10.126.0.0/24",
             "91.105.192.0/23",
             "91.108.4.0/22",
             "91.108.8.0/21",
@@ -131,16 +83,6 @@ const linuxConfig = {
         "dns-hijack": [
             "any:53"
         ],
-        "route-exclude-address": [
-            "10.126.0.0/24",
-            "100.100.100.101/32"
-        ],
-        "exclude-src-port": [
-            11010,
-            11011,
-            11012,
-            11013
-        ],
         "mtu": 1380
     },
     "dns": {
@@ -160,8 +102,6 @@ const linuxConfig = {
         "fake-ip-filter": [
             "+.lan",
             "+.local",
-            "+.et.net",
-            "10.126.0.0/24",
             "time.*.com",
             "ntp.*.com",
             "+.msftconnecttest.com",
@@ -205,9 +145,6 @@ const linuxConfig = {
         ],
         "direct-nameserver-follow-policy": true,
         "nameserver-policy": {
-            "+.et.net": [
-                "et://easytier"
-            ],
             "rule-set:proxy_domain": [
                 "https://1.1.1.1/dns-query#代理模式",
                 "https://8.8.8.8/dns-query#代理模式"
@@ -1601,11 +1538,9 @@ const ebpfListener = {
 
 function main(params) {
     const config = JSON.parse(JSON.stringify(linuxConfig));
-    const subscriptionNodes = (params.proxies || []).filter((proxy) => proxy.name !== easytierProxy.name);
-    config.proxies = [...subscriptionNodes, JSON.parse(JSON.stringify(easytierProxy))];
     const providers = Object.keys(params["proxy-providers"] || {});
     const excluded = new RegExp(subscriptionExclude, "i");
-    const nodes = subscriptionNodes.filter((proxy) => !excluded.test(proxy.name));
+    const nodes = (params.proxies || []).filter((proxy) => !excluded.test(proxy.name));
     if (!nodes.length && !providers.length) {
         throw new Error("Linux override requires proxies or proxy-providers from a subscription.");
     }
@@ -1657,8 +1592,6 @@ function main(params) {
             ...(keep.has("DIRECT") ? ["DIRECT"] : []),
         ];
     });
-
-    config.hosts = { ...(params.hosts || {}), ...config.hosts };
     config.profile = { ...(params.profile || {}), ...config.profile };
 
     // Module-owned ports, controller, authentication and TUN handles stay with the module.
@@ -1667,10 +1600,6 @@ function main(params) {
         if (params[key] !== undefined) config[key] = params[key];
     }
     if (params.dns && params.dns.listen !== undefined) config.dns.listen = params.dns.listen;
-    config.dns["fake-ip-filter"] = [...new Set([
-        ...config.dns["fake-ip-filter"],
-        "100.100.100.101/32",
-    ])];
     const moduleTun = params.tun || {};
     config.tun = {
         ...config.tun,
@@ -1678,18 +1607,7 @@ function main(params) {
         stack: config.tun.stack,
         "congestion-controller": config.tun["congestion-controller"],
     };
-    for (const key of ["route-exclude-address", "exclude-src-port"]) {
-        config.tun[key] = [...new Set([
-            ...linuxConfig.tun[key],
-            ...(moduleTun[key] || []),
-            ...(key === "route-exclude-address" ? (moduleTun["inet4-route-exclude-address"] || []) : []),
-        ])];
-    }
-    delete config.tun["inet4-route-exclude-address"];
-
-    const listeners = (params.listeners || []).filter((listener) =>
-        listener.type !== "ebpf" && listener.name !== easytierInbound.name);
-    listeners.push(JSON.parse(JSON.stringify(easytierInbound)));
+    const listeners = (params.listeners || []).filter((listener) => listener.type !== "ebpf");
     if (enableEBPF) {
         const listener = JSON.parse(JSON.stringify(ebpfListener));
         listener.shared.enable = sharedInterfaces.length > 0;
