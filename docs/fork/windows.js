@@ -81,6 +81,7 @@ const windowsConfig = {
         "auto-route": true,
         "strict-route": false,
         "auto-detect-interface": true,
+        "exclude-src-port": [41641],
         "dns-hijack": [
             "any:53"
         ],
@@ -1459,6 +1460,9 @@ const windowsConfig = {
         }
     },
     "rules": [
+        "IN-TYPE,TAILSCALE,智能优选",
+        "IP-CIDR,100.64.0.0/10,智能优选,no-resolve",
+        "IP-CIDR6,fd7a:115c:a1e0::/48,智能优选,no-resolve",
         "AND,((OR,((PROCESS-NAME,Discord.exe),(PROCESS-NAME,Discord),(PROCESS-NAME,com.discord),(PROCESS-NAME,discord),(PROCESS-NAME,com.aliucord))),(NETWORK,udp)),代理模式",
         "RULE-SET,Reject_no_ip,广告屏蔽",
         "RULE-SET,Reject_domainset,广告屏蔽",
