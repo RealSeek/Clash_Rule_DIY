@@ -20,6 +20,12 @@ Sub-Store 远程脚本使用 `#` 后的参数传给 `$arguments`，不是 `?` �
 #peer=tcp%3A%2F%2Frelay.example.com%3A11010&network-name=YOUR_NETWORK&network-secret=YOUR_SECRET
 ```
 
+多个 peer 在同一个 `peer` 参数内用逗号分隔，再对整个值进行 URL 编码，例如：
+
+```text
+#peer=tcp%3A%2F%2Frelay.example.com%3A11010%2Cudp%3A%2F%2Frelay.example.com%3A11010&network-name=YOUR_NETWORK&network-secret=YOUR_SECRET
+```
+
 脚本不内置 peer 或网络密钥；URL 中的密钥仍可能出现在平台日志、历史记录中，请勿公开完整 URL。
 当前分流网段为 `10.126.0.0/24`，使用其他 overlay 网段时修改脚本对应规则。
 Windows 固定使用 `10.126.0.10/24`，Linux / root Android 固定使用
