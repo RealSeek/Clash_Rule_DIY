@@ -12,11 +12,12 @@
 两份 JS 覆写使用 RealSeek/mihomo 的 EasyTier，共享 `mips` TUN。Windows 节点名为
 `RealSeek-PC`，Linux / root Android 为 `RealSeek-Phone`。原 Tailscale 配置已移除。
 
-脚本执行端需要将 URL 参数传给 `$arguments`，或 `params.arguments`：
+Sub-Store 远程脚本使用 `#` 后的参数传给 `$arguments`，不是 `?` 查询参数。
+其他脚本执行端需要将参数传给 `$arguments`，或 `params.arguments`：
 `peer`、`network-name`、`network-secret` 三项必填。参数值须进行 URL 编码，例如：
 
 ```text
-?peer=tcp%3A%2F%2Frelay.example.com%3A11010&network-name=YOUR_NETWORK&network-secret=YOUR_SECRET
+#peer=tcp%3A%2F%2Frelay.example.com%3A11010&network-name=YOUR_NETWORK&network-secret=YOUR_SECRET
 ```
 
 脚本不内置 peer 或网络密钥；URL 中的密钥仍可能出现在平台日志、历史记录中，请勿公开完整 URL。
