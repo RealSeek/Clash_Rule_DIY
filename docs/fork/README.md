@@ -9,7 +9,19 @@
 | [windows.js](windows.js) | Windows 的 JS 覆写，接入 TUN、WebUI 和现有订阅；不内置 EasyTier 或订阅地址 |
 | [windows.yaml](windows.yaml) | Windows。没有 eBPF，透明入站由 TUN `mips` + `bbr` 承担 |
 
-两份 JS 覆写只配置 mihomo 的代理、TUN、DNS 和规则集，不包含 EasyTier 出站、入站或相关路由。
+两份 JS 覆写使用 RealSeek/mihomo 的 EasyTier，共享 `mips` TUN。Windows 节点名为
+`RealSeek-PC`，Linux / root Android 为 `RealSeek-Phone`。原 Tailscale 配置已移除。
+
+脚本执行端需要将 URL 参数传给 `$arguments`，或 `params.arguments`：
+`peer`、`network-name`、`network-secret` 三项必填。参数值须进行 URL 编码，例如：
+
+```text
+?peer=tcp%3A%2F%2Frelay.example.com%3A11010&network-name=YOUR_NETWORK&network-secret=YOUR_SECRET
+```
+
+脚本不内置 peer 或网络密钥；URL 中的密钥仍可能出现在平台日志、历史记录中，请勿公开完整 URL。
+当前分流网段为 `10.126.0.0/24`，使用其他 overlay 网段时修改脚本对应规则。
+使用 DHCP 分配地址，保留网口自动检测，不启用 FakeTCP。
 
 ## 用之前改
 

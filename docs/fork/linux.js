@@ -4,10 +4,20 @@ const enableEBPF = true;
 const sharedInterfaces = []; // Example: ["wlan0"] for hotspot sharing.
 
 const subscriptionExclude = "自动|故障|流量|官网|套餐|机场|订阅|年|月|失联|频道|Traffic|Expire";
-const tailscaleProxy = { "name": "tailscale", "type": "tailscale", "hostname": "realseek-phone", "listen-port": 41641, "udp": true, "accept-routes": true, "advertise-routes": ["192.168.0.0/16"], "advertise-exit-node": true };
-function getTailscaleAuthKey(params) {
+function getEasyTierProxy(params) {
     const args = typeof $arguments === "object" && $arguments ? $arguments : params.arguments || {};
-    return args["auth-key"] || args.auth_key || args.authKey || "";
+    if (!args.peer || !args["network-name"] || !args["network-secret"]) {
+        throw new Error("EasyTier requires URL arguments: peer, network-name, network-secret");
+    }
+    return {
+        name: "Easytier", type: "easytier", hostname: "RealSeek-Phone",
+        "instance-name": "RealSeek-Phone", "network-name": args["network-name"],
+        "network-secret": args["network-secret"], peers: [args.peer],
+        dhcp: true, udp: true, mtu: 1360, "ipv6-public-addr-auto": true,
+        "accept-dns": true, "latency-first": true, "need-p2p": true,
+        "disable-upnp": true,
+        listeners: ["tcp://0.0.0.0:11010", "udp://0.0.0.0:11010"]
+    };
 }
 const linuxConfig = {
     "mixed-port": 7890,
@@ -85,7 +95,8 @@ const linuxConfig = {
         "auto-redirect": false,
         "strict-route": false,
         "auto-detect-interface": true,
-        "exclude-src-port": [41641],
+        "easytier": ["Easytier"],
+        "gso": false,
         "dns-hijack": [
             "any:53"
         ],
@@ -1458,8 +1469,7 @@ const linuxConfig = {
         }
     },
     "rules": [
-        "IP-CIDR,100.64.0.0/10,tailscale,no-resolve",
-        "IP-CIDR6,fd7a:115c:a1e0::/48,tailscale,no-resolve",
+        "IP-CIDR,10.126.0.0/24,Easytier,no-resolve",
         "DOMAIN-SUFFIX,hot-chilli.net,DIRECT",
         "DOMAIN-SUFFIX,fitauto.ru,DIRECT",
         "DOMAIN-SUFFIX,radiojar.com,DIRECT",
@@ -1546,13 +1556,11 @@ const ebpfListener = {
 
 function main(params) {
     const config = JSON.parse(JSON.stringify(linuxConfig));
-    const tailscale = { ...tailscaleProxy };
-    const authKey = getTailscaleAuthKey(params);
-    if (authKey) tailscale["auth-key"] = authKey;
-    config.proxies = [...(params.proxies || []).filter((proxy) => proxy.name !== tailscale.name), tailscale];
+    const easytier = getEasyTierProxy(params);
+    config.proxies = [...(params.proxies || []).filter((proxy) => proxy.type !== "tailscale" && proxy.name !== easytier.name), easytier];
     const providers = Object.keys(params["proxy-providers"] || {});
     const excluded = new RegExp(subscriptionExclude, "i");
-    const nodes = (params.proxies || []).filter((proxy) => !excluded.test(proxy.name));
+    const nodes = config.proxies.filter((proxy) => proxy.name !== easytier.name && !excluded.test(proxy.name));
     if (!nodes.length && !providers.length) {
         throw new Error("Linux override requires proxies or proxy-providers from a subscription.");
     }
@@ -1616,8 +1624,10 @@ function main(params) {
     config.tun = {
         ...config.tun,
         ...moduleTun,
-        "route-exclude-address": (moduleTun["route-exclude-address"] || []).filter((prefix) => prefix !== "100.64.0.0/10" && prefix !== "fd7a:115c:a1e0::/48"),
-        "exclude-src-port": [...new Set([...(moduleTun["exclude-src-port"] || []), tailscaleProxy["listen-port"]])],
+        "easytier": ["Easytier"],
+        "gso": false,
+        "auto-redirect": false,
+        "auto-detect-interface": true,
         stack: config.tun.stack,
         "congestion-controller": config.tun["congestion-controller"],
     };
