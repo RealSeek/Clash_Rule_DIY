@@ -10,7 +10,8 @@ function getEasyTierProxy(params) {
         name: "Easytier", type: "easytier", hostname: "RealSeek-PC",
         "instance-name": "RealSeek-PC", "network-name": args["network-name"],
         "network-secret": args["network-secret"], peers: [args.peer],
-        dhcp: true, udp: true, mtu: 1360, "ipv6-public-addr-auto": true,
+        ipv4: "10.126.0.10/24", dhcp: false,
+        udp: true, mtu: 1360, "ipv6-public-addr-auto": true,
         "accept-dns": true, "latency-first": true, "need-p2p": true,
         "disable-upnp": true,
         listeners: ["tcp://0.0.0.0:11010", "udp://0.0.0.0:11010"]
