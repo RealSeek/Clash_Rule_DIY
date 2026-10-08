@@ -1628,6 +1628,7 @@ function main(params) {
         "gso": false,
         "auto-redirect": false,
         "auto-detect-interface": true,
+        "mtu": easytier.mtu,
         stack: config.tun.stack,
         "congestion-controller": config.tun["congestion-controller"],
     };

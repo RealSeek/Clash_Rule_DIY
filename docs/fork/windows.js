@@ -1582,6 +1582,7 @@ function main(params) {
         "gso": false,
         "auto-redirect": false,
         "auto-detect-interface": true,
+        "mtu": easytier.mtu,
         stack: windowsConfig.tun.stack,
         "congestion-controller": windowsConfig.tun["congestion-controller"],
     };
