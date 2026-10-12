@@ -33,7 +33,7 @@ const linuxConfig = {
     "ipv6": false,
     "external-controller": "0.0.0.0:9090",
     "external-ui": "WebUI",
-    "external-ui-url": "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
+    "external-ui-url": "https://github.com/RealSeek/zashboard/releases/latest/download/dist.zip",
     "external-controller-cors": {
         "allow-origins": ["*"],
         "allow-private-network": true
