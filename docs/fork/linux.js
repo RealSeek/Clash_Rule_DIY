@@ -1259,9 +1259,9 @@ const linuxConfig = {
             "interval": 86400,
             "behavior": "domain",
             "format": "mrs",
-            "url": "https://ghfast.top/github.com/DustinWin/ruleset_geodata/raw/refs/heads/mihomo-ruleset/fakeip-filter.mrs",
+            "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/mihomo-ruleset/fakeip-filter.mrs",
             "path": "./ruleset/DustinWin/ruleset_geodata/fakeip-filter.mrs",
-            "proxy": "DIRECT"
+            "proxy": "代理模式"
         },
         "MicrosoftCDN_no_ip": {
             "type": "http",
@@ -1428,45 +1428,45 @@ const linuxConfig = {
             "interval": 86400,
             "behavior": "domain",
             "format": "mrs",
-            "url": "https://ghfast.top/github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/cn.mrs",
+            "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/cn.mrs",
             "path": "./ruleset/MetaCubeX/meta-rules-dat/geo/geosite/cn.mrs",
-            "proxy": "DIRECT"
+            "proxy": "代理模式"
         },
         "private_domain": {
             "type": "http",
             "interval": 86400,
             "behavior": "domain",
             "format": "mrs",
-            "url": "https://ghfast.top/github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/private.mrs",
+            "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/private.mrs",
             "path": "./ruleset/MetaCubeX/meta-rules-dat/geo/geosite/private.mrs",
-            "proxy": "DIRECT"
+            "proxy": "代理模式"
         },
         "cn_ip": {
             "type": "http",
             "interval": 86400,
             "behavior": "ipcidr",
             "format": "mrs",
-            "url": "https://ghfast.top/github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/cn.mrs",
+            "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geoip/cn.mrs",
             "path": "./ruleset/MetaCubeX/meta-rules-dat/geo/geoip/cn.mrs",
-            "proxy": "DIRECT"
+            "proxy": "代理模式"
         },
         "private_ip": {
             "type": "http",
             "interval": 86400,
             "behavior": "ipcidr",
             "format": "mrs",
-            "url": "https://ghfast.top/github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/private.mrs",
+            "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geoip/private.mrs",
             "path": "./ruleset/MetaCubeX/meta-rules-dat/geo/geoip/private.mrs",
-            "proxy": "DIRECT"
+            "proxy": "代理模式"
         },
         "proxy_domain": {
             "type": "http",
             "interval": 86400,
             "behavior": "domain",
             "format": "mrs",
-            "url": "https://ghfast.top/github.com/DustinWin/ruleset_geodata/raw/refs/heads/mihomo-ruleset/proxy.mrs",
+            "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/mihomo-ruleset/proxy.mrs",
             "path": "./ruleset/DustinWin/ruleset_geodata/proxy.mrs",
-            "proxy": "DIRECT"
+            "proxy": "代理模式"
         }
     },
     "rules": [
@@ -1527,7 +1527,6 @@ const linuxConfig = {
 const ebpfListener = {
     "name": "ebpf-in",
     "type": "ebpf",
-    "mode": "hybrid",
     "network": [
         "tcp",
         "udp"
@@ -1537,7 +1536,7 @@ const ebpfListener = {
         "cn_ip"
     ],
     "bypass-tun-direct": true,
-    "fakeip-icmp": "reply",
+    "fakeip-icmp": "off",
     "local": {
         "enable": true,
         "data-plane": "cgroup",
@@ -1639,6 +1638,7 @@ function main(params) {
         const listener = JSON.parse(JSON.stringify(ebpfListener));
         listener.shared.enable = sharedInterfaces.length > 0;
         listener.shared.interface = sharedInterfaces.slice();
+        if (!listener.shared.enable) listener.shared = { "enable": false };
         listeners.push(listener);
         config.tun["auto-redirect"] = false;
         config.tun["strict-route"] = false;
