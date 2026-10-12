@@ -56,5 +56,5 @@ https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/docs
 ## 四项分别落在哪
 
 1. **eBPF**：只有 Linux。`type: ebpf`、`mode: hybrid`，`bypass-rule-set: [cn_ip]` 在内核放行国内 IP。DNS 53 由 `dns-mode: hijack` 先于旁路劫持。二进制要带 `with_ebpf`，需要 root 和 cgroup v2。TUN 同时开着：`stack: mips`、`congestion-controller: bbr`、`auto-route: true`。`bypass-tun-direct: true` 让内核已经放行的目的地直接连出，避免被 `auto-route` 吸进 `mips` 后再走一遍规则。不要在同一张网卡上开 `auto-redirect`，`strict-route` 保持关闭。
-2. **真实可用性**：`真实可用` 是 `url-test`，地区自动组和 `智能优选` 是 `smart`。三者都开 `prefer-udp`、`prefer-ipv6`、`penalize-unstable`。`prefer-asn` 只在 `smart` 上有效。探测走独立通道，不会改面板上的普通延迟。
+2. **真实可用性**：`真实可用` 是 `url-test`，地区自动组和 `智能优选` 是 `smart`。三者启用 `prefer-udp`、`penalize-unstable`。Linux JS 关闭 `prefer-ipv6`，不再偏好 IPv6；Windows JS 保持启用。`prefer-asn` 只在 `smart` 上有效。探测走独立通道，不会改面板上的普通延迟。
 3. **网络与 DNS**：UDP、TCP、DoT 的连接池是内核默认行为。DoH 开 `prefer-h3`，查询优先走 QUIC。国内域名用阿里 DoH 拿真实地址，不进 fake-ip，Linux 上才能被 eBPF 的 `cn_ip` 在内核放行。非中国地址回退到 `1.1.1.1` / `8.8.8.8`，经 `代理模式` 查询。IPv6 使用 `fake-ip-range6`，`ipv6-timeout` 为 300ms。`smart` 组开启 `uselightgbm`，ASN 库由 `geox-url.asn` 提供。

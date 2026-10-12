@@ -194,7 +194,7 @@ const linuxConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -212,7 +212,7 @@ const linuxConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -401,7 +401,7 @@ const linuxConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -434,7 +434,7 @@ const linuxConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -467,7 +467,7 @@ const linuxConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -500,7 +500,7 @@ const linuxConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -533,7 +533,7 @@ const linuxConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -566,7 +566,7 @@ const linuxConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -599,7 +599,7 @@ const linuxConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -632,7 +632,7 @@ const linuxConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -665,7 +665,7 @@ const linuxConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -698,7 +698,7 @@ const linuxConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -731,7 +731,7 @@ const linuxConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -764,7 +764,7 @@ const linuxConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -797,7 +797,7 @@ const linuxConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -830,7 +830,7 @@ const linuxConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -863,7 +863,7 @@ const linuxConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -896,7 +896,7 @@ const linuxConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -929,7 +929,7 @@ const linuxConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -962,7 +962,7 @@ const linuxConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -995,7 +995,7 @@ const linuxConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -1028,7 +1028,7 @@ const linuxConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -1061,7 +1061,7 @@ const linuxConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -1093,7 +1093,7 @@ const linuxConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -1646,3 +1646,4 @@ function main(params) {
     config.listeners = listeners;
     return Object.assign(params, config);
 }
+
