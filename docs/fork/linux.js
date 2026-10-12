@@ -26,10 +26,11 @@ const linuxConfig = {
     "allow-lan": true,
     "bind-address": "*",
     "unified-delay": true,
-    "tcp-concurrent": true,
+    // Avoid racing every resolved IP on mobile networks during app request bursts.
+    "tcp-concurrent": false,
     "find-process-mode": "strict",
     "log-level": "info",
-    "ipv6": true,
+    "ipv6": false,
     "external-controller": "0.0.0.0:9090",
     "external-ui": "WebUI",
     "external-ui-url": "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
@@ -106,7 +107,7 @@ const linuxConfig = {
     "dns": {
         "enable": true,
         "listen": "0.0.0.0:1053",
-        "ipv6": true,
+        "ipv6": false,
         "ipv6-timeout": 300,
         "prefer-h3": false,
         "respect-rules": true,
@@ -135,12 +136,12 @@ const linuxConfig = {
             "rule-set:Domestic_no_ip"
         ],
         "default-nameserver": [
-            "tls://223.5.5.5",
-            "tls://120.53.53.53"
+            "223.5.5.5",
+            "120.53.53.53"
         ],
         "nameserver": [
-            "https://223.5.5.5/dns-query",
-            "https://120.53.53.53/dns-query"
+            "223.5.5.5",
+            "120.53.53.53"
         ],
         "fallback": [
             "https://1.1.1.1/dns-query#代理模式",
@@ -154,12 +155,12 @@ const linuxConfig = {
             ]
         },
         "proxy-server-nameserver": [
-            "tls://223.5.5.5",
-            "tls://120.53.53.53"
+            "223.5.5.5",
+            "120.53.53.53"
         ],
         "direct-nameserver": [
-            "https://223.5.5.5/dns-query",
-            "https://120.53.53.53/dns-query"
+            "223.5.5.5",
+            "120.53.53.53"
         ],
         "direct-nameserver-follow-policy": true,
         "nameserver-policy": {
@@ -168,8 +169,8 @@ const linuxConfig = {
                 "https://8.8.8.8/dns-query#代理模式"
             ],
             "rule-set:Domestic_no_ip,Direct_no_ip,Lan_no_ip,GoogleFCM_no_ip,cn_domain,private_domain": [
-                "https://223.5.5.5/dns-query",
-                "https://120.53.53.53/dns-query"
+                "223.5.5.5",
+                "120.53.53.53"
             ]
         }
     },
@@ -1541,7 +1542,7 @@ const ebpfListener = {
         "enable": true,
         "data-plane": "cgroup",
         "dns-mode": "hijack",
-        "ipv6": true,
+        "ipv6": false,
         "bypass-private-address": true
     },
     "shared": {
@@ -1549,7 +1550,7 @@ const ebpfListener = {
         "interface": [],
         "data-plane": "packet_rewrite",
         "dns-mode": "hijack",
-        "ipv6": true,
+        "ipv6": false,
         "bypass-private-address": false
     }
 };

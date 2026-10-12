@@ -23,10 +23,10 @@ const windowsConfig = {
     "allow-lan": true,
     "bind-address": "*",
     "unified-delay": true,
-    "tcp-concurrent": true,
+    "tcp-concurrent": false,
     "find-process-mode": "strict",
     "log-level": "info",
-    "ipv6": true,
+    "ipv6": false,
     "external-controller": "127.0.0.1:9090",
     "external-ui": "WebUI",
     "external-ui-url": "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
@@ -102,7 +102,7 @@ const windowsConfig = {
     "dns": {
         "enable": true,
         "listen": "0.0.0.0:1053",
-        "ipv6": true,
+        "ipv6": false,
         "ipv6-timeout": 300,
         "prefer-h3": true,
         "respect-rules": true,
@@ -131,12 +131,12 @@ const windowsConfig = {
             "rule-set:Domestic_no_ip"
         ],
         "default-nameserver": [
-            "tls://223.5.5.5",
-            "tls://120.53.53.53"
+            "223.5.5.5",
+            "120.53.53.53"
         ],
         "nameserver": [
-            "https://223.5.5.5/dns-query",
-            "https://120.53.53.53/dns-query"
+            "223.5.5.5",
+            "120.53.53.53"
         ],
         "fallback": [
             "https://1.1.1.1/dns-query#代理模式",
@@ -150,12 +150,12 @@ const windowsConfig = {
             ]
         },
         "proxy-server-nameserver": [
-            "tls://223.5.5.5",
-            "tls://120.53.53.53"
+            "223.5.5.5",
+            "120.53.53.53"
         ],
         "direct-nameserver": [
-            "https://223.5.5.5/dns-query",
-            "https://120.53.53.53/dns-query"
+            "223.5.5.5",
+            "120.53.53.53"
         ],
         "direct-nameserver-follow-policy": true,
         "nameserver-policy": {
@@ -164,8 +164,8 @@ const windowsConfig = {
                 "https://8.8.8.8/dns-query#代理模式"
             ],
             "rule-set:Domestic_no_ip,Direct_no_ip,Lan_no_ip,GoogleFCM_no_ip,cn_domain,private_domain": [
-                "https://223.5.5.5/dns-query",
-                "https://120.53.53.53/dns-query"
+                "223.5.5.5",
+                "120.53.53.53"
             ]
         }
     },
@@ -190,7 +190,7 @@ const windowsConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -208,7 +208,7 @@ const windowsConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -397,7 +397,7 @@ const windowsConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -430,7 +430,7 @@ const windowsConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -463,7 +463,7 @@ const windowsConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -496,7 +496,7 @@ const windowsConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -529,7 +529,7 @@ const windowsConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -562,7 +562,7 @@ const windowsConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -595,7 +595,7 @@ const windowsConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -628,7 +628,7 @@ const windowsConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -661,7 +661,7 @@ const windowsConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -694,7 +694,7 @@ const windowsConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -727,7 +727,7 @@ const windowsConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -760,7 +760,7 @@ const windowsConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -793,7 +793,7 @@ const windowsConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -826,7 +826,7 @@ const windowsConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -859,7 +859,7 @@ const windowsConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -892,7 +892,7 @@ const windowsConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -925,7 +925,7 @@ const windowsConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -958,7 +958,7 @@ const windowsConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -991,7 +991,7 @@ const windowsConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -1024,7 +1024,7 @@ const windowsConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -1057,7 +1057,7 @@ const windowsConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
@@ -1089,7 +1089,7 @@ const windowsConfig = {
                 "myclash"
             ],
             "prefer-udp": true,
-            "prefer-ipv6": true,
+            "prefer-ipv6": false,
             "penalize-unstable": true,
             "url": "https://cp.cloudflare.com/generate_204",
             "expected-status": 204,
