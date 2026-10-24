@@ -8,3 +8,6 @@ payload:
   - DOMAIN,alt7-mtalk.google.com
   - DOMAIN,alt8-mtalk.google.com
   - DOMAIN,mtalk.google.com
+  - DOMAIN,mtalk4.google.com
+  - DOMAIN,mtalk-dev.google.com
+  - DOMAIN,mtalk-staging.google.com

@@ -1,4 +1,7 @@
 payload:
+  - DOMAIN,dns.weixin.qq.com
+  - DOMAIN,aedns.weixin.qq.com
+  - DOMAIN,dns.weixin.qq.com.cn
   - DOMAIN-SUFFIX,lan
   - DOMAIN-SUFFIX,m2m
   - DOMAIN-SUFFIX,_tcp

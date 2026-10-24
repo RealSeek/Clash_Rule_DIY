@@ -5,7 +5,6 @@ on:
     branches: [mihomo]
     paths:
       - 'REJECT/no_ip/Reject_domainset.yaml'
-      - 'DIRECT/ip/China_ip.yaml'
       - 'PROXY/no_ip/CDN_domainset.yaml'
       - 'PROXY/no_ip/Download_domainset.yaml'
   workflow_dispatch:
@@ -24,7 +23,7 @@ jobs:
           gunzip "mihomo-linux-amd64-${LATEST_VERSION}.gz"
           chmod +x "mihomo-linux-amd64-${LATEST_VERSION}"
           sudo mv "mihomo-linux-amd64-${LATEST_VERSION}" /usr/local/bin/mihomo
-          mihomo version
+          mihomo -v
 
       - name: Convert domain rulesets to MRS
         run: |
@@ -39,12 +38,6 @@ jobs:
           mihomo convert-ruleset domain yaml \
             PROXY/no_ip/Download_domainset.yaml \
             PROXY/no_ip/Download_domainset.mrs
-
-      - name: Convert ipcidr rulesets to MRS
-        run: |
-          mihomo convert-ruleset ipcidr yaml \
-            DIRECT/ip/China_ip.yaml \
-            DIRECT/ip/China_ip.mrs
 
       - name: Commit and push
         run: |

@@ -41,8 +41,6 @@ payload:
   - DOMAIN-SUFFIX,incoming-telemetry.thunderbird.net
   - DOMAIN-SUFFIX,telemetry.mozilla.org
   - DOMAIN-SUFFIX,telemetry-coverage.mozilla.org
-  - DOMAIN,dns.weixin.qq.com
-  - DOMAIN,aedns.weixin.qq.com
   - DOMAIN,httpdns.gslb.yy.com
   - DOMAIN,httpdns-v6.gslb.yy.com
   - DOMAIN,union-httpdns.gslb.yy.com
@@ -57,7 +55,6 @@ payload:
   - DOMAIN,httpdns.push.heytapmobi.com
   - DOMAIN,virusinfo-cloudscan-cn.heytapmobi.com
   - DOMAIN,httpdns.push.oppomobile.com
-  - DOMAIN,dns.weixin.qq.com.cn
   - DOMAIN-KEYWORD,.estream.
   - DOMAIN-KEYWORD,jshosting
   - DOMAIN-KEYWORD,hostingcloud

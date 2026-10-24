@@ -23,15 +23,17 @@ const windowsConfig = {
     "allow-lan": true,
     "bind-address": "*",
     "unified-delay": true,
-    "tcp-concurrent": false,
+    "tcp-concurrent": true,
     "find-process-mode": "strict",
     "log-level": "info",
-    "ipv6": false,
+    "ipv6": true,
     "external-controller": "127.0.0.1:9090",
     "external-ui": "WebUI",
     "external-ui-url": "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
     "external-controller-cors": {
-        "allow-origins": ["*"],
+        "allow-origins": [
+            "*"
+        ],
         "allow-private-network": true
     },
     "profile": {
@@ -63,9 +65,11 @@ const windowsConfig = {
             }
         },
         "skip-domain": [
-            "+.push.apple.com"
+            "+.push.apple.com",
+            "+.et.net"
         ],
         "skip-dst-address": [
+            "10.126.0.0/24",
             "91.105.192.0/23",
             "91.108.4.0/22",
             "91.108.8.0/21",
@@ -92,7 +96,9 @@ const windowsConfig = {
         "auto-route": true,
         "strict-route": false,
         "auto-detect-interface": true,
-        "easytier": ["Easytier"],
+        "easytier": [
+            "Easytier"
+        ],
         "gso": false,
         "dns-hijack": [
             "any:53"
@@ -111,7 +117,7 @@ const windowsConfig = {
         "fake-ip-range": "198.18.0.1/16",
         "fake-ip-range6": "fdfe:dcba:9876::1/64",
         "use-hosts": true,
-        "use-system-hosts": false,
+        "use-system-hosts": true,
         "cache-algorithm": "arc",
         "fake-ip-filter": [
             "+.lan",
@@ -128,48 +134,67 @@ const windowsConfig = {
             "rule-set:private_domain",
             "rule-set:Lan_no_ip",
             "rule-set:Direct_no_ip",
-            "rule-set:Domestic_no_ip"
+            "rule-set:Domestic_no_ip",
+            "+.et.net",
+            "rule-set:GoogleFCM_no_ip"
         ],
         "default-nameserver": [
-            "223.5.5.5",
-            "120.53.53.53"
+            "tls://223.5.5.5#DIRECT",
+            "tls://120.53.53.53#DIRECT"
         ],
         "nameserver": [
-            "223.5.5.5",
-            "120.53.53.53"
-        ],
-        "fallback": [
             "https://1.1.1.1/dns-query#代理模式",
             "https://8.8.8.8/dns-query#代理模式"
         ],
-        "fallback-filter": {
-            "geoip": true,
-            "geoip-code": "CN",
-            "ipcidr": [
-                "240.0.0.0/4"
-            ]
-        },
         "proxy-server-nameserver": [
-            "223.5.5.5",
-            "120.53.53.53"
+            "https://223.5.5.5/dns-query#DIRECT",
+            "https://120.53.53.53/dns-query#DIRECT"
         ],
         "direct-nameserver": [
-            "223.5.5.5",
-            "120.53.53.53"
+            "https://223.5.5.5/dns-query#DIRECT",
+            "https://120.53.53.53/dns-query#DIRECT"
         ],
         "direct-nameserver-follow-policy": true,
         "nameserver-policy": {
+            "+.et.net": [
+                "easytier://Easytier"
+            ],
+            "rule-set:private_domain,Lan_no_ip": [
+                "system#DIRECT"
+            ],
+            "+.lan": [
+                "system#DIRECT"
+            ],
+            "+.local": [
+                "system#DIRECT"
+            ],
             "rule-set:proxy_domain": [
                 "https://1.1.1.1/dns-query#代理模式",
                 "https://8.8.8.8/dns-query#代理模式"
             ],
-            "rule-set:Domestic_no_ip,Direct_no_ip,Lan_no_ip,GoogleFCM_no_ip,cn_domain,private_domain": [
-                "223.5.5.5",
-                "120.53.53.53"
+            "rule-set:Domestic_no_ip,Direct_no_ip,GoogleFCM_no_ip,cn_domain": [
+                "https://223.5.5.5/dns-query#DIRECT",
+                "https://120.53.53.53/dns-query#DIRECT"
             ]
         }
     },
     "proxy-groups": [
+        {
+            "name": "直连模式",
+            "type": "select",
+            "proxies": [
+                "DIRECT",
+                "直连 IPv4优先"
+            ]
+        },
+        {
+            "name": "国外 QUIC",
+            "type": "select",
+            "proxies": [
+                "PASS",
+                "REJECT"
+            ]
+        },
         {
             "name": "代理模式",
             "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/adjust.svg",
@@ -179,7 +204,7 @@ const windowsConfig = {
                 "智能优选",
                 "故障转移",
                 "手动选择",
-                "DIRECT"
+                "直连模式"
             ]
         },
         {
@@ -198,7 +223,8 @@ const windowsConfig = {
             "timeout": 5000,
             "lazy": true,
             "tolerance": 50,
-            "hidden": true
+            "hidden": true,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "智能优选",
@@ -220,7 +246,8 @@ const windowsConfig = {
             "uselightgbm": true,
             "collectdata": false,
             "sample-rate": 1,
-            "hidden": true
+            "hidden": true,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "故障转移",
@@ -234,7 +261,8 @@ const windowsConfig = {
             "timeout": 5000,
             "lazy": true,
             "expected-status": 204,
-            "hidden": true
+            "hidden": true,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "手动选择",
@@ -295,7 +323,7 @@ const windowsConfig = {
                 "智能优选",
                 "延迟优选",
                 "手动选择",
-                "DIRECT"
+                "直连模式"
             ]
         },
         {
@@ -324,7 +352,7 @@ const windowsConfig = {
             "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/apple.svg",
             "type": "select",
             "proxies": [
-                "DIRECT",
+                "直连模式",
                 "智能优选",
                 "延迟优选"
             ]
@@ -334,7 +362,7 @@ const windowsConfig = {
             "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/microsoft.svg",
             "type": "select",
             "proxies": [
-                "DIRECT",
+                "直连模式",
                 "智能优选",
                 "延迟优选"
             ]
@@ -346,7 +374,7 @@ const windowsConfig = {
             "proxies": [
                 "智能优选",
                 "延迟优选",
-                "DIRECT"
+                "直连模式"
             ]
         },
         {
@@ -354,7 +382,7 @@ const windowsConfig = {
             "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/google.svg",
             "type": "select",
             "proxies": [
-                "DIRECT",
+                "直连模式",
                 "智能优选"
             ]
         },
@@ -363,7 +391,7 @@ const windowsConfig = {
             "icon": "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/steam.svg",
             "type": "select",
             "proxies": [
-                "DIRECT",
+                "直连模式",
                 "智能优选",
                 "🇭🇰 香港 - 智能选择",
                 "🇯🇵 日本 - 智能选择",
@@ -386,7 +414,7 @@ const windowsConfig = {
             "proxies": [
                 "智能优选",
                 "延迟优选",
-                "DIRECT"
+                "直连模式"
             ]
         },
         {
@@ -410,7 +438,8 @@ const windowsConfig = {
             "collectdata": false,
             "sample-rate": 1,
             "filter": "香港|HK|Hong Kong|🇭🇰",
-            "hidden": true
+            "hidden": true,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇭🇰 香港 - 手动选择",
@@ -420,7 +449,8 @@ const windowsConfig = {
                 "myclash"
             ],
             "filter": "香港|HK|Hong Kong|🇭🇰",
-            "hidden": false
+            "hidden": false,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇹🇼 台湾 - 智能选择",
@@ -443,7 +473,8 @@ const windowsConfig = {
             "collectdata": false,
             "sample-rate": 1,
             "filter": "台湾|TW|Taiwan|🇹🇼",
-            "hidden": true
+            "hidden": true,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇹🇼 台湾 - 手动选择",
@@ -453,7 +484,8 @@ const windowsConfig = {
                 "myclash"
             ],
             "filter": "台湾|TW|Taiwan|🇹🇼",
-            "hidden": false
+            "hidden": false,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇸🇬 新加坡 - 智能选择",
@@ -476,7 +508,8 @@ const windowsConfig = {
             "collectdata": false,
             "sample-rate": 1,
             "filter": "新加坡|狮城|SG|Singapore|🇸🇬",
-            "hidden": true
+            "hidden": true,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇸🇬 新加坡 - 手动选择",
@@ -486,7 +519,8 @@ const windowsConfig = {
                 "myclash"
             ],
             "filter": "新加坡|狮城|SG|Singapore|🇸🇬",
-            "hidden": false
+            "hidden": false,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇦🇷 阿根廷 - 智能选择",
@@ -509,7 +543,8 @@ const windowsConfig = {
             "collectdata": false,
             "sample-rate": 1,
             "filter": "阿根廷|AR|Argentina|🇦🇷",
-            "hidden": true
+            "hidden": true,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇦🇷 阿根廷 - 手动选择",
@@ -519,7 +554,8 @@ const windowsConfig = {
                 "myclash"
             ],
             "filter": "阿根廷|AR|Argentina|🇦🇷",
-            "hidden": false
+            "hidden": false,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇯🇵 日本 - 智能选择",
@@ -542,7 +578,8 @@ const windowsConfig = {
             "collectdata": false,
             "sample-rate": 1,
             "filter": "日本|JP|Japan|🇯🇵",
-            "hidden": true
+            "hidden": true,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇯🇵 日本 - 手动选择",
@@ -552,7 +589,8 @@ const windowsConfig = {
                 "myclash"
             ],
             "filter": "日本|JP|Japan|🇯🇵",
-            "hidden": false
+            "hidden": false,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇺🇸 美国 - 智能选择",
@@ -575,7 +613,8 @@ const windowsConfig = {
             "collectdata": false,
             "sample-rate": 1,
             "filter": "美国|US|USA|United States|America|🇺🇸",
-            "hidden": true
+            "hidden": true,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇺🇸 美国 - 手动选择",
@@ -585,7 +624,8 @@ const windowsConfig = {
                 "myclash"
             ],
             "filter": "美国|US|USA|United States|America|🇺🇸",
-            "hidden": false
+            "hidden": false,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇩🇪 德国 - 智能选择",
@@ -608,7 +648,8 @@ const windowsConfig = {
             "collectdata": false,
             "sample-rate": 1,
             "filter": "德国|DE|Germany|🇩🇪",
-            "hidden": true
+            "hidden": true,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇩🇪 德国 - 手动选择",
@@ -618,7 +659,8 @@ const windowsConfig = {
                 "myclash"
             ],
             "filter": "德国|DE|Germany|🇩🇪",
-            "hidden": false
+            "hidden": false,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇰🇷 韩国 - 智能选择",
@@ -641,7 +683,8 @@ const windowsConfig = {
             "collectdata": false,
             "sample-rate": 1,
             "filter": "韩国|KR|Korea|South Korea|🇰🇷",
-            "hidden": true
+            "hidden": true,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇰🇷 韩国 - 手动选择",
@@ -651,7 +694,8 @@ const windowsConfig = {
                 "myclash"
             ],
             "filter": "韩国|KR|Korea|South Korea|🇰🇷",
-            "hidden": false
+            "hidden": false,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇬🇧 英国 - 智能选择",
@@ -674,7 +718,8 @@ const windowsConfig = {
             "collectdata": false,
             "sample-rate": 1,
             "filter": "英国|UK|United Kingdom|Britain|Great Britain|🇬🇧",
-            "hidden": true
+            "hidden": true,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇬🇧 英国 - 手动选择",
@@ -684,7 +729,8 @@ const windowsConfig = {
                 "myclash"
             ],
             "filter": "英国|UK|United Kingdom|Britain|Great Britain|🇬🇧",
-            "hidden": false
+            "hidden": false,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇨🇦 加拿大 - 智能选择",
@@ -707,7 +753,8 @@ const windowsConfig = {
             "collectdata": false,
             "sample-rate": 1,
             "filter": "加拿大|CA|Canada|🇨🇦",
-            "hidden": true
+            "hidden": true,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇨🇦 加拿大 - 手动选择",
@@ -717,7 +764,8 @@ const windowsConfig = {
                 "myclash"
             ],
             "filter": "加拿大|CA|Canada|🇨🇦",
-            "hidden": false
+            "hidden": false,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇦🇺 澳大利亚 - 智能选择",
@@ -740,7 +788,8 @@ const windowsConfig = {
             "collectdata": false,
             "sample-rate": 1,
             "filter": "澳大利亚|AU|Australia|🇦🇺",
-            "hidden": true
+            "hidden": true,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇦🇺 澳大利亚 - 手动选择",
@@ -750,7 +799,8 @@ const windowsConfig = {
                 "myclash"
             ],
             "filter": "澳大利亚|AU|Australia|🇦🇺",
-            "hidden": false
+            "hidden": false,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇪🇸 西班牙 - 智能选择",
@@ -773,7 +823,8 @@ const windowsConfig = {
             "collectdata": false,
             "sample-rate": 1,
             "filter": "西班牙|ES|Spain|🇪🇸",
-            "hidden": true
+            "hidden": true,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇪🇸 西班牙 - 手动选择",
@@ -783,7 +834,8 @@ const windowsConfig = {
                 "myclash"
             ],
             "filter": "西班牙|ES|Spain|🇪🇸",
-            "hidden": false
+            "hidden": false,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇳🇱 荷兰 - 智能选择",
@@ -806,7 +858,8 @@ const windowsConfig = {
             "collectdata": false,
             "sample-rate": 1,
             "filter": "荷兰|NL|Netherlands|🇳🇱",
-            "hidden": true
+            "hidden": true,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇳🇱 荷兰 - 手动选择",
@@ -816,7 +869,8 @@ const windowsConfig = {
                 "myclash"
             ],
             "filter": "荷兰|NL|Netherlands|🇳🇱",
-            "hidden": false
+            "hidden": false,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇹🇷 土耳其 - 智能选择",
@@ -839,7 +893,8 @@ const windowsConfig = {
             "collectdata": false,
             "sample-rate": 1,
             "filter": "土耳其|TR|Turkey|🇹🇷",
-            "hidden": true
+            "hidden": true,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇹🇷 土耳其 - 手动选择",
@@ -849,7 +904,8 @@ const windowsConfig = {
                 "myclash"
             ],
             "filter": "土耳其|TR|Turkey|🇹🇷",
-            "hidden": false
+            "hidden": false,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇷🇺 俄罗斯 - 智能选择",
@@ -872,7 +928,8 @@ const windowsConfig = {
             "collectdata": false,
             "sample-rate": 1,
             "filter": "俄罗斯|RU|Russia|🇷🇺",
-            "hidden": true
+            "hidden": true,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇷🇺 俄罗斯 - 手动选择",
@@ -882,7 +939,8 @@ const windowsConfig = {
                 "myclash"
             ],
             "filter": "俄罗斯|RU|Russia|🇷🇺",
-            "hidden": false
+            "hidden": false,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇮🇳 印度 - 智能选择",
@@ -905,7 +963,8 @@ const windowsConfig = {
             "collectdata": false,
             "sample-rate": 1,
             "filter": "印度|IN|India|🇮🇳",
-            "hidden": true
+            "hidden": true,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇮🇳 印度 - 手动选择",
@@ -915,7 +974,8 @@ const windowsConfig = {
                 "myclash"
             ],
             "filter": "印度|IN|India|🇮🇳",
-            "hidden": false
+            "hidden": false,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇧🇷 巴西 - 智能选择",
@@ -938,7 +998,8 @@ const windowsConfig = {
             "collectdata": false,
             "sample-rate": 1,
             "filter": "巴西|BR|Brazil|🇧🇷",
-            "hidden": true
+            "hidden": true,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇧🇷 巴西 - 手动选择",
@@ -948,7 +1009,8 @@ const windowsConfig = {
                 "myclash"
             ],
             "filter": "巴西|BR|Brazil|🇧🇷",
-            "hidden": false
+            "hidden": false,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇮🇹 意大利 - 智能选择",
@@ -971,7 +1033,8 @@ const windowsConfig = {
             "collectdata": false,
             "sample-rate": 1,
             "filter": "意大利|IT|Italy|🇮🇹",
-            "hidden": true
+            "hidden": true,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇮🇹 意大利 - 手动选择",
@@ -981,7 +1044,8 @@ const windowsConfig = {
                 "myclash"
             ],
             "filter": "意大利|IT|Italy|🇮🇹",
-            "hidden": false
+            "hidden": false,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇨🇭 瑞士 - 智能选择",
@@ -1004,7 +1068,8 @@ const windowsConfig = {
             "collectdata": false,
             "sample-rate": 1,
             "filter": "瑞士|CH|Switzerland|🇨🇭",
-            "hidden": true
+            "hidden": true,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇨🇭 瑞士 - 手动选择",
@@ -1014,7 +1079,8 @@ const windowsConfig = {
                 "myclash"
             ],
             "filter": "瑞士|CH|Switzerland|🇨🇭",
-            "hidden": false
+            "hidden": false,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇸🇪 瑞典 - 智能选择",
@@ -1037,7 +1103,8 @@ const windowsConfig = {
             "collectdata": false,
             "sample-rate": 1,
             "filter": "瑞典|SE|Sweden|🇸🇪",
-            "hidden": true
+            "hidden": true,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇸🇪 瑞典 - 手动选择",
@@ -1047,7 +1114,8 @@ const windowsConfig = {
                 "myclash"
             ],
             "filter": "瑞典|SE|Sweden|🇸🇪",
-            "hidden": false
+            "hidden": false,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇳🇴 挪威 - 智能选择",
@@ -1070,7 +1138,8 @@ const windowsConfig = {
             "collectdata": false,
             "sample-rate": 1,
             "filter": "挪威|NO|Norway|🇳🇴",
-            "hidden": true
+            "hidden": true,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "🇳🇴 挪威 - 手动选择",
@@ -1080,7 +1149,8 @@ const windowsConfig = {
                 "myclash"
             ],
             "filter": "挪威|NO|Norway|🇳🇴",
-            "hidden": false
+            "hidden": false,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "其他 - 智能选择",
@@ -1102,7 +1172,8 @@ const windowsConfig = {
             "collectdata": false,
             "sample-rate": 1,
             "exclude-filter": "香港|台湾|新加坡|狮城|阿根廷|日本|美国|德国|韩国|英国|加拿大|澳大利亚|西班牙|荷兰|土耳其|俄罗斯|印度|巴西|意大利|瑞士|瑞典|挪威",
-            "hidden": true
+            "hidden": true,
+            "empty-fallback": "REJECT"
         },
         {
             "name": "其他 - 手动选择",
@@ -1110,7 +1181,8 @@ const windowsConfig = {
             "use": [
                 "myclash"
             ],
-            "exclude-filter": "香港|台湾|新加坡|狮城|阿根廷|日本|美国|德国|韩国|英国|加拿大|澳大利亚|西班牙|荷兰|土耳其|俄罗斯|印度|巴西|意大利|瑞士|瑞典|挪威"
+            "exclude-filter": "香港|台湾|新加坡|狮城|阿根廷|日本|美国|德国|韩国|英国|加拿大|澳大利亚|西班牙|荷兰|土耳其|俄罗斯|印度|巴西|意大利|瑞士|瑞典|挪威",
+            "empty-fallback": "REJECT"
         }
     ],
     "rule-providers": {
@@ -1153,14 +1225,6 @@ const windowsConfig = {
             "format": "yaml",
             "url": "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/REJECT/no_ip/Reject_no_ip_no_drop.yaml",
             "path": "./ruleset/RealSeek/Clash_Rule_DIY/REJECT/no_ip/Reject_no_ip_no_drop.yaml"
-        },
-        "China_ip": {
-            "type": "http",
-            "interval": 1800,
-            "behavior": "ipcidr",
-            "format": "mrs",
-            "url": "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/DIRECT/ip/China_ip.mrs",
-            "path": "./ruleset/RealSeek/Clash_Rule_DIY/DIRECT/ip/China_ip.mrs"
         },
         "Domestic_ip": {
             "type": "http",
@@ -1255,7 +1319,7 @@ const windowsConfig = {
             "interval": 86400,
             "behavior": "domain",
             "format": "mrs",
-            "url": "https://ghfast.top/github.com/DustinWin/ruleset_geodata/raw/refs/heads/mihomo-ruleset/fakeip-filter.mrs",
+            "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/mihomo-ruleset/fakeip-filter.mrs",
             "path": "./ruleset/DustinWin/ruleset_geodata/fakeip-filter.mrs",
             "proxy": "DIRECT"
         },
@@ -1430,7 +1494,7 @@ const windowsConfig = {
             "interval": 86400,
             "behavior": "domain",
             "format": "mrs",
-            "url": "https://ghfast.top/github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/cn.mrs",
+            "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/cn.mrs",
             "path": "./ruleset/MetaCubeX/meta-rules-dat/geo/geosite/cn.mrs",
             "proxy": "DIRECT"
         },
@@ -1439,7 +1503,7 @@ const windowsConfig = {
             "interval": 86400,
             "behavior": "domain",
             "format": "mrs",
-            "url": "https://ghfast.top/github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/private.mrs",
+            "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/private.mrs",
             "path": "./ruleset/MetaCubeX/meta-rules-dat/geo/geosite/private.mrs",
             "proxy": "DIRECT"
         },
@@ -1448,7 +1512,7 @@ const windowsConfig = {
             "interval": 86400,
             "behavior": "ipcidr",
             "format": "mrs",
-            "url": "https://ghfast.top/github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/cn.mrs",
+            "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geoip/cn.mrs",
             "path": "./ruleset/MetaCubeX/meta-rules-dat/geo/geoip/cn.mrs",
             "proxy": "DIRECT"
         },
@@ -1457,7 +1521,7 @@ const windowsConfig = {
             "interval": 86400,
             "behavior": "ipcidr",
             "format": "mrs",
-            "url": "https://ghfast.top/github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/private.mrs",
+            "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geoip/private.mrs",
             "path": "./ruleset/MetaCubeX/meta-rules-dat/geo/geoip/private.mrs",
             "proxy": "DIRECT"
         },
@@ -1466,13 +1530,14 @@ const windowsConfig = {
             "interval": 86400,
             "behavior": "domain",
             "format": "mrs",
-            "url": "https://ghfast.top/github.com/DustinWin/ruleset_geodata/raw/refs/heads/mihomo-ruleset/proxy.mrs",
+            "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/mihomo-ruleset/proxy.mrs",
             "path": "./ruleset/DustinWin/ruleset_geodata/proxy.mrs",
             "proxy": "DIRECT"
         }
     },
     "rules": [
         "IP-CIDR,10.126.0.0/24,Easytier,no-resolve",
+        "AND,((NETWORK,UDP),(DST-PORT,443),(NOT,((OR,((RULE-SET,private_domain),(RULE-SET,Lan_no_ip),(RULE-SET,cn_domain),(RULE-SET,Domestic_no_ip),(RULE-SET,Direct_no_ip),(RULE-SET,cn_ip,no-resolve),(RULE-SET,private_ip,no-resolve)))))),国外 QUIC",
         "AND,((OR,((PROCESS-NAME,Discord.exe),(PROCESS-NAME,Discord),(PROCESS-NAME,com.discord),(PROCESS-NAME,discord),(PROCESS-NAME,com.aliucord))),(NETWORK,udp)),代理模式",
         "RULE-SET,Reject_no_ip,广告屏蔽",
         "RULE-SET,Reject_domainset,广告屏蔽",
@@ -1480,17 +1545,17 @@ const windowsConfig = {
         "RULE-SET,Reject_no_ip_no_drop,广告屏蔽",
         "RULE-SET,CustomProxy_no_ip,代理模式",
         "RULE-SET,GoogleFCM_no_ip,GoogleFCM",
-        "RULE-SET,NetEaseMusic_no_ip,DIRECT",
+        "RULE-SET,NetEaseMusic_no_ip,直连模式",
         "RULE-SET,SteamRegion_no_ip,Steam地区",
-        "RULE-SET,SteamCN_no_ip,DIRECT",
+        "RULE-SET,SteamCN_no_ip,直连模式",
         "RULE-SET,Steam_no_ip,代理模式",
         "RULE-SET,CDN_domainset,代理模式",
         "RULE-SET,CDN_no_ip,代理模式",
         "RULE-SET,Stream_no_ip,流媒体",
         "RULE-SET,Telegram_no_ip,电报消息",
-        "RULE-SET,AppleCDN_no_ip,DIRECT",
-        "RULE-SET,AppleCN_no_ip,DIRECT",
-        "RULE-SET,MicrosoftCDN_no_ip,DIRECT",
+        "RULE-SET,AppleCDN_no_ip,直连模式",
+        "RULE-SET,AppleCN_no_ip,直连模式",
+        "RULE-SET,MicrosoftCDN_no_ip,直连模式",
         "RULE-SET,Download_domainset,代理模式",
         "RULE-SET,Download_no_ip,代理模式",
         "RULE-SET,Apple_no_ip,苹果服务",
@@ -1498,36 +1563,160 @@ const windowsConfig = {
         "RULE-SET,AI_Gateway,AI",
         "RULE-SET,AI_no_ip,AI",
         "RULE-SET,Global_no_ip,代理模式",
-        "RULE-SET,Domestic_no_ip,DIRECT",
-        "RULE-SET,Direct_no_ip,DIRECT",
+        "RULE-SET,proxy_domain,代理模式",
+        "RULE-SET,Domestic_no_ip,直连模式",
+        "RULE-SET,Direct_no_ip,直连模式",
         "RULE-SET,Lan_no_ip,DIRECT",
         "RULE-SET,GoogleFCM_ip,GoogleFCM",
-        "RULE-SET,NetEaseMusic_ip,DIRECT",
-        "RULE-SET,SteamCN_ip,DIRECT",
+        "RULE-SET,NetEaseMusic_ip,直连模式",
+        "RULE-SET,SteamCN_ip,直连模式",
         "RULE-SET,Reject_ip,REJECT",
         "RULE-SET,Discord_ip,代理模式",
         "RULE-SET,Telegram_ip,电报消息",
         "RULE-SET,Stream_ip,流媒体",
         "RULE-SET,Emby_no_ip,Emby",
-        "RULE-SET,Domestic_ip,DIRECT",
-        "RULE-SET,China_ip,DIRECT",
+        "RULE-SET,Domestic_ip,直连模式",
         "RULE-SET,Lan_ip,DIRECT",
-        "RULE-SET,cn_domain,DIRECT",
         "RULE-SET,private_domain,DIRECT",
-        "RULE-SET,cn_ip,DIRECT",
+        "RULE-SET,cn_ip,直连模式",
         "RULE-SET,private_ip,DIRECT",
         "MATCH,漏网之鱼"
     ]
+};
+
+// 只保留与实际节点域名有关的订阅 DNS；节点 server 和 TLS 参数保持订阅原值。
+function preserveSubscriptionProxyDns(params, dns) {
+    const original = params.dns || {};
+    const domains = [...new Set((params.proxies || [])
+        .map((proxy) => proxy.server)
+        .filter((server) => typeof server === "string" && !server.includes(":") && !/^\d+(\.\d+){3}$/.test(server))
+        .map((server) => server.toLowerCase()))];
+    const matches = (pattern, domain) => {
+        pattern = pattern.toLowerCase();
+        if (pattern.startsWith("+.")) {
+            return domain === pattern.slice(2) || domain.endsWith(pattern.slice(1));
+        }
+        if (pattern.startsWith(".")) return domain.endsWith(pattern);
+        const labels = pattern.split(".");
+        const domainLabels = domain.split(".");
+        return labels.length === domainLabels.length &&
+            labels.every((label, index) => label === "*" || label === domainLabels[index]);
+    };
+    const listenPort = String(original.listen || "").split(":").pop();
+    const normalize = (resolvers) => (Array.isArray(resolvers) ? resolvers : [resolvers])
+        .filter((resolver) => typeof resolver === "string")
+        .map((resolver) => {
+            const [address, suffix = ""] = resolver.split("#");
+            const loopback = address.match(/^(?:(?:udp|tcp):\/\/)?(?:127\.0\.0\.1|localhost|\[::1\])(?::(\d+))?$/);
+            // 订阅内置 DNS 监听不能成为新 DNS 的上游；hosts 映射仍会保留。
+            if (loopback && String(loopback[1] || "53") === listenPort) return null;
+            if (address === "system" || address === "system://") return address;
+            const options = suffix.split("&").filter((option) => option.includes("="));
+            return address + "#DIRECT" + (options.length ? "&" + options.join("&") : "");
+        }).filter(Boolean);
+    const commonResolver = /^(?:(?:https?|tls|quic|tcp|udp):\/\/)?(?:dns\.google|cloudflare-dns\.com|one\.one\.one\.one|dns\.alidns\.com|doh\.pub|dns\.quad9\.net|doh\.opendns\.com|dns\.adguard-dns\.com|223\.(?:5\.5\.5|6\.6\.6)|119\.29\.29\.29|1\.12\.12\.(?:12|21)|120\.53\.53\.53|8\.8\.(?:8\.8|4\.4)|1\.(?:1\.1\.1|0\.0\.1)|9\.9\.9\.9|114\.114\.(?:114\.114|115\.115))(?=[:/#]|$)|^system(?::\/\/)?$/i;
+    const fallback = normalize(original["proxy-server-nameserver"] ||
+        (original.nameserver || []).filter((resolver) => !commonResolver.test(resolver)));
+    // Provider 内容由内核稍后拉取，脚本阶段看不到节点域名。
+    if (Object.keys(params["proxy-providers"] || {}).length && original["proxy-server-nameserver"] && fallback.length) {
+        dns["proxy-server-nameserver"] = fallback;
+    }
+    const policy = {};
+    const inherited = { ...original["nameserver-policy"], ...original["proxy-server-nameserver-policy"] };
+    for (const [patterns, resolvers] of Object.entries(inherited)) {
+        const retained = patterns.split(",").filter((pattern) => domains.some((domain) => matches(pattern, domain)));
+        const upstreams = normalize(resolvers);
+        if (retained.length && upstreams.length) policy[retained.join(",")] = upstreams;
+    }
+    for (const domain of domains) {
+        if (fallback.length && !Object.keys(policy).some((patterns) => patterns.split(",").some((pattern) => matches(pattern, domain)))) {
+            policy[domain] = fallback;
+        }
+    }
+    if (Object.keys(policy).length) dns["proxy-server-nameserver-policy"] = policy;
+    dns["fake-ip-filter"].push(...(original["fake-ip-filter"] || [])
+        .filter((pattern) => domains.some((domain) => matches(pattern, domain))));
 }
-;
+
+// 可选脚本参数：默认保持现有策略；参数取自 $arguments 或 params.arguments。
+function applyOptionalFeatures(params) {
+    const proxyName = "代理模式";
+    const args = (typeof $arguments !== "undefined" && $arguments) || params.arguments || {};
+    const disabled = new Set(String(args["disable-groups"] || "").split(",").map((name) => name.trim()).filter(Boolean));
+    const filterMultiplier = args["filter-high-multiplier"] === true || args["filter-high-multiplier"] === "true";
+    const ipVersion = args["proxy-ip-version"] || "";
+    if (!disabled.size && !filterMultiplier && !ipVersion) return;
+
+    const services = new Set(["电报消息", "AI", "Bilibili港澳台", "流媒体", "苹果服务", "微软服务", "Emby", "GoogleFCM", "Steam地区", "漏网之鱼"]);
+    for (const name of disabled) {
+        if (!services.has(name)) throw new Error("disable-groups 仅支持服务分组，不能关闭基础组：" + name);
+    }
+    if (ipVersion && !["ipv4", "ipv6", "ipv4-prefer", "ipv6-prefer"].includes(ipVersion)) {
+        throw new Error("proxy-ip-version 仅支持 ipv4、ipv6、ipv4-prefer、ipv6-prefer");
+    }
+
+    // 与 provider 共用 RE2 兼容表达式；数字前禁止小数点，避免将 0.25x 当成 25x。
+    const aboveOne = "(?:(?:[2-9][0-9]*|1[0-9]+)(?:\\.[0-9]+)?|1\\.0*[1-9][0-9]*)";
+    const multiplierPattern = "(^|[^0-9.])(?:" + aboveOne + "\\s*[xX×倍]|[xX×]\\s*" + aboveOne + ")($|[^0-9.])";
+    const highMultiplier = new RegExp(multiplierPattern);
+    const excluded = new Set(filterMultiplier ? (params.proxies || [])
+        .filter((proxy) => highMultiplier.test(proxy.name)).map((proxy) => proxy.name) : []);
+    const withMultiplierFilter = (previous) => previous ? "(?:" + previous + ")|(?:" + multiplierPattern + ")" : multiplierPattern;
+    const hasProvider = (group) => group["include-all"] || group["include-all-providers"] ||
+        group["include-all-proxies"] || (group.use && group.use.length);
+    const baseGroups = new Set(["国外QUIC", "代理模式", "智能优选", "延迟优选", "故障转移", "手动选择", "负载均衡(散列)", "负载均衡(会话)", "直连模式"]);
+    let groups = params["proxy-groups"].filter((group) => !disabled.has(group.name));
+    for (const group of groups) {
+        if (group.proxies) {
+            group.proxies = group.proxies.filter((name) => !excluded.has(name))
+                .map((name) => disabled.has(name) ? proxyName : name);
+        }
+        if (filterMultiplier && hasProvider(group)) {
+            group["exclude-filter"] = withMultiplierFilter(group["exclude-filter"]);
+        }
+    }
+    if (filterMultiplier) {
+        const emptyRegions = new Set(groups.filter((group) => !baseGroups.has(group.name.replace(/\s/g, "")) &&
+            !services.has(group.name) && group.proxies && group.proxies.length === 0 && !hasProvider(group))
+            .map((group) => group.name));
+        groups = groups.filter((group) => !emptyRegions.has(group.name));
+        for (const group of groups) {
+            if (group.proxies) group.proxies = group.proxies.filter((name) => !emptyRegions.has(name));
+            if (baseGroups.has(group.name.replace(/\s/g, "")) && group.proxies && !group.proxies.length && !hasProvider(group)) {
+                throw new Error("倍率过滤后分组没有可用节点：" + group.name);
+            }
+        }
+    }
+    params["proxy-groups"] = groups;
+    if (disabled.size) {
+        params.rules = params.rules.map((rule) => {
+            const fields = rule.split(",");
+            const target = fields.length - (fields[fields.length - 1] === "no-resolve" ? 2 : 1);
+            if (disabled.has(fields[target])) fields[target] = proxyName;
+            return fields.join(",");
+        });
+    }
+    for (const provider of Object.values(params["proxy-providers"] || {})) {
+        if (filterMultiplier) provider["exclude-filter"] = withMultiplierFilter(provider["exclude-filter"]);
+        if (ipVersion) provider.override = { ...provider.override, "ip-version": ipVersion };
+    }
+    if (ipVersion) {
+        for (const proxy of params.proxies || []) {
+            if (!/^(direct|reject|pass|dns|easytier|tailscale)$/i.test(proxy.type) && !/^(EasyTier|Tailscale)$/i.test(proxy.name)) {
+                proxy["ip-version"] = ipVersion;
+            }
+        }
+    }
+}
 
 function main(params) {
     const config = JSON.parse(JSON.stringify(windowsConfig));
     const easytier = getEasyTierProxy(params);
-    config.proxies = [...(params.proxies || []).filter((proxy) => proxy.type !== "tailscale" && proxy.name !== easytier.name), easytier];
+    config.proxies = [...(params.proxies || []).filter((proxy) => proxy.type !== "tailscale" && proxy.name !== easytier.name && proxy.name !== "直连 IPv4优先"), easytier,
+        { name: "直连 IPv4优先", type: "direct", "ip-version": "ipv4-prefer" }];
     const providers = Object.keys(params["proxy-providers"] || {});
     const excluded = new RegExp(subscriptionExclude, "i");
-    const nodes = config.proxies.filter((proxy) => proxy.name !== easytier.name && !excluded.test(proxy.name));
+    const nodes = config.proxies.filter((proxy) => proxy.name !== easytier.name && proxy.name !== "直连 IPv4优先" && !excluded.test(proxy.name));
     if (!nodes.length && !providers.length) {
         throw new Error("Windows override requires proxies or proxy-providers from a subscription.");
     }
@@ -1561,20 +1750,23 @@ function main(params) {
     ]);
     config["proxy-groups"].forEach((group) => {
         if (!serviceGroups.has(group.name)) return;
+        const defaultProxy = group.proxies[0];
         const keep = new Set(group.proxies || []);
         group.proxies = [
             "智能优选",
             "延迟优选",
             ...countryGroupNames,
             "手动选择",
-            ...(keep.has("DIRECT") ? ["DIRECT"] : []),
+            ...(keep.has("直连模式") ? ["直连模式"] : []),
         ];
+        group.proxies = [defaultProxy, ...group.proxies.filter((name) => name !== defaultProxy)];
     });
     config.profile = { ...(params.profile || {}), ...config.profile };
     if (params["mixed-port"] !== undefined) config["mixed-port"] = params["mixed-port"];
     for (const key of ["external-controller", "external-ui", "external-ui-url", "secret", "external-controller-cors"]) {
         if (params[key] !== undefined) config[key] = params[key];
     }
+    preserveSubscriptionProxyDns(params, config.dns);
     if (params.dns && params.dns.listen !== undefined) config.dns.listen = params.dns.listen;
     config.tun = {
         ...config.tun,
@@ -1587,8 +1779,7 @@ function main(params) {
         stack: windowsConfig.tun.stack,
         "congestion-controller": windowsConfig.tun["congestion-controller"],
     };
-    config.dns["fake-ip-filter"] = [...new Set([
-        ...config.dns["fake-ip-filter"],,
-    ])];
-    return Object.assign(params, config);
+    Object.assign(params, config);
+    applyOptionalFeatures(params);
+    return params;
 }

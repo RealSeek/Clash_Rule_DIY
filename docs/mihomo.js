@@ -1,17 +1,88 @@
 const proxyName = "代理模式";
 
 function main(params) {
-    if (!params.proxies) return params;
+    if (!Array.isArray(params.proxies) || params.proxies.length === 0) {
+        throw new Error("订阅没有可用节点，请检查订阅内容后再覆写配置");
+    }
     overwriteBasicOptions(params);
     overwriteHosts(params);
     overwriteSniffer(params);
     overwriteProxyGroups(params);
     overwriteRules(params);
     overwriteDns(params);
-    // Force enable UDP for all proxies
-    params.proxies.forEach((p) => { p.udp = true; });
     overwriteTunnel(params);
+    applyOptionalFeatures(params);
     return params;
+}
+
+// 可选脚本参数：默认保持现有策略；参数取自 $arguments 或 params.arguments。
+function applyOptionalFeatures(params) {
+    const args = (typeof $arguments !== "undefined" && $arguments) || params.arguments || {};
+    const disabled = new Set(String(args["disable-groups"] || "").split(",").map((name) => name.trim()).filter(Boolean));
+    const filterMultiplier = args["filter-high-multiplier"] === true || args["filter-high-multiplier"] === "true";
+    const ipVersion = args["proxy-ip-version"] || "";
+    if (!disabled.size && !filterMultiplier && !ipVersion) return;
+
+    const services = new Set(["电报消息", "AI", "Bilibili港澳台", "流媒体", "苹果服务", "微软服务", "Emby", "GoogleFCM", "Steam地区", "漏网之鱼"]);
+    for (const name of disabled) {
+        if (!services.has(name)) throw new Error("disable-groups 仅支持服务分组，不能关闭基础组：" + name);
+    }
+    if (ipVersion && !["ipv4", "ipv6", "ipv4-prefer", "ipv6-prefer"].includes(ipVersion)) {
+        throw new Error("proxy-ip-version 仅支持 ipv4、ipv6、ipv4-prefer、ipv6-prefer");
+    }
+
+    // 与 provider 共用 RE2 兼容表达式；数字前禁止小数点，避免将 0.25x 当成 25x。
+    const aboveOne = "(?:(?:[2-9][0-9]*|1[0-9]+)(?:\\.[0-9]+)?|1\\.0*[1-9][0-9]*)";
+    const multiplierPattern = "(^|[^0-9.])(?:" + aboveOne + "\\s*[xX×倍]|[xX×]\\s*" + aboveOne + ")($|[^0-9.])";
+    const highMultiplier = new RegExp(multiplierPattern);
+    const excluded = new Set(filterMultiplier ? (params.proxies || [])
+        .filter((proxy) => highMultiplier.test(proxy.name)).map((proxy) => proxy.name) : []);
+    const withMultiplierFilter = (previous) => previous ? "(?:" + previous + ")|(?:" + multiplierPattern + ")" : multiplierPattern;
+    const hasProvider = (group) => group["include-all"] || group["include-all-providers"] ||
+        group["include-all-proxies"] || (group.use && group.use.length);
+    const baseGroups = new Set(["代理模式", "延迟优选", "故障转移", "手动选择", "负载均衡(散列)", "负载均衡(会话)", "直连模式", "国外QUIC"]);
+    let groups = params["proxy-groups"].filter((group) => !disabled.has(group.name));
+    for (const group of groups) {
+        if (group.proxies) {
+            group.proxies = group.proxies.filter((name) => !excluded.has(name))
+                .map((name) => disabled.has(name) ? proxyName : name);
+        }
+        if (filterMultiplier && hasProvider(group)) {
+            group["exclude-filter"] = withMultiplierFilter(group["exclude-filter"]);
+        }
+    }
+    if (filterMultiplier) {
+        const emptyRegions = new Set(groups.filter((group) => !baseGroups.has(group.name.replace(/\s/g, "")) &&
+            !services.has(group.name) && group.proxies && group.proxies.length === 0 && !hasProvider(group))
+            .map((group) => group.name));
+        groups = groups.filter((group) => !emptyRegions.has(group.name));
+        for (const group of groups) {
+            if (group.proxies) group.proxies = group.proxies.filter((name) => !emptyRegions.has(name));
+            if (baseGroups.has(group.name.replace(/\s/g, "")) && group.proxies && !group.proxies.length && !hasProvider(group)) {
+                throw new Error("倍率过滤后分组没有可用节点：" + group.name);
+            }
+        }
+    }
+    params["proxy-groups"] = groups;
+    if (disabled.size) {
+        params.rules = params.rules.map((rule) => {
+            const fields = rule.split(",");
+            const target = fields.length - (fields[fields.length - 1] === "no-resolve" ? 2 : 1);
+            if (disabled.has(fields[target])) fields[target] = proxyName;
+            return fields.join(",");
+        });
+    }
+    for (const provider of Object.values(params["proxy-providers"] || {})) {
+        if (filterMultiplier) provider["exclude-filter"] = withMultiplierFilter(provider["exclude-filter"]);
+        if (ipVersion) provider.override = { ...provider.override, "ip-version": ipVersion };
+    }
+    if (ipVersion) {
+        for (const proxy of params.proxies || []) {
+            if (!/^(direct|reject|pass|dns|easytier|tailscale)$/i.test(proxy.type) && !/^(EasyTier|Tailscale)$/i.test(proxy.name)) {
+                proxy["ip-version"] = ipVersion;
+            }
+        }
+    }
 }
 
 // 覆写Basic Options
@@ -69,8 +140,8 @@ function overwriteHosts(params) {
         ],
     };
     params["hosts"] = {
-        ...(params["hosts"] || {}),
         ...customHosts,
+        ...(params["hosts"] || {}),
     };
 }
 
@@ -264,11 +335,14 @@ function overwriteProxyGroups(params) {
     const allRegex =
         /^(?!.*(?:自动|故障|流量|官网|套餐|机场|订阅|年|月|失联|频道|Traffic|Expire)).*$/;
     const allProxies = getProxiesByRegexOne(params, allRegex);
+    if (allProxies.length === 0) {
+        throw new Error("节点过滤后为空，请检查订阅和 allRegex 过滤条件");
+    }
     // const allProxies = params["proxies"].map((e) => e.name);
 
     const availableCountryCodes = new Set();
     const otherProxies = [];
-    for (const proxy of params["proxies"]) {
+    for (const proxy of params["proxies"].filter((proxy) => allRegex.test(proxy.name))) {
         let found = false;
         for (const region of countryRegions) {
             if (region.regex.test(proxy.name)) {
@@ -323,8 +397,8 @@ function overwriteProxyGroups(params) {
                 "故障转移",
                 "手动选择",
                 "负载均衡 (散列)",
-                "负载均衡 (轮询)",
-                "DIRECT",
+                "负载均衡 (会话)",
+                "直连模式",
             ],
         },
         {
@@ -332,7 +406,7 @@ function overwriteProxyGroups(params) {
             type: "url-test",
             icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/speed.svg",
             "exclude-filter": "自动选择|手动选择",
-            proxies: allProxies.length > 0 ? allProxies : ["DIRECT"],
+            proxies: allProxies,
             hidden: true,
         },
         {
@@ -340,7 +414,7 @@ function overwriteProxyGroups(params) {
             type: "fallback",
             icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/ambulance.svg",
             "exclude-filter": "自动选择|手动选择",
-            proxies: allProxies.length > 0 ? allProxies : ["DIRECT"],
+            proxies: allProxies,
             hidden: true,
         },
         {
@@ -354,6 +428,7 @@ function overwriteProxyGroups(params) {
                         `${region.name} - 自动选择`,
                         `${region.name} - 手动选择`,
                     ]),
+                ...otherProxies,
             ],
         },
         {
@@ -366,20 +441,20 @@ function overwriteProxyGroups(params) {
             strategy: "consistent-hashing",
             lazy: true,
             "exclude-filter": "自动选择|手动选择",
-            proxies: allProxies.length > 0 ? allProxies : ["DIRECT"],
+            proxies: allProxies,
             hidden: true,
         },
         {
-            name: "负载均衡 (轮询)",
+            name: "负载均衡 (会话)",
             type: "load-balance",
             url: "https://www.gstatic.com/generate_204",
             icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/merry_go.svg",
             interval: 300,
             "max-failed-times": 3,
             "exclude-filter": "自动选择|手动选择",
-            strategy: "round-robin",
+            strategy: "sticky-sessions",
             lazy: true,
-            proxies: allProxies.length > 0 ? allProxies : ["DIRECT"],
+            proxies: allProxies,
             hidden: true,
         },
         {
@@ -393,7 +468,7 @@ function overwriteProxyGroups(params) {
                         `${region.name} - 自动选择`,
                         `${region.name} - 手动选择`,
                     ]),
-                "DIRECT",
+                "直连模式",
             ],
             // "include-all": true,
             icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/telegram.svg",
@@ -409,7 +484,7 @@ function overwriteProxyGroups(params) {
                         `${region.name} - 自动选择`,
                         `${region.name} - 手动选择`,
                     ]),
-                "DIRECT",
+                "直连模式",
             ],
             // "include-all": true,
             icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/chatgpt.svg",
@@ -418,7 +493,7 @@ function overwriteProxyGroups(params) {
             name: "Bilibili港澳台",
             type: "select",
             proxies: [
-                "DIRECT",
+                "直连模式",
                 proxyName,
                 ...countryRegions
                     .filter((region) => availableCountryCodes.has(region.name))
@@ -441,7 +516,7 @@ function overwriteProxyGroups(params) {
                         `${region.name} - 自动选择`,
                         `${region.name} - 手动选择`,
                     ]),
-                "DIRECT",
+                "直连模式",
             ],
             // "include-all": true,
             icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/youtube.svg",
@@ -472,7 +547,7 @@ function overwriteProxyGroups(params) {
                         `${region.name} - 自动选择`,
                         `${region.name} - 手动选择`,
                     ]),
-                "DIRECT",
+                "直连模式",
             ],
             // "include-all": true,
             icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/microsoft.svg",
@@ -481,7 +556,7 @@ function overwriteProxyGroups(params) {
             name: "GoogleFCM",
             type: "select",
             proxies: [
-                "DIRECT",
+                "直连模式",
                 proxyName,
                 ...countryRegions
                     .filter((region) => availableCountryCodes.has(region.name))
@@ -497,7 +572,7 @@ function overwriteProxyGroups(params) {
             name: "Steam地区",
             type: "select",
             proxies: [
-                "DIRECT",
+                "直连模式",
                 proxyName,
                 ...countryRegions
                     .filter((region) => availableCountryCodes.has(region.name))
@@ -513,7 +588,7 @@ function overwriteProxyGroups(params) {
             name: "Emby",
             type: "select",
             proxies: [
-                "DIRECT",
+                "直连模式",
                 proxyName,
                 ...countryRegions
                     .filter((region) => availableCountryCodes.has(region.name))
@@ -534,15 +609,18 @@ function overwriteProxyGroups(params) {
         {
             name: "漏网之鱼",
             type: "select",
-            proxies: ["DIRECT", proxyName],
+            proxies: ["直连模式", proxyName],
             icon: "https://fastly.jsdelivr.net/gh/clash-verge-rev/clash-verge-rev.github.io@main/docs/assets/icons/fish.svg",
         },
     ];
 
     autoProxyGroups.length &&
     groups[2].proxies.unshift(...autoProxyGroups.map((item) => item.name));
+    groups.splice(1, 0, { name: "国外 QUIC", type: "select", proxies: ["PASS", "REJECT"] });
     groups.push(...autoProxyGroups);
     groups.push(...manualProxyGroupsConfig);
+    groups.push({ name: "直连模式", type: "select", proxies: ["DIRECT", "直连 IPv4优先"] });
+    params.proxies.push({ name: "直连 IPv4优先", type: "direct", "ip-version": "ipv4-prefer" });
     params["proxy-groups"] = groups;
 }
 
@@ -552,10 +630,10 @@ function overwriteRules(params) {
         // 在此添加自定义规则，优先级高于广告规则。例子：
         // "DOMAIN,baidu.com,DIRECT",
         "AND,((NOT,((OR,((PROCESS-NAME,mihomo),(PROCESS-NAME,ClashMeta))))),(DST-PORT,853)),REJECT",
+        // PASS 继续原有分流；手动切换 REJECT 可让非国内/私网的 UDP 443 尝试回退 TCP。
+        "AND,((NETWORK,UDP),(DST-PORT,443),(NOT,((OR,((RULE-SET,private_domain),(RULE-SET,Lan_no_ip),(RULE-SET,cn_domain),(RULE-SET,Domestic_no_ip),(RULE-SET,Direct_no_ip),(RULE-SET,cn_ip,no-resolve),(RULE-SET,private_ip,no-resolve)))))),国外 QUIC",
         // Discord UDP 流量强制代理（语音/视频，全平台）
         "AND,((OR,((PROCESS-NAME,Discord.exe),(PROCESS-NAME,Discord),(PROCESS-NAME,com.discord),(PROCESS-NAME,discord),(PROCESS-NAME,com.aliucord))),(NETWORK,udp))," + proxyName,
-        // 如需更高隐私或更强的 DNS/QUIC 防绕过，可自行开启下面这条规则
-        // "AND,((NETWORK,udp),(DST-PORT,443)),REJECT",
     ];
 
     // 广告拦截 / 隐私保护 / Malware 拦截 / Phiishing 拦截
@@ -574,13 +652,13 @@ function overwriteRules(params) {
         "RULE-SET,GoogleFCM_no_ip,GoogleFCM",
 
         // 网易云音乐
-        "RULE-SET,NetEaseMusic_no_ip,DIRECT",
+        "RULE-SET,NetEaseMusic_no_ip,直连模式",
 
         // Steam 地区
         "RULE-SET,SteamRegion_no_ip,Steam地区",
 
         // SteamCN
-        "RULE-SET,SteamCN_no_ip,DIRECT",
+        "RULE-SET,SteamCN_no_ip,直连模式",
         // Steam
         "RULE-SET,Steam_no_ip," + proxyName,
 
@@ -611,12 +689,12 @@ function overwriteRules(params) {
         "RULE-SET,Telegram_no_ip,电报消息",
 
         // 云上贵州（CN）的苹果 CDN 无特殊需求直连即可
-        "RULE-SET,AppleCDN_no_ip,DIRECT",
+        "RULE-SET,AppleCDN_no_ip,直连模式",
         // 苹果 CN 域名
-        "RULE-SET,AppleCN_no_ip,DIRECT",
+        "RULE-SET,AppleCN_no_ip,直连模式",
 
         // Microsoft 中国 CDN
-        "RULE-SET,MicrosoftCDN_no_ip,DIRECT",
+        "RULE-SET,MicrosoftCDN_no_ip,直连模式",
 
         // 软件更新、操作系统等大文件下载
         /**
@@ -642,8 +720,8 @@ function overwriteRules(params) {
         "RULE-SET,Global_no_ip," + proxyName,
 
         // 国内常见互联网公司和服务的域名
-        "RULE-SET,Domestic_no_ip,DIRECT",
-        "RULE-SET,Direct_no_ip,DIRECT",
+        "RULE-SET,Domestic_no_ip,直连模式",
+        "RULE-SET,Direct_no_ip,直连模式",
 
         // 内网域名和局域网 IP
         /**
@@ -651,6 +729,9 @@ function overwriteRules(params) {
          * 这部分域名一般会被解析到局域网 IP、需要走内网 DNS 解析、需要直连访问
          */
         "RULE-SET,Lan_no_ip,DIRECT",
+        "RULE-SET,private_domain,DIRECT",
+        // 国外域名先代理，避免进入 IP 规则时触发本地解析。
+        "RULE-SET,proxy_domain," + proxyName,
     ];
 
     const ipRules = [
@@ -658,10 +739,10 @@ function overwriteRules(params) {
         "RULE-SET,GoogleFCM_ip,GoogleFCM",
 
         // 网易云音乐
-        "RULE-SET,NetEaseMusic_ip,DIRECT",
+        "RULE-SET,NetEaseMusic_ip,直连模式",
 
         // SteamCN ip
-        "RULE-SET,SteamCN_ip,DIRECT",
+        "RULE-SET,SteamCN_ip,直连模式",
 
         // 广告拦截 / 隐私保护 / Malware 拦截 / Phiishing 拦截（ip）
         "RULE-SET,Reject_ip,REJECT",
@@ -686,8 +767,7 @@ function overwriteRules(params) {
         "RULE-SET,Stream_ip,流媒体",
 
         // 国内常见互联网公司和服务的 IP
-        "RULE-SET,Domestic_ip,DIRECT",
-        "RULE-SET,China_ip,DIRECT",
+        "RULE-SET,Domestic_ip,直连模式",
 
         // 内网域名和局域网 IP
         /**
@@ -695,10 +775,8 @@ function overwriteRules(params) {
          * 这部分域名一般会被解析到局域网 IP、需要走内网 DNS 解析、需要直连访问
          */
         "RULE-SET,Lan_ip,DIRECT",
-        // 使用 rule-set 兜底直连规则（替代 GEOIP/GEOSITE）
-        "RULE-SET,cn_domain,DIRECT",
-        "RULE-SET,private_domain,DIRECT",
-        "RULE-SET,cn_ip,DIRECT",
+        // 宽泛国内域名仅参与 DNS 分流；路由按国内 IP 兜底。
+        "RULE-SET,cn_ip,直连模式",
         "RULE-SET,private_ip,DIRECT",
         // 兜底
         "MATCH,漏网之鱼",
@@ -798,14 +876,6 @@ function overwriteRules(params) {
         // ##################################################################################################################
 
         // 国内常见互联网公司和服务的 IP
-        China_ip: {
-            ...ruleAnchor.ip,
-            format: "mrs",
-            url: "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/DIRECT/ip/China_ip.mrs",
-            path: "./ruleset/RealSeek/Clash_Rule_DIY/DIRECT/ip/China_ip.mrs",
-        },
-
-        // 国内常见互联网公司和服务的 IP
         Domestic_ip: {
             ...ruleAnchor.classical,
             url: "https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/DIRECT/ip/Domestic_ip.yaml",
@@ -890,7 +960,7 @@ function overwriteRules(params) {
             interval: 86400,
             behavior: "domain",
             format: "mrs",
-            url: "https://ghfast.top/github.com/DustinWin/ruleset_geodata/raw/refs/heads/mihomo-ruleset/fakeip-filter.mrs",
+            url: "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/mihomo-ruleset/fakeip-filter.mrs",
             path: "./ruleset/DustinWin/ruleset_geodata/fakeip-filter.mrs",
             proxy: "DIRECT",
         },
@@ -1075,7 +1145,7 @@ function overwriteRules(params) {
             interval: 86400,
             behavior: "domain",
             format: "mrs",
-            url: "https://ghfast.top/github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/cn.mrs",
+            url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/cn.mrs",
             path: "./ruleset/MetaCubeX/meta-rules-dat/geo/geosite/cn.mrs",
             proxy: "DIRECT",
         },
@@ -1086,7 +1156,7 @@ function overwriteRules(params) {
             interval: 86400,
             behavior: "domain",
             format: "mrs",
-            url: "https://ghfast.top/github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/private.mrs",
+            url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/private.mrs",
             path: "./ruleset/MetaCubeX/meta-rules-dat/geo/geosite/private.mrs",
             proxy: "DIRECT",
         },
@@ -1097,7 +1167,7 @@ function overwriteRules(params) {
             interval: 86400,
             behavior: "ipcidr",
             format: "mrs",
-            url: "https://ghfast.top/github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/cn.mrs",
+            url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geoip/cn.mrs",
             path: "./ruleset/MetaCubeX/meta-rules-dat/geo/geoip/cn.mrs",
             proxy: "DIRECT",
         },
@@ -1108,18 +1178,18 @@ function overwriteRules(params) {
             interval: 86400,
             behavior: "ipcidr",
             format: "mrs",
-            url: "https://ghfast.top/github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/private.mrs",
+            url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geoip/private.mrs",
             path: "./ruleset/MetaCubeX/meta-rules-dat/geo/geoip/private.mrs",
             proxy: "DIRECT",
         },
 
-        // 代理域名（用于 DNS nameserver-policy）
+        // 国外域名（DNS 与路由分流共用）
         proxy_domain: {
             type: "http",
             interval: 86400,
             behavior: "domain",
             format: "mrs",
-            url: "https://ghfast.top/github.com/DustinWin/ruleset_geodata/raw/refs/heads/mihomo-ruleset/proxy.mrs",
+            url: "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/mihomo-ruleset/proxy.mrs",
             path: "./ruleset/DustinWin/ruleset_geodata/proxy.mrs",
             proxy: "DIRECT",
         },
@@ -1139,7 +1209,57 @@ function getProxiesByRegex(params, regex) {
     const matchedProxies = params.proxies
         .filter((e) => regex.test(e.name))
         .map((e) => e.name);
-    return matchedProxies.length > 0 ? matchedProxies : ["手动选择"];
+    return matchedProxies;
+}
+
+// 只保留与实际节点域名有关的订阅 DNS；节点 server 和 TLS 参数保持订阅原值。
+function preserveSubscriptionProxyDns(params, dns) {
+    const original = params.dns || {};
+    const domains = [...new Set(params.proxies
+        .map((proxy) => proxy.server)
+        .filter((server) => typeof server === "string" && !server.includes(":") && !/^\d+(\.\d+){3}$/.test(server))
+        .map((server) => server.toLowerCase()))];
+    const matches = (pattern, domain) => {
+        pattern = pattern.toLowerCase();
+        if (pattern.startsWith("+.")) {
+            return domain === pattern.slice(2) || domain.endsWith(pattern.slice(1));
+        }
+        if (pattern.startsWith(".")) return domain.endsWith(pattern);
+        const labels = pattern.split(".");
+        const domainLabels = domain.split(".");
+        return labels.length === domainLabels.length &&
+            labels.every((label, index) => label === "*" || label === domainLabels[index]);
+    };
+    const listenPort = String(original.listen || "").split(":").pop();
+    const normalize = (resolvers) => (Array.isArray(resolvers) ? resolvers : [resolvers])
+        .filter((resolver) => typeof resolver === "string")
+        .map((resolver) => {
+            const [address, suffix = ""] = resolver.split("#");
+            const loopback = address.match(/^(?:(?:udp|tcp):\/\/)?(?:127\.0\.0\.1|localhost|\[::1\])(?::(\d+))?$/);
+            // 订阅内置 DNS 监听不能成为新 DNS 的上游；hosts 映射仍会保留。
+            if (loopback && String(loopback[1] || "53") === listenPort) return null;
+            if (address === "system" || address === "system://") return address;
+            const options = suffix.split("&").filter((option) => option.includes("="));
+            return address + "#DIRECT" + (options.length ? "&" + options.join("&") : "");
+        }).filter(Boolean);
+    const commonResolver = /^(?:(?:https?|tls|quic|tcp|udp):\/\/)?(?:dns\.google|cloudflare-dns\.com|one\.one\.one\.one|dns\.alidns\.com|doh\.pub|dns\.quad9\.net|doh\.opendns\.com|dns\.adguard-dns\.com|223\.(?:5\.5\.5|6\.6\.6)|119\.29\.29\.29|1\.12\.12\.(?:12|21)|120\.53\.53\.53|8\.8\.(?:8\.8|4\.4)|1\.(?:1\.1\.1|0\.0\.1)|9\.9\.9\.9|114\.114\.(?:114\.114|115\.115))(?=[:/#]|$)|^system(?::\/\/)?$/i;
+    const fallback = normalize(original["proxy-server-nameserver"] ||
+        (original.nameserver || []).filter((resolver) => !commonResolver.test(resolver)));
+    const policy = {};
+    const inherited = { ...original["nameserver-policy"], ...original["proxy-server-nameserver-policy"] };
+    for (const [patterns, resolvers] of Object.entries(inherited)) {
+        const retained = patterns.split(",").filter((pattern) => domains.some((domain) => matches(pattern, domain)));
+        const upstreams = normalize(resolvers);
+        if (retained.length && upstreams.length) policy[retained.join(",")] = upstreams;
+    }
+    for (const domain of domains) {
+        if (fallback.length && !Object.keys(policy).some((patterns) => patterns.split(",").some((pattern) => matches(pattern, domain)))) {
+            policy[domain] = fallback;
+        }
+    }
+    if (Object.keys(policy).length) dns["proxy-server-nameserver-policy"] = policy;
+    dns["fake-ip-filter"].push(...(original["fake-ip-filter"] || [])
+        .filter((pattern) => domains.some((domain) => matches(pattern, domain))));
 }
 
 // 修改DNS
@@ -1157,6 +1277,7 @@ function overwriteDns(params) {
         "respect-rules": true,
 
         "fake-ip-filter": [
+            "rule-set:private_domain",
             "rule-set:Lan_no_ip",
             "rule-set:Direct_no_ip",
             "rule-set:Domestic_no_ip",
@@ -1168,28 +1289,35 @@ function overwriteDns(params) {
             "+.market.xiaomi.com",
             "+.push.apple.com",
             "+.ts.net",
-            "100.64.0.0/10",
+            "+.et.net",
+            "time.*.com",
+            "ntp.*.com",
+            "localhost.ptlogin2.qq.com",
+            "localhost.sec.qq.com",
+            "+.qq.com",
+            "+.tencent.com",
+            "+.msftconnecttest.com",
+            "+.msftncsi.com",
         ],
 
         "default-nameserver": [
-            "https://1.12.12.21/dns-query",
-            "https://223.5.5.5/dns-query",
+            "https://1.12.12.21/dns-query#DIRECT",
+            "https://223.5.5.5/dns-query#DIRECT",
         ],
 
         nameserver: [
-            "ts://tailscale",
             "https://1.1.1.1/dns-query#代理模式",
             "https://8.8.8.8/dns-query#代理模式",
         ],
 
         "proxy-server-nameserver": [
-            "https://dns.alidns.com/dns-query",
-            "https://doh.pub/dns-query",
+            "https://dns.alidns.com/dns-query#DIRECT",
+            "https://doh.pub/dns-query#DIRECT",
         ],
 
         "direct-nameserver": [
-            "https://dns.alidns.com/dns-query",
-            "https://doh.pub/dns-query",
+            "https://dns.alidns.com/dns-query#DIRECT",
+            "https://doh.pub/dns-query#DIRECT",
         ],
 
         "direct-nameserver-follow-policy": true,
@@ -1198,13 +1326,10 @@ function overwriteDns(params) {
             "+.ts.net": [
                 "100.100.100.100#system"
             ],
-            "rule-set:cn_domain": [
-                "https://doh.pub/dns-query",
-                "https://dns.alidns.com/dns-query",
-            ],
-            "rule-set:private_domain": [
-                "https://doh.pub/dns-query",
-                "https://dns.alidns.com/dns-query",
+            "rule-set:Lan_no_ip,private_domain": ["system"],
+            "rule-set:cn_domain,Domestic_no_ip,Direct_no_ip,GoogleFCM_no_ip": [
+                "https://doh.pub/dns-query#DIRECT",
+                "https://dns.alidns.com/dns-query#DIRECT",
             ],
             "rule-set:proxy_domain": [
                 "https://1.1.1.1/dns-query#代理模式",
@@ -1213,6 +1338,7 @@ function overwriteDns(params) {
         },
     };
 
+    preserveSubscriptionProxyDns(params, dnsOptions);
     params["dns"] = dnsOptions;
 }
 
@@ -1220,9 +1346,7 @@ function getManualProxiesByRegex(params, regex) {
     const matchedProxies = params.proxies
         .filter((e) => regex.test(e.name))
         .map((e) => e.name);
-    return matchedProxies.length > 0
-        ? matchedProxies
-        : ["DIRECT", "手动选择", proxyName];
+    return matchedProxies;
 }
 
 // 覆写Tunnel

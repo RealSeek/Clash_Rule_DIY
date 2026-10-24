@@ -103995,8 +103995,6 @@ payload:
   - btrace.video.qq.com
   - sdkconfig.video.qq.com
   - +.ad.weixin.qq.com
-  - dns.weixin.qq.com
-  - aedns.weixin.qq.com
   - +.log1.wtlogin.qq.com
   - +.app.dreambox.ru.com
   - +.app.connections.te.com
@@ -108126,7 +108124,6 @@ payload:
   - huodong.ios.shouji.360.cn
   - act.commercial.shouji.360.cn
   - soft.data.weather.360.cn
-  - dns.weixin.qq.com.cn
   - +.tracking.mail.ti.com.cn
   - +.images.mkt.zte.com.cn
   - +.images.newsletter.hach.com.cn
