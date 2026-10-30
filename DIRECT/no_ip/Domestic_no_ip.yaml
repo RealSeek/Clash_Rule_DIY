@@ -3,6 +3,7 @@ payload:
   - DOMAIN-SUFFIX,99.df1319.com
   - DOMAIN-SUFFIX,api-huacloud.net
   - DOMAIN-SUFFIX,realseek.wiki
+  - DOMAIN,as.hypergryph.com
   # 以上是自定义内容
   # 国内 AI 服务
   - DOMAIN-SUFFIX,deepseek.com
