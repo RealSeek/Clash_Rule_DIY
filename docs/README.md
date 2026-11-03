@@ -7,6 +7,8 @@
 
 YAML 中填写 `proxy-providers.myclash.url`。JS 由支持 `main(params)` 的客户端执行，输入须包含订阅展开后的 `proxies`；内核自身不执行 JS。Smart 版需要支持 `smart` 组的内核。JS 保留的 Tailscale，以及 Smart JS 的 EasyTier DNS 扩展需要对应内核支持；Linux / Windows 定制入口见 [fork 配置](fork/README.md)。
 
+Windows fork 的 YAML / JS 使用 TUN `mips` + `cubic`，已用于修复本机 Minecraft 在 BBR 下出现的下行积压和掉线，详见 [fork 说明](fork/README.md)。这里的普通版和 Smart 版仍使用 `gvisor`。
+
 ## DNS
 
 基础 DNS 设计参考 [AIsouler/MyClash](https://github.com/AIsouler/MyClash)，保留本项目业务规则和内核扩展：

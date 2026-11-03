@@ -91,7 +91,7 @@ const windowsConfig = {
     "tun": {
         "enable": true,
         "stack": "mips",
-        "congestion-controller": "bbr",
+        "congestion-controller": "cubic",
         "device": "Meta",
         "auto-route": true,
         "strict-route": false,

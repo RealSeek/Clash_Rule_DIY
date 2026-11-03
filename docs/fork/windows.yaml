@@ -59,12 +59,12 @@ geox-url:
 geo-auto-update: true
 geo-update-interval: 24
 
-# Windows 没有 eBPF。透明入站由 TUN 完成，协议栈用这个分支的默认高性能栈 mips，拥塞控制 bbr。
+# Windows 没有 eBPF。透明入站由 TUN 完成，使用 mips + cubic，避免本机 BBR 下行积压。
 # 独立 EasyTier 只排除固定 overlay 和监听源端口；公共节点 IP 可能变化，不写死。
 tun:
   enable: true
   stack: mips
-  congestion-controller: bbr
+  congestion-controller: cubic
   device: Meta
   auto-route: true
   strict-route: false

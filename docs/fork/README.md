@@ -7,10 +7,12 @@
 | [linux.yaml](linux.yaml) | Linux。eBPF 透明入站，同时开 TUN `mips` + `bbr` |
 | [linux.js](linux.js) | Linux / Android Root 模块的 JS 覆写，接入已有订阅节点及 provider；eBPF 默认只代理本机 |
 | [windows.js](windows.js) | Windows 的 JS 覆写，接入 TUN、WebUI、EasyTier 和现有订阅；不内置订阅地址 |
-| [windows.yaml](windows.yaml) | Windows。没有 eBPF，透明入站由 TUN `mips` + `bbr` 承担 |
+| [windows.yaml](windows.yaml) | Windows。没有 eBPF，透明入站由 TUN `mips` + `cubic` 承担 |
 
 两份 JS 覆写使用 RealSeek/mihomo 的 EasyTier，共享 `mips` TUN。Windows 节点名为
 `RealSeek-PC`，Linux / root Android 为 `RealSeek-Phone`。原 Tailscale 配置已移除。
+
+Windows 两份配置的 TUN 拥塞控制使用 `cubic`。2026-11-03 的 Minecraft GunZ 抓包显示，原 `bbr` 下本机 TUN 下行降至约 4.7 KB/s，积压后服务器断开连接；同日切换 `cubic` 后，用户确认游戏恢复正常，游戏仍经过 TUN。BBR 的微秒级 ACK 采样精度缺陷已通过隔离测试复现，补丁尚未编入此次运行核心。这项配置调整不涉及 Linux 或代理协议自身的拥塞控制。
 
 Sub-Store 远程脚本使用 `#` 后的参数传给 `$arguments`，不是 `?` 查询参数。
 其他脚本执行端需要将参数传给 `$arguments`，或 `params.arguments`：
