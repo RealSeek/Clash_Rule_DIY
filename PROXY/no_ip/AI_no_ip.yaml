@@ -19,6 +19,7 @@ payload:
   - DOMAIN-SUFFIX,chat.com
   - DOMAIN-SUFFIX,chatgpt.com
   - DOMAIN-SUFFIX,deepmind.com
+  - DOMAIN-SUFFIX,synthid.com
   - DOMAIN-SUFFIX,anthropic.com
   - DOMAIN-SUFFIX,anthropiccdn.com
   - DOMAIN,anthropic.com.cdn.cloudflare.net
