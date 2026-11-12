@@ -39,6 +39,37 @@ for (const file of files) {
         assert(quicRule.includes("(RULE-SET," + exception + ")"), file);
     assert(quicRule.includes("(RULE-SET,cn_ip,no-resolve)") && quicRule.includes("(RULE-SET,private_ip,no-resolve)"), file);
     assert(!baseline["rule-providers"].cn_additional, file);
+    assert(!baseline["proxy-groups"].some((group) => group.name === "链式入口"), file);
+
+    const lexFront = "🇭🇰 DMIT-Lex | 香港 01";
+    const lexLandings = ["🇺🇸 DMIT-Lex | 美国 01", "🇺🇸 DMIT-Lex | 美国 02"];
+    const lexNodes = [
+        { ...nodes[0], name: "🇭🇰 iKuuu | 香港 01" },
+        { ...nodes[0], name: "🇭🇰 Murss | 香港 01" },
+        { ...nodes[1], name: "🇺🇸 DMIT-Pro | 美国 01" },
+        { ...nodes[1], name: lexFront },
+        ...lexLandings.map((name) => ({ ...nodes[0], name, "dialer-proxy": lexFront })),
+        { ...nodes[0], name: "日本链式节点", "dialer-proxy": lexLandings[0] },
+        { ...nodes[0], name: "NewCloud | 日本 01" },
+        { ...nodes[0], name: "香港 2倍" },
+    ];
+    const lex = run({ proxies: lexNodes }, { "filter-high-multiplier": "true", "chain-proxy": "true" });
+    const entrance = lex["proxy-groups"].find((group) => group.name === "链式入口");
+    assert.deepEqual(entrance.proxies, [...lexNodes.slice(0, 4).map((proxy) => proxy.name), "NewCloud | 日本 01", "DIRECT"], file);
+    assert.deepEqual(lex["proxy-groups"].find((group) => group.name === "链式代理").proxies, ["链式出口"], file);
+    assert.deepEqual(lex["proxy-groups"].find((group) => group.name === "链式出口").proxies,
+        lexNodes.slice(0, -1).map((proxy) => "🔗 " + proxy.name), file);
+    assert(lex["proxy-groups"].find((group) => group.name === "代理模式").proxies.includes("链式代理"), file);
+    assert(lex["proxy-groups"].find((group) => group.name === "AI").proxies.includes("链式代理"), file);
+    assert(!lex.proxies.find((proxy) => proxy.name === lexFront)["dialer-proxy"], file);
+    for (const name of lexLandings) {
+        assert.equal(lex.proxies.find((proxy) => proxy.name === name)["dialer-proxy"], lexFront, file);
+        const landing = lex.proxies.find((proxy) => proxy.name === "🔗 " + name);
+        assert.equal(landing["dialer-proxy"], entrance.name, file);
+        assert.equal(landing.server, nodes[0].server, file);
+        assert.equal(landing.servername, nodes[0].servername, file);
+    }
+    assert(!lex["proxy-groups"].find((group) => group.name === "延迟优选").proxies.some((name) => name.startsWith("🔗 ")), file);
 
     const inherited = run({
         proxies: nodes,
@@ -70,6 +101,7 @@ for (const file of files) {
     assert.throws(() => run({ proxies: [] }), /节点|subscription/i, file);
 
     const stem = file.replaceAll("/", "-").replace(/\.js$/, "");
+    fs.writeFileSync(path.join(output, stem + "-lex-chain.json"), JSON.stringify(lex, null, 2));
     fs.writeFileSync(path.join(output, stem + ".json"), JSON.stringify(baseline, null, 2));
     const costNodes = [
         { ...nodes[0], name: "香港 0.25x" },

@@ -55,6 +55,10 @@ https://raw.githubusercontent.com/RealSeek/Clash_Rule_DIY/refs/heads/mihomo/docs
 
 模块已有的 TUN 开关、设备和句柄、监听端口、控制器及认证设置保留；覆写协议栈为 `mips` + `bbr`，eBPF 开启时关闭 `auto-redirect` 和 `strict-route`。
 
+## 通用链式代理
+
+两份 JS 支持 `chain-proxy=true`，在合并后的内联节点上生成 `链式代理`、`链式入口`、`链式出口` 三个策略组。在 `代理模式` 中选择 `链式代理`，再分别通过 `链式入口` 和 `链式出口` 选择前置节点和落地副本。新增订阅自动加入候选，不绑定机场名称。用法和 Sub-Store 接入方式见 [链式代理说明](../README.md#通用链式代理)。
+
 ## 四项分别落在哪
 
 1. **eBPF**：只有 Linux。`type: ebpf`、`mode: hybrid`，`bypass-rule-set: [cn_ip]` 在内核放行国内 IP。DNS 53 由 `dns-mode: hijack` 先于旁路劫持。二进制要带 `with_ebpf`，需要 root 和 cgroup v2。TUN 同时开着：`stack: mips`、`congestion-controller: bbr`、`auto-route: true`。`bypass-tun-direct: true` 让内核已经放行的目的地直接连出，避免被 `auto-route` 吸进 `mips` 后再走一遍规则。不要在同一张网卡上开 `auto-redirect`，`strict-route` 保持关闭。

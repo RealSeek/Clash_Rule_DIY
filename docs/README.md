@@ -41,6 +41,22 @@ MyClash 的 `默认代理` 与本项目的 `代理模式` 都是 `type: select`�
 
 开关只影响进入规则引擎的业务流量，不能关闭节点自身的 Hysteria2 / TUIC 等 UDP 传输，也不改变显式指定出口的 DNS 连接。切换内核到全局 / 直连模式后，业务规则不会按上述方式执行。
 
+## 通用链式代理
+
+四份 JS（包括 fork）支持 `chain-proxy=true` 参数。启用后添加三个策略组，不按机场名称判断：
+
+- `链式代理`：在 `代理模式` 或 AI 等业务组中选择此项，使用 `链式出口` 当前所选节点。
+- `链式入口`：选择合并订阅中的独立原节点，或选 `DIRECT` 直接连接落地。
+- `链式出口`：选择带 `🔗 ` 前缀的落地副本。
+
+例如入口选 `🇭🇰 iKuuu | 香港 01`，落地选 `🔗 🇺🇸 DMIT-Lex | 美国 01`，链路就是 `本机 → iKuuu 香港 → DMIT-Lex 美国 → 网站`。所有落地副本共用当前入口选择；普通分流继续使用原节点。入口只列出没有前置依赖的原节点，避免经链式副本或已有代理链绕回自身；两组均遵循倍率过滤。`profile.store-selected` 保存面板选择，切换入口主要影响新连接。
+
+新增订阅后，只需加入同一个组合订阅并更新配置，脚本会自动生成相应候选。落地副本保留原节点的协议、服务器和 TLS 参数，将前置替换为 `dialer-proxy: 链式入口`；原节点已有的前置设置不变。入口和落地应选择不同服务器，避免无意义的自身转接；两端协议支持也会影响 UDP 是否可用。
+
+输入须先合并、展开各订阅为 `proxies`，仅有 `proxy-providers` 时不会自动展开远程节点。静态 YAML 不执行 JS。
+
+Sub-Store 可用组合订阅合并四个来源，再通过“文件”资源运行 JS 生成完整配置；单纯下载组合订阅只包含节点，不包含策略组和业务分流。客户端也可在合并订阅后执行相同 JS 覆写。两种方式均应以 Mihomo / Clash Meta 格式保留链式字段；fork 的 EasyTier 参数仍需按 [fork 说明](fork/README.md) 提供。
+
 ## 可选脚本参数
 
 四份 JS（包括 fork）支持下列参数，由客户端传入 `$arguments`，没有该对象时读取 `params.arguments`。未设置时保持默认配置。
@@ -50,6 +66,7 @@ MyClash 的 `默认代理` 与本项目的 `代理模式` 都是 `type: select`�
 | `disable-groups` | 空 | 逗号分隔的服务组名，例如 `AI,流媒体`。隐藏这些专用组，将其规则和引用交给 `代理模式`；基础选点组不能关闭 |
 | `filter-high-multiplier` | `false` | 将名称中明确标注超过 1 倍（如 `1.5x`、`2×`、`2倍`）的节点排除出选择和测速候选；没有倍率标注的节点保留 |
 | `proxy-ip-version` | 空 | `ipv4`、`ipv6`、`ipv4-prefer` 或 `ipv6-prefer`，覆盖订阅节点及 provider 的 IP 策略；不修改直连、EasyTier、Tailscale 出口 |
+| `chain-proxy` | `false` | 添加 `链式代理`、`链式入口`、`链式出口` 三个策略组；为可选节点生成单独的落地副本，新增合并订阅自动加入候选 |
 
 倍率过滤保留原始节点定义和 `dialer-proxy` 依赖，节点名称也不改动。provider 过滤使用内核支持的正则。IP 偏好不会把一个 IPv6 字面地址转换成 IPv4。
 
@@ -59,7 +76,8 @@ MyClash 的 `默认代理` 与本项目的 `代理模式` 都是 `type: select`�
 {
   "disable-groups": "AI,流媒体",
   "filter-high-multiplier": "true",
-  "proxy-ip-version": "ipv4-prefer"
+  "proxy-ip-version": "ipv4-prefer",
+  "chain-proxy": "true"
 }
 ```
 

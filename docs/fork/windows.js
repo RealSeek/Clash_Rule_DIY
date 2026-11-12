@@ -1638,6 +1638,39 @@ function preserveSubscriptionProxyDns(params, dns) {
         .filter((pattern) => domains.some((domain) => matches(pattern, domain))));
 }
 
+// 用独立原节点作入口，落地副本单独拨号；新订阅展开后自动加入候选。
+function configureChainProxy(params) {
+    const args = (typeof $arguments !== "undefined" && $arguments) || params.arguments || {};
+    if (args["chain-proxy"] !== true && args["chain-proxy"] !== "true") return;
+
+    const selectable = new Set(params["proxy-groups"].find((group) => group.name === "延迟优选").proxies);
+    const nodes = params.proxies.filter((proxy) => selectable.has(proxy.name) &&
+        !/^(direct|reject|pass|dns|easytier|tailscale)$/i.test(proxy.type));
+    if (!nodes.length) return;
+
+    const entries = nodes.filter((proxy) =>
+        !proxy["dialer-proxy"] && !proxy["underlying-proxy"] && !proxy.detour)
+        .map((proxy) => proxy.name);
+    const landings = nodes.map((proxy) => {
+        const landing = { ...proxy, name: "🔗 " + proxy.name, "dialer-proxy": "链式入口" };
+        delete landing["underlying-proxy"];
+        delete landing.detour;
+        return landing;
+    });
+    params.proxies.push(...landings);
+    for (const group of params["proxy-groups"]) {
+        if (group.type === "select" &&
+            (group.name === "手动选择" || group.proxies?.includes("手动选择") || group.proxies?.includes("代理模式"))) {
+            group.proxies.push("链式代理");
+        }
+    }
+    params["proxy-groups"].push(
+        { name: "链式代理", type: "select", proxies: ["链式出口"] },
+        { name: "链式入口", type: "select", proxies: [...entries, "DIRECT"] },
+        { name: "链式出口", type: "select", proxies: landings.map((proxy) => proxy.name) },
+    );
+}
+
 // 可选脚本参数：默认保持现有策略；参数取自 $arguments 或 params.arguments。
 function applyOptionalFeatures(params) {
     const proxyName = "代理模式";
@@ -1781,5 +1814,6 @@ function main(params) {
     };
     Object.assign(params, config);
     applyOptionalFeatures(params);
+    configureChainProxy(params);
     return params;
 }
